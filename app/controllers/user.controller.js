@@ -14,6 +14,7 @@ exports.create = (req, res) => {
     name: req.body.name,
     full_name: req.body.full_name,
     email: req.body.email,
+    role: req.body.role
   })
 
   // Save User in the database
@@ -141,7 +142,6 @@ exports.deleteAll = (req, res) => {
     else res.send({ message: `All Users were deleted successfully!` })
   })
 }
-
 
 exports.login = (req, res) => {
   User.login(req.body, (err, data) => {

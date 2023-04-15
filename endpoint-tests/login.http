@@ -1,0 +1,27 @@
+### Login
+POST http://localhost:3000/api/user/login HTTP/1.1
+content-type: application/json
+
+{
+    "name": "omar",
+    "password": "master1"
+}
+
+### Users
+GET http://localhost:3000/api/user HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo5NSwibmFtZSI6Im9tYXIiLCJmdWxsX25hbWUiOiJPbWFyIE1lbGVuZHJleiIsImVtYWlsIjoib21hci5tZWxlbmRyZXpAZ21haWwuY29tIiwic3RhdHVzIjoxfSwiaWF0IjoxNjgwODg0NzIwLCJleHAiOjE2ODA5NzExMjB9.ZvKfbpjoi3mFibp8tOOmUA1p_3l3S1eXw69V-BZVfac
+
+### By ID
+GET http://localhost:3000/api/user/95 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo5NSwibmFtZSI6Im9tYXIiLCJmdWxsX25hbWUiOiJPbWFyIE1lbGVuZHJleiIsImVtYWlsIjoib21hci5tZWxlbmRyZXpAZXNjbmcuY29tIiwic3RhdHVzIjoxLCJuZXdfcGFzc3dvcmQiOiJNQVNURVIxIn0sImlhdCI6MTY4MDg4MTM3MSwiZXhwIjoxNjgwOTY3NzcxfQ.5IErzgWK4MP9mAW8DwiTBQvzlpK33ynBFjq8w8Im1_Y
+
+
+### Change password
+PUT http://localhost:3000/api/user/95/chgpwd HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo5NSwibmFtZSI6Im9tYXIiLCJmdWxsX25hbWUiOiJPbWFyIE1lbGVuZHJleiIsImVtYWlsIjoib21hci5tZWxlbmRyZXpAZXNjbmcuY29tIiwic3RhdHVzIjoxLCJuZXdfcGFzc3dvcmQiOiJNQVNURVIxIn0sImlhdCI6MTY4MDg4MTM3MSwiZXhwIjoxNjgwOTY3NzcxfQ.5IErzgWK4MP9mAW8DwiTBQvzlpK33ynBFjq8w8Im1_Y
+content-type: application/json
+
+{
+    "password": "master1",
+    "prevPass": "master2"
+}

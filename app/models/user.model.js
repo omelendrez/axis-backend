@@ -113,6 +113,13 @@ User.updateById = (id, user, result) => {
 }
 
 User.chgPwd = async (id, user, result) => {
+
+  if (user.prevPass === user.password) {
+    result({ kind: "same_password" }, null)
+    return
+  }
+
+
   sql.query(`SELECT * FROM user WHERE id = '${id}'`, async (err, res) => {
     if (err) {
       log.error("error: ", err)
@@ -128,7 +135,7 @@ User.chgPwd = async (id, user, result) => {
     const ok = await bcrypt.compare(user.prevPass, res[0].password)
 
     if (!ok) {
-      result({ kind: "wrong_prev_password" }, null)
+      result({ kind: "wrong_curr_password" }, null)
       return
     }
 

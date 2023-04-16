@@ -99,12 +99,17 @@ exports.chgPwd = (req, res) => {
               message: "Error updating User with id " + req.params.id
             })
             break
+          case "same_password":
+            res.status(400).send({
+              message: 'Passwords are all the same. Nothing to change.'
+            })
+            break
           case "not_found":
             res.status(404).send({
               message: `Not found User with id ${req.params.id}.`
             })
             break
-          case "wrong_prev_password":
+          case "wrong_curr_password":
             res.status(400).send({
               message: `Current password not matching.`
             })

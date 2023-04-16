@@ -106,7 +106,7 @@ exports.chgPwd = (req, res) => {
             break
           case "wrong_prev_password":
             res.status(400).send({
-              message: `Previous password not matching.`
+              message: `Current password not matching.`
             })
             break
         }

@@ -10,6 +10,7 @@ const User = function (user) {
   this.name = user.name
   this.full_name = user.full_name
   this.role = user.role
+  this.status = user.status
 }
 
 User.create = (user, result) => {
@@ -34,7 +35,7 @@ User.findById = (id, result) => {
     }
 
     if (res.length) {
-      result(null, res[0])
+      result(null, toWeb(res[0]))
       return
     }
 
@@ -93,8 +94,8 @@ User.getAll = (title, result) => {
 
 User.updateById = (id, user, result) => {
   sql.query(
-    "UPDATE user SET name = ?, full_name = ?, email = ?, status = ?, role = ? WHERE id = ?",
-    [user.first_name, user.last_name, user.phone, user.profile_id, user.organization_id, user.user_status_id, user.role_id, id],
+    "UPDATE user SET name = ?, full_name = ?, email = ?, role = ?, status = ? WHERE id = ?",
+    [user.name, user.full_name, user.email, user.role, user.status, id],
     (err, res) => {
       if (err) {
         log.error("error: ", err)

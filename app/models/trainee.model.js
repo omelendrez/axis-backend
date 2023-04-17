@@ -46,7 +46,7 @@ Trainee.findById = (id, result) => {
 }
 
 Trainee.getAll = (title, result) => {
-  let query = "SELECT t.id, t.type, t.badge, t.last_name, t.first_name, t.sex, t.state, s.name state_name, t.nationality, n.name nationality_name, t.birth_date, t.company, c.name company_name, t.status, CASE WHEN t.status=1 THEN 'Active' WHEN t.status=0 THEN 'Inactive' END status_name FROM trainee t INNER JOIN state s ON t.state=s.id INNER JOIN nationality n ON t.nationality=n.code INNER JOIN company c ON t.company=c.code LIMIT 10;"
+  let query = "SELECT t.id, t.type, t.badge, t.last_name, t.first_name, t.sex, t.state, s.name state_name, t.nationality, n.name nationality_name, t.birth_date, t.company, c.name company_name, t.status, CASE WHEN t.status=1 THEN 'Active' WHEN t.status=0 THEN 'Inactive' END status_name FROM trainee t INNER JOIN state s ON t.state=s.id INNER JOIN nationality n ON t.nationality=n.code INNER JOIN company c ON t.company=c.code;"
 
   if (title) {
     query += ` WHERE title LIKE '%${title}%'`

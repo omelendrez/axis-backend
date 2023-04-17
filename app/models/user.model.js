@@ -75,7 +75,7 @@ User.login = (params, result) => {
 }
 
 User.getAll = (title, result) => {
-  let query = "SELECT u.id, u.name, full_name, email, r.name role_name, CASE WHEN status=1 THEN 'Active' WHEN status=0 THEN 'Inactive' END status_name  FROM user u INNER JOIN role r ON u.role = r.id;"
+  let query = "SELECT u.id, u.name, full_name, email, role, r.name role_name, status, CASE WHEN status=1 THEN 'Active' WHEN status=0 THEN 'Inactive' END status_name  FROM user u INNER JOIN role r ON u.role = r.id;"
 
   if (title) {
     query += ` WHERE title LIKE '%${title}%'`
@@ -164,19 +164,32 @@ User.chgPwd = async (id, user, result) => {
 }
 
 User.remove = (id, result) => {
-  sql.query("DELETE FROM user WHERE id = ?", id, (err, res) => {
+  sql.query("SELECT COUNT(1) records FROM tracking WHERE user = ?", id, (err, res) => {
     if (err) {
       log.error("error: ", err)
       result(null, err)
       return
     }
 
-    if (res.affectedRows == 0) {
-      result({ kind: "not_found" }, null)
+    if (res[0].records) {
+      result({ kind: "cannot_delete" }, null)
       return
     }
 
-    result(null, id)
+    sql.query("DELETE FROM user WHERE id = ?", id, (err, res) => {
+      if (err) {
+        log.error("error: ", err)
+        result(null, err)
+        return
+      }
+
+      if (res.affectedRows == 0) {
+        result({ kind: "not_found" }, null)
+        return
+      }
+
+      result(null, id)
+    })
   })
 }
 

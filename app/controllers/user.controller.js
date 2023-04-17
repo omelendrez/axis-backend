@@ -122,17 +122,24 @@ exports.chgPwd = (req, res) => {
 // Delete a user with the specified id in the request
 exports.delete = (req, res) => {
   User.remove(req.params.id, (err, data) => {
-    if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found User with id ${req.params.id}.`
-        })
-      } else {
-        res.status(500).send({
-          message: "Could not delete User with id " + req.params.id
-        })
+    if (err)
+      switch (err.kind) {
+        case "cannot_delete":
+          res.status(404).send({
+            message: `User has transactions and cannot be deleted.`
+          })
+          break
+        case "not_found":
+          res.status(404).send({
+            message: `Not found User with id ${req.params.id}.`
+          })
+          break
+        default:
+          res.status(500).send({
+            message: "Could not delete User with id " + req.params.id
+          })
       }
-    } else res.send({ message: `User was deleted successfully!` })
+    else res.send({ message: `User was deleted successfully!` })
   })
 }
 

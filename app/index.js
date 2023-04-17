@@ -16,6 +16,7 @@ app.get("/", (req, res) => {
 })
 
 require("./routes/user.routes.js")(app)
+require("./routes/trainee.routes.js")(app)
 
 const PORT = process.env.PORT || 3000
 

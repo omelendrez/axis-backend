@@ -1,14 +1,12 @@
 const User = require("../models/user.model")
 
 exports.create = (req, res) => {
-  // Validate request
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
     })
   }
 
-  // Create a User
   const user = new User({
     password: req.body.password,
     name: req.body.name,
@@ -17,7 +15,6 @@ exports.create = (req, res) => {
     role: req.body.role
   })
 
-  // Save User in the database
   User.create(user, (err, data) => {
     if (err)
       res.status(500).send({
@@ -28,7 +25,6 @@ exports.create = (req, res) => {
   })
 }
 
-// Retrieve all users from the database (with condition).
 exports.findAll = (req, res) => {
   const title = req.query.title
 
@@ -42,7 +38,6 @@ exports.findAll = (req, res) => {
   })
 }
 
-// Find a single user with a id
 exports.findOne = (req, res) => {
   User.findById(req.params.id, (err, data) => {
     if (err) {
@@ -59,9 +54,7 @@ exports.findOne = (req, res) => {
   })
 }
 
-// Update a user identified by the id in the request
 exports.update = (req, res) => {
-  // Validate Request
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
@@ -119,7 +112,6 @@ exports.chgPwd = (req, res) => {
     })
 }
 
-// Delete a user with the specified id in the request
 exports.delete = (req, res) => {
   User.remove(req.params.id, (err, data) => {
     if (err)
@@ -143,7 +135,6 @@ exports.delete = (req, res) => {
   })
 }
 
-// Delete all users from the database.
 exports.deleteAll = (req, res) => {
   User.removeAll((err, data) => {
     if (err)

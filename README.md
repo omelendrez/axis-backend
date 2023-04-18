@@ -4,7 +4,7 @@ This node app is the Axis API and integrates our database with the UI.
 
 ---
 
-## 🔵 Tolmann - Server setup
+## 🔵 Tolmann - Axis 2.0 Backend setup
 
 You should have MySQL Server 8.0 Community version installed in the server.
 

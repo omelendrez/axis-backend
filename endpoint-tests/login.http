@@ -8,8 +8,8 @@ content-type: application/json
 }
 
 ### Users
-GET http://localhost:3000/api/user HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo5NSwibmFtZSI6Im9tYXIiLCJmdWxsX25hbWUiOiJPbWFyIE1lbGVuZHJleiIsImVtYWlsIjoib21hci5tZWxlbmRyZXpAZ21haWwuY29tIiwic3RhdHVzIjoxfSwiaWF0IjoxNjgwODg0NzIwLCJleHAiOjE2ODA5NzExMjB9.ZvKfbpjoi3mFibp8tOOmUA1p_3l3S1eXw69V-BZVfac
+GET http://localhost:3000/api/role HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo5NSwibmFtZSI6Im9tYXIiLCJmdWxsX25hbWUiOiJPbWFyIE1lbGVuZHJleiIsImVtYWlsIjoib21hci5tZWxlbmRyZXpAZ21haWwuY29tIiwic3RhdHVzIjoxLCJyb2xlIjoxfSwiaWF0IjoxNjgxODM5MDg3LCJleHAiOjE2ODE5MjU0ODd9.X3CDYTisoyyQ20N8w7uMEe0oMvxdsyUKqUhud5vfwgg
 
 ### By ID
 GET http://localhost:3000/api/user/95 HTTP/1.1

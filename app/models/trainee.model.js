@@ -59,7 +59,6 @@ Trainee.getAll = (title, result) => {
       return
     }
     const results = res.map((trainee) => toWeb(trainee))
-    console.log(results)
     result(null, results)
   })
 }

@@ -104,5 +104,6 @@ npm start
 
 The app will show in the terminal when the server is ready.
 If everything concludes without errors, you should see the last message as follows:
+![Screenshot 2023-04-18 084321](https://user-images.githubusercontent.com/7883563/232766843-60cb917d-1687-4b7b-8269-c5921740be8d.png)
 
 If this is the case, the new version of axis database has already running in the MySQL server.

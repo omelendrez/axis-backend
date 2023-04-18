@@ -75,7 +75,7 @@ User.login = (params, result) => {
 }
 
 User.getAll = (title, result) => {
-  let query = "SELECT u.id, u.name, full_name, email, role, r.name role_name, status, CASE WHEN status=1 THEN 'Active' WHEN status=0 THEN 'Inactive' END status_name  FROM user u INNER JOIN role r ON u.role = r.id;"
+  let query = "SELECT u.id, u.name, full_name, email, role, r.name role_name, status, CASE WHEN status=1 THEN 'Active' WHEN status=0 THEN 'Inactive' END status_name  FROM user u INNER JOIN role r ON u.role = r.id WHERE status=1;"
 
   if (title) {
     query += ` WHERE title LIKE '%${title}%'`

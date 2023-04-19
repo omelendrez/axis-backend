@@ -22,6 +22,7 @@ require("./routes/user.routes.js")(app);
 require("./routes/trainee.routes.js")(app);
 require("./routes/role.routes.js")(app);
 require("./routes/nationality.routes.js")(app);
+require("./routes/state.routes.js")(app);
 
 const PORT = process.env.PORT || 3000;
 

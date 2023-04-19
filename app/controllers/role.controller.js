@@ -21,9 +21,9 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  const title = req.query.title;
+  const search = req.query.search;
 
-  Role.getAll(title, (err, data) => {
+  Role.getAll(search, (err, data) => {
     if (err)
       res.status(500).send({
         message: err.message || "Some error occurred while retrieving Roles.",

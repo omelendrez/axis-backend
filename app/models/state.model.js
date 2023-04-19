@@ -36,12 +36,16 @@ State.findById = (id, result) => {
   });
 };
 
-State.getAll = (title, result) => {
-  let query = "SELECT id, name FROM state;";
-
-  if (title) {
-    query += ` WHERE title LIKE '%${title}%'`;
+State.getAll = (search, result) => {
+  let filter = "";
+  const fields = ["name"];
+  if (search) {
+    filter = ` WHERE CONCAT(${fields.join(" , ")}) LIKE '%${search}%'`;
   }
+
+  const query = `SELECT id, name FROM state ${filter} ORDER BY name LIMIT 50;`;
+
+  console.log(query, search);
 
   sql.query(query, (err, res) => {
     if (err) {

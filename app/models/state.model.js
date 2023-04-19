@@ -45,8 +45,6 @@ State.getAll = (search, result) => {
 
   const query = `SELECT id, name FROM state ${filter} ORDER BY name LIMIT 50;`;
 
-  console.log(query, search);
-
   sql.query(query, (err, res) => {
     if (err) {
       log.error("error: ", err);

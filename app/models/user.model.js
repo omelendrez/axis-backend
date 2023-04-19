@@ -14,7 +14,7 @@ const User = function (user) {
 };
 
 User.create = (user, result) => {
-  const newUser = { ...user };
+  const newUser = { ...user, status: 1 };
   sql.query("INSERT INTO user SET ?", newUser, (err, res) => {
     if (err) {
       log.error("error: ", err);

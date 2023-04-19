@@ -2,25 +2,27 @@ const sql = require("./db.js");
 const { toWeb } = require("../helpers/utils.js");
 const { log } = require("../helpers/log.js");
 // constructor
-const Role = function (role) {
-  this.name = role.name;
+const Nationality = function (nationality) {
+  this.code = nationality.code;
+  this.country = nationality.country;
+  this.nationality = nationality.nationality;
 };
 
-Role.create = (role, result) => {
-  const newRole = { ...role };
-  sql.query("INSERT INTO role SET ?", newRole, (err, res) => {
+Nationality.create = (nationality, result) => {
+  const newNationality = { ...nationality };
+  sql.query("INSERT INTO nationality SET ?", newNationality, (err, res) => {
     if (err) {
       log.error("error: ", err);
       result(err, null);
       return;
     }
 
-    result(null, { id: res.insertId, ...newRole });
+    result(null, { id: res.insertId, ...newNationality });
   });
 };
 
-Role.findById = (id, result) => {
-  sql.query(`SELECT * FROM role WHERE id = ${id}`, (err, res) => {
+Nationality.findById = (id, result) => {
+  sql.query(`SELECT * FROM nationality WHERE id = ${id}`, (err, res) => {
     if (err) {
       log.error("error: ", err);
       result(err, null);
@@ -36,8 +38,8 @@ Role.findById = (id, result) => {
   });
 };
 
-Role.getAll = (title, result) => {
-  let query = "SELECT id, name FROM role;";
+Nationality.getAll = (title, result) => {
+  let query = "SELECT id, name, country, nationality FROM nationality;";
 
   if (title) {
     query += ` WHERE title LIKE '%${title}%'`;
@@ -49,15 +51,15 @@ Role.getAll = (title, result) => {
       result(null, err);
       return;
     }
-    const results = res.map((role) => toWeb(role));
+    const results = res.map((nationality) => toWeb(nationality));
     result(null, results);
   });
 };
 
-Role.updateById = (id, role, result) => {
+Nationality.updateById = (id, nationality, result) => {
   sql.query(
-    "UPDATE role SET name = ? WHERE id = ?",
-    [role.name, id],
+    "UPDATE nationality SET code = ?, country = ?, nationality = ? WHERE id = ?",
+    [nationality.code, nationality.country, nationality.nationality, id],
     (err, res) => {
       if (err) {
         log.error("error: ", err);
@@ -70,14 +72,14 @@ Role.updateById = (id, role, result) => {
         return;
       }
 
-      result(null, { id: id, ...toWeb(role) });
+      result(null, { id: id, ...toWeb(nationality) });
     }
   );
 };
 
-Role.remove = (id, result) => {
+Nationality.remove = (id, result) => {
   sql.query(
-    "SELECT COUNT(1) records FROM user WHERE role = ?",
+    "SELECT COUNT(1) records FROM trainee WHERE nationality = ?",
     id,
     (err, res) => {
       if (err) {
@@ -91,7 +93,7 @@ Role.remove = (id, result) => {
         return;
       }
 
-      sql.query("DELETE FROM role WHERE id = ?", id, (err, res) => {
+      sql.query("DELETE FROM nationality WHERE id = ?", id, (err, res) => {
         if (err) {
           log.error("error: ", err);
           result(null, err);
@@ -109,8 +111,8 @@ Role.remove = (id, result) => {
   );
 };
 
-Role.removeAll = (result) => {
-  sql.query("DELETE FROM role", (err, res) => {
+Nationality.removeAll = (result) => {
+  sql.query("DELETE FROM nationality", (err, res) => {
     if (err) {
       log.error("error: ", err);
       result(null, err);
@@ -121,4 +123,4 @@ Role.removeAll = (result) => {
   });
 };
 
-module.exports = Role;
+module.exports = Nationality;

@@ -1,126 +1,126 @@
-const sql = require("./db.js");
-const { toWeb } = require("../helpers/utils.js");
-const { log } = require("../helpers/log.js");
+const sql = require('./db.js')
+const { toWeb } = require('../helpers/utils.js')
+const { log } = require('../helpers/log.js')
 // constructor
 const Nationality = function (nationality) {
-  this.code = nationality.code;
-  this.country = nationality.country;
-  this.nationality = nationality.nationality;
-};
+  this.code = nationality.code
+  this.country = nationality.country
+  this.nationality = nationality.nationality
+}
 
 Nationality.create = (nationality, result) => {
-  const newNationality = { ...nationality };
-  sql.query("INSERT INTO nationality SET ?", newNationality, (err, res) => {
+  const newNationality = { ...nationality }
+  sql.query('INSERT INTO nationality SET ?', newNationality, (err, res) => {
     if (err) {
-      log.error("error: ", err);
-      result(err, null);
-      return;
+      log.error('error: ', err)
+      result(err, null)
+      return
     }
 
-    result(null, { id: res.insertId, ...newNationality });
-  });
-};
+    result(null, { id: res.insertId, ...newNationality })
+  })
+}
 
 Nationality.findById = (id, result) => {
   sql.query(`SELECT * FROM nationality WHERE id = ${id}`, (err, res) => {
     if (err) {
-      log.error("error: ", err);
-      result(err, null);
-      return;
+      log.error('error: ', err)
+      result(err, null)
+      return
     }
 
     if (res.length) {
-      result(null, toWeb(res[0]));
-      return;
+      result(null, toWeb(res[0]))
+      return
     }
 
-    result({ kind: "not_found" }, null);
-  });
-};
+    result({ kind: 'not_found' }, null)
+  })
+}
 
 Nationality.getAll = (title, result) => {
-  let query = "SELECT id, name, country, nationality FROM nationality;";
+  let query = 'SELECT id, name, country, nationality FROM nationality;'
 
   if (title) {
-    query += ` WHERE title LIKE '%${title}%'`;
+    query += ` WHERE title LIKE '%${title}%'`
   }
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error("error: ", err);
-      result(null, err);
-      return;
+      log.error('error: ', err)
+      result(null, err)
+      return
     }
-    const results = res.map((nationality) => toWeb(nationality));
-    result(null, results);
-  });
-};
+    const results = res.map((nationality) => toWeb(nationality))
+    result(null, results)
+  })
+}
 
 Nationality.updateById = (id, nationality, result) => {
   sql.query(
-    "UPDATE nationality SET code = ?, country = ?, nationality = ? WHERE id = ?",
+    'UPDATE nationality SET code = ?, country = ?, nationality = ? WHERE id = ?',
     [nationality.code, nationality.country, nationality.nationality, id],
     (err, res) => {
       if (err) {
-        log.error("error: ", err);
-        result(null, err);
-        return;
+        log.error('error: ', err)
+        result(null, err)
+        return
       }
 
-      if (res.affectedRows == 0) {
-        result({ kind: "not_found" }, null);
-        return;
+      if (res.affectedRows === 0) {
+        result({ kind: 'not_found' }, null)
+        return
       }
 
-      result(null, { id: id, ...toWeb(nationality) });
+      result(null, { id, ...toWeb(nationality) })
     }
-  );
-};
+  )
+}
 
 Nationality.remove = (id, result) => {
   sql.query(
-    "SELECT COUNT(1) records FROM trainee WHERE nationality = ?",
+    'SELECT COUNT(1) records FROM trainee WHERE nationality = ?',
     id,
     (err, res) => {
       if (err) {
-        log.error("error: ", err);
-        result(null, err);
-        return;
+        log.error('error: ', err)
+        result(null, err)
+        return
       }
 
       if (res[0].records) {
-        result({ kind: "cannot_delete" }, null);
-        return;
+        result({ kind: 'cannot_delete' }, null)
+        return
       }
 
-      sql.query("DELETE FROM nationality WHERE id = ?", id, (err, res) => {
+      sql.query('DELETE FROM nationality WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error("error: ", err);
-          result(null, err);
-          return;
+          log.error('error: ', err)
+          result(null, err)
+          return
         }
 
-        if (res.affectedRows == 0) {
-          result({ kind: "not_found" }, null);
-          return;
+        if (res.affectedRows === 0) {
+          result({ kind: 'not_found' }, null)
+          return
         }
 
-        result(null, id);
-      });
+        result(null, id)
+      })
     }
-  );
-};
+  )
+}
 
 Nationality.removeAll = (result) => {
-  sql.query("DELETE FROM nationality", (err, res) => {
+  sql.query('DELETE FROM nationality', (err, res) => {
     if (err) {
-      log.error("error: ", err);
-      result(null, err);
-      return;
+      log.error('error: ', err)
+      result(null, err)
+      return
     }
 
-    result(null, res.affectedRows);
-  });
-};
+    result(null, res.affectedRows)
+  })
+}
 
-module.exports = Nationality;
+module.exports = Nationality

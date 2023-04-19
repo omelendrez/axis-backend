@@ -2,26 +2,26 @@ const auth = require('../middleware/auth')
 
 const secure = auth.validateToken
 
-module.exports = app => {
-  const user = require("../controllers/user.controller.js")
+module.exports = (app) => {
+  const user = require('../controllers/user.controller.js')
 
-  const router = require("express").Router()
+  const router = require('express').Router()
 
-  router.post("/", secure, user.create)
+  router.post('/', secure, user.create)
 
-  router.get("/", secure, user.findAll)
+  router.get('/', secure, user.findAll)
 
-  router.get("/:id", secure, user.findOne)
+  router.get('/:id', secure, user.findOne)
 
-  router.put("/:id", secure, user.update)
+  router.put('/:id', secure, user.update)
 
-  router.put("/:id/chgpwd", secure, user.chgPwd)
+  router.put('/:id/chgpwd', secure, user.chgPwd)
 
-  router.delete("/:id", secure, user.delete)
+  router.delete('/:id', secure, user.delete)
 
-  router.delete("/", secure, user.deleteAll)
+  router.delete('/', secure, user.deleteAll)
 
-  router.post("/login", user.login)
+  router.post('/login', user.login)
 
   app.use('/api/user', router)
 }

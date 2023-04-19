@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "nodemon app/",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint ./app --ext .js",
+    "lint-fix": "eslint --fix ./app --ext .js"
   },
   "author": "Omar Melendrez",
   "license": "ISC",
@@ -23,6 +24,11 @@
     "mysql2": "^3.2.0"
   },
   "devDependencies": {
+    "eslint": "^8.38.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.7.0",
+    "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^2.0.22"
   }
 }

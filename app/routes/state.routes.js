@@ -1,23 +1,23 @@
-const auth = require("../middleware/auth");
+const auth = require('../middleware/auth')
 
-const secure = auth.validateToken;
+const secure = auth.validateToken
 
 module.exports = (app) => {
-  const state = require("../controllers/state.controller.js");
+  const state = require('../controllers/state.controller.js')
 
-  const router = require("express").Router();
+  const router = require('express').Router()
 
-  router.post("/", secure, state.create);
+  router.post('/', secure, state.create)
 
-  router.get("/", secure, state.findAll);
+  router.get('/', secure, state.findAll)
 
-  router.get("/:id", secure, state.findOne);
+  router.get('/:id', secure, state.findOne)
 
-  router.put("/:id", secure, state.update);
+  router.put('/:id', secure, state.update)
 
-  router.delete("/:id", secure, state.delete);
+  router.delete('/:id', secure, state.delete)
 
-  router.delete("/", secure, state.deleteAll);
+  router.delete('/', secure, state.deleteAll)
 
-  app.use("/api/state", router);
-};
+  app.use('/api/state', router)
+}

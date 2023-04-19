@@ -1,58 +1,58 @@
-const sql = require("./db.js")
-const { toWeb } = require('../helpers/utils.js')
-const { log } = require("../helpers/log.js")
+const sql = require("./db.js");
+const { toWeb } = require("../helpers/utils.js");
+const { log } = require("../helpers/log.js");
 // constructor
 const Role = function (role) {
-  this.name = role.name
-}
+  this.name = role.name;
+};
 
 Role.create = (role, result) => {
-  const newRole = { ...role, status: 1 }
+  const newRole = { ...role };
   sql.query("INSERT INTO role SET ?", newRole, (err, res) => {
     if (err) {
-      log.error("error: ", err)
-      result(err, null)
-      return
+      log.error("error: ", err);
+      result(err, null);
+      return;
     }
 
-    result(null, { id: res.insertId, ...newRole })
-  })
-}
+    result(null, { id: res.insertId, ...newRole });
+  });
+};
 
 Role.findById = (id, result) => {
   sql.query(`SELECT * FROM role WHERE id = ${id}`, (err, res) => {
     if (err) {
-      log.error("error: ", err)
-      result(err, null)
-      return
+      log.error("error: ", err);
+      result(err, null);
+      return;
     }
 
     if (res.length) {
-      result(null, toWeb(res[0]))
-      return
+      result(null, toWeb(res[0]));
+      return;
     }
 
-    result({ kind: "not_found" }, null)
-  })
-}
+    result({ kind: "not_found" }, null);
+  });
+};
 
 Role.getAll = (title, result) => {
-  let query = "SELECT id, name FROM role;"
+  let query = "SELECT id, name FROM role;";
 
   if (title) {
-    query += ` WHERE title LIKE '%${title}%'`
+    query += ` WHERE title LIKE '%${title}%'`;
   }
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error("error: ", err)
-      result(null, err)
-      return
+      log.error("error: ", err);
+      result(null, err);
+      return;
     }
-    const results = res.map((role) => toWeb(role))
-    result(null, results)
-  })
-}
+    const results = res.map((role) => toWeb(role));
+    result(null, results);
+  });
+};
 
 Role.updateById = (id, role, result) => {
   sql.query(
@@ -60,61 +60,61 @@ Role.updateById = (id, role, result) => {
     [role.name, id],
     (err, res) => {
       if (err) {
-        log.error("error: ", err)
-        result(null, err)
-        return
+        log.error("error: ", err);
+        result(null, err);
+        return;
       }
 
       if (res.affectedRows == 0) {
-        result({ kind: "not_found" }, null)
-        return
+        result({ kind: "not_found" }, null);
+        return;
       }
 
-      result(null, { id: id, ...toWeb(role) })
+      result(null, { id: id, ...toWeb(role) });
     }
-  )
-}
+  );
+};
 
 Role.remove = (id, result) => {
   sql.query("SELECT COUNT(1) user FROM user WHERE role = ?", id, (err, res) => {
     if (err) {
-      log.error("error: ", err)
-      result(null, err)
-      return
+      log.error("error: ", err);
+      result(null, err);
+      return;
     }
 
     if (res[0].records) {
-      result({ kind: "cannot_delete" }, null)
-      return
+      result({ kind: "cannot_delete" }, null);
+      return;
     }
 
     sql.query("DELETE FROM role WHERE id = ?", id, (err, res) => {
       if (err) {
-        log.error("error: ", err)
-        result(null, err)
-        return
+        log.error("error: ", err);
+        result(null, err);
+        return;
       }
 
       if (res.affectedRows == 0) {
-        result({ kind: "not_found" }, null)
-        return
+        result({ kind: "not_found" }, null);
+        return;
       }
 
-      result(null, id)
-    })
-  })
-}
+      result(null, id);
+    });
+  });
+};
 
-Role.removeAll = result => {
+Role.removeAll = (result) => {
   sql.query("DELETE FROM role", (err, res) => {
     if (err) {
-      log.error("error: ", err)
-      result(null, err)
-      return
+      log.error("error: ", err);
+      result(null, err);
+      return;
     }
 
-    result(null, res.affectedRows)
-  })
-}
+    result(null, res.affectedRows);
+  });
+};
 
-module.exports = Role
+module.exports = Role;

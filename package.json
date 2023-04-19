@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Axis API",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/omelendrez/axis-backend.git"
+  },
   "scripts": {
     "start": "nodemon app/",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -16,7 +16,7 @@ const Trainee = function (trainee) {
 };
 
 Trainee.create = (trainee, result) => {
-  const newTrainee = { ...trainee, status: 1 };
+  const newTrainee = { ...trainee };
   sql.query("INSERT INTO trainee SET ?", newTrainee, (err, res) => {
     if (err) {
       log.error("error: ", err);
@@ -102,7 +102,7 @@ Trainee.updateById = (id, trainee, result) => {
 
 Trainee.remove = (id, result) => {
   sql.query(
-    "SELECT COUNT(1) records FROM tracking WHERE trainee = ?",
+    "SELECT COUNT(1) records FROM training WHERE trainee = ?",
     id,
     (err, res) => {
       if (err) {

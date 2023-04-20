@@ -43,7 +43,7 @@ State.getAll = (search, result) => {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, name FROM state ${filter} ORDER BY name LIMIT 50;`
+  const query = `SELECT id, name FROM state ${filter} ORDER BY name;`
 
   sql.query(query, (err, res) => {
     if (err) {

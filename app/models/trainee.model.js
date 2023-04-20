@@ -16,7 +16,7 @@ const Trainee = function (trainee) {
 }
 
 Trainee.create = (trainee, result) => {
-  const newTrainee = { ...trainee }
+  const newTrainee = { ...trainee, status: 1 }
   sql.query('INSERT INTO trainee SET ?', newTrainee, (err, res) => {
     if (err) {
       log.error('error: ', err)

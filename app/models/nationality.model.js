@@ -38,12 +38,14 @@ Nationality.findById = (id, result) => {
   })
 }
 
-Nationality.getAll = (title, result) => {
-  let query = 'SELECT id, name, country, nationality FROM nationality;'
-
-  if (title) {
-    query += ` WHERE title LIKE '%${title}%'`
+Nationality.getAll = (search, result) => {
+  let filter = ''
+  const fields = ['code', 'country', 'nationality']
+  if (search) {
+    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
+
+  const query = `SELECT id, code, country, nationality FROM nationality ${filter} ORDER BY code LIMIT 50;`
 
   sql.query(query, (err, res) => {
     if (err) {

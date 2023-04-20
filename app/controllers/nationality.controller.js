@@ -24,9 +24,9 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  const title = req.query.title
+  const search = req.query.search
 
-  Nationality.getAll(title, (err, data) => {
+  Nationality.getAll(search, (err, data) => {
     if (err) {
       res.status(500).send({
         message:

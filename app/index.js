@@ -49,6 +49,7 @@ require('./routes/role.routes.js')(app)
 require('./routes/nationality.routes.js')(app)
 require('./routes/state.routes.js')(app)
 require('./routes/company.routes.js')(app)
+require('./routes/course.routes.js')(app)
 
 const PORT = process.env.PORT || 3000
 

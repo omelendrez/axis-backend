@@ -1,15 +1,15 @@
-const jwt = require('jsonwebtoken')
 const { log } = require('../helpers/log')
+const { verifyToken } = require('../secure')
 require('dotenv').config()
 
 module.exports = {
-  validateToken (req, res, next) {
+  async validateToken(req, res, next) {
     const authorizationHeaader = req.headers.authorization
     let result
     if (authorizationHeaader) {
       const token = req.headers.authorization.split(' ')[1]
       try {
-        result = jwt.verify(token, process.env.JWT_SECRET)
+        result = await verifyToken(token)
         req.decoded = result
         next()
       } catch (err) {

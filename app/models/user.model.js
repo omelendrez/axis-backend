@@ -1,8 +1,7 @@
 const sql = require('./db.js')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 const { toWeb } = require('../helpers/utils')
 const { log } = require('../helpers/log.js')
+const { createToken, comparePassword, passwordHash } = require('../secure')
 // constructor
 const User = function (user) {
   this.email = user.email
@@ -53,7 +52,7 @@ User.login = (params, result) => {
     }
 
     if (res.length) {
-      const ok = await bcrypt.compare(params.password, res[0].password)
+      const ok = await comparePassword(params.password, res[0].password)
 
       if (!ok) {
         log.error('error: user or password incorrect' + err)
@@ -62,14 +61,7 @@ User.login = (params, result) => {
       }
 
       const user = toWeb(res[0])
-      const token = jwt.sign(
-        {
-          data: user
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: '1d' },
-        { algorithm: 'HS256' }
-      )
+      const token = await createToken(user)
 
       result(null, { ...user, token })
       return
@@ -140,14 +132,14 @@ User.chgPwd = async (id, user, result) => {
       return
     }
 
-    const ok = await bcrypt.compare(user.prevPass, res[0].password)
+    const ok = await comparePassword(user.prevPass, res[0].password)
 
     if (!ok) {
       result({ kind: 'wrong_curr_password' }, null)
       return
     }
 
-    const password = await bcrypt.hash(user.password, 10)
+    const password = await passwordHash(user.password)
 
     sql.query(
       'UPDATE user SET password = ? WHERE id = ?',

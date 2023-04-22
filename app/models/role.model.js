@@ -36,12 +36,14 @@ Role.findById = (id, result) => {
   })
 }
 
-Role.getAll = (title, result) => {
-  let query = 'SELECT id, name FROM role;'
-
-  if (title) {
-    query += ` WHERE title LIKE '%${title}%'`
+Role.getAll = (search, result) => {
+  let filter = ''
+  const fields = ['name']
+  if (search) {
+    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
+
+  const query = `SELECT id, name FROM role ${filter} ORDER BY id;`
 
   sql.query(query, (err, res) => {
     if (err) {

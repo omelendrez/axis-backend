@@ -21,9 +21,16 @@ exports.create = (req, res) => {
 
   Course.create(course, (err, data) => {
     if (err) {
-      res.status(500).send({
-        message: err.message || 'Some error occurred while creating the Course.'
-      })
+      if (err.kind === 'already_exists') {
+        res.status(400).send({
+          message: `Course with same code or name already exists in database.`
+        })
+      } else {
+        res.status(500).send({
+          message:
+            err.message || 'Some error occurred while creating the Course.'
+        })
+      }
     } else res.send(data)
   })
 }
@@ -83,7 +90,7 @@ exports.delete = (req, res) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
-          res.status(404).send({
+          res.status(400).send({
             message: 'Course has transactions and cannot be deleted.'
           })
           break

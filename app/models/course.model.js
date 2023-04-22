@@ -17,15 +17,30 @@ const Course = function (course) {
 
 Course.create = (course, result) => {
   const newCourse = { ...course }
-  sql.query('INSERT INTO course SET ?', newCourse, (err, res) => {
-    if (err) {
-      log.error('error: ', err)
-      result(err, null)
-      return
-    }
+  sql.query(
+    `SELECT COUNT(1) records FROM course WHERE code='${course.code}' OR name='${course.name}'`,
+    (err, res) => {
+      if (err) {
+        log.error('error: ', err)
+        result(null, err)
+        return
+      }
 
-    result(null, { id: res.insertId, ...newCourse })
-  })
+      if (res[0].records) {
+        result({ kind: 'already_exists' }, null)
+        return
+      }
+      sql.query('INSERT INTO course SET ?', newCourse, (err, res) => {
+        if (err) {
+          log.error('error: ', err)
+          result(err, null)
+          return
+        }
+
+        result(null, { id: res.insertId, ...newCourse })
+      })
+    }
+  )
 }
 
 Course.findById = (id, result) => {
@@ -47,13 +62,13 @@ Course.findById = (id, result) => {
 
 Course.getAll = (search, result) => {
   let filter = ''
-  const fields = ['c.code', 'c.name']
+  const fields = ['c.code', 'c.name', 'ct.name', 'c.opito_reg_code']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
   const query = `SELECT c.id, c.code, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY code;`
-  console.log(query)
+
   sql.query(query, (err, res) => {
     if (err) {
       log.error('error: ', err)

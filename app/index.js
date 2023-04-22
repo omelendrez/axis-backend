@@ -31,7 +31,13 @@ app.use(express.json())
 
 app.use(express.urlencoded({ extended: true }))
 
-app.use(logger('dev'))
+app.use(
+  logger('dev', {
+    skip: function (req, res) {
+      return res.statusCode < 400
+    }
+  })
+)
 
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Axis.' })
@@ -42,6 +48,7 @@ require('./routes/trainee.routes.js')(app)
 require('./routes/role.routes.js')(app)
 require('./routes/nationality.routes.js')(app)
 require('./routes/state.routes.js')(app)
+require('./routes/company.routes.js')(app)
 
 const PORT = process.env.PORT || 3000
 

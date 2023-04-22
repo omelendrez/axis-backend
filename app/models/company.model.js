@@ -2,27 +2,26 @@ const sql = require('./db.js')
 const { toWeb } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const Nationality = function (nationality) {
-  this.code = nationality.code
-  this.country = nationality.country
-  this.nationality = nationality.nationality
+const Company = function (company) {
+  this.code = company.code
+  this.name = company.name
 }
 
-Nationality.create = (nationality, result) => {
-  const newNationality = { ...nationality }
-  sql.query('INSERT INTO nationality SET ?', newNationality, (err, res) => {
+Company.create = (company, result) => {
+  const newCompany = { ...company }
+  sql.query('INSERT INTO company SET ?', newCompany, (err, res) => {
     if (err) {
       log.error('error: ', err)
       result(err, null)
       return
     }
 
-    result(null, { id: res.insertId, ...newNationality })
+    result(null, { id: res.insertId, ...newCompany })
   })
 }
 
-Nationality.findById = (id, result) => {
-  sql.query(`SELECT * FROM nationality WHERE id = ${id}`, (err, res) => {
+Company.findById = (id, result) => {
+  sql.query(`SELECT * FROM company WHERE id = ${id}`, (err, res) => {
     if (err) {
       log.error('error: ', err)
       result(err, null)
@@ -38,14 +37,14 @@ Nationality.findById = (id, result) => {
   })
 }
 
-Nationality.getAll = (search, result) => {
+Company.getAll = (search, result) => {
   let filter = ''
-  const fields = ['code', 'country', 'nationality']
+  const fields = ['code', 'name']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, code, country, nationality FROM nationality ${filter} ORDER BY code;`
+  const query = `SELECT id, code, name FROM company ${filter} ORDER BY name;`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -53,15 +52,15 @@ Nationality.getAll = (search, result) => {
       result(null, err)
       return
     }
-    const results = res.map((nationality) => toWeb(nationality))
+    const results = res.map((company) => toWeb(company))
     result(null, results)
   })
 }
 
-Nationality.updateById = (id, nationality, result) => {
+Company.updateById = (id, company, result) => {
   sql.query(
-    'UPDATE nationality SET code = ?, country = ?, nationality = ? WHERE id = ?',
-    [nationality.code, nationality.country, nationality.nationality, id],
+    'UPDATE company SET code = ?, name = ? WHERE id = ?',
+    [company.code, company.name, id],
     (err, res) => {
       if (err) {
         log.error('error: ', err)
@@ -74,14 +73,14 @@ Nationality.updateById = (id, nationality, result) => {
         return
       }
 
-      result(null, { id, ...toWeb(nationality) })
+      result(null, { id, ...toWeb(company) })
     }
   )
 }
 
-Nationality.remove = (id, result) => {
+Company.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM trainee WHERE nationality = ?',
+    'SELECT COUNT(1) records FROM trainee WHERE company IN (SELECT code FROM company WHERE id = ?)',
     id,
     (err, res) => {
       if (err) {
@@ -95,7 +94,7 @@ Nationality.remove = (id, result) => {
         return
       }
 
-      sql.query('DELETE FROM nationality WHERE id = ?', id, (err, res) => {
+      sql.query('DELETE FROM company WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error('error: ', err)
           result(null, err)
@@ -113,8 +112,8 @@ Nationality.remove = (id, result) => {
   )
 }
 
-Nationality.removeAll = (result) => {
-  sql.query('DELETE FROM nationality', (err, res) => {
+Company.removeAll = (result) => {
+  sql.query('DELETE FROM company', (err, res) => {
     if (err) {
       log.error('error: ', err)
       result(null, err)
@@ -125,4 +124,4 @@ Nationality.removeAll = (result) => {
   })
 }
 
-module.exports = Nationality
+module.exports = Company

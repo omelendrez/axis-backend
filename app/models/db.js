@@ -1,13 +1,14 @@
 require('dotenv').config()
 const { log } = require('./../helpers/log')
 const mysql = require('mysql2')
+
 // Create a connection to the database
 const connection = mysql.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DB,
-  port: process.env.MYSQL_PORT,
+  host: process.env.RAILWAY_MYSQL_HOST,
+  user: process.env.RAILWAY_MYSQL_USER,
+  password: process.env.RAILWAY_MYSQL_PASSWORD,
+  database: process.env.RAILWAY_MYSQL_DB,
+  port: process.env.RAILWAY_MYSQL_PORT,
   waitForConnections: true,
   connectionLimit: 10,
   maxIdle: 10,

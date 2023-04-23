@@ -42,12 +42,12 @@ CertificateType.findById = (id, result) => {
 
 CertificateType.getAll = (search, result) => {
   let filter = ''
-  const fields = ['code', 'country', 'certificatetype']
+  const fields = ['name']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, code, country, certificatetype FROM certificate_type ${filter} ORDER BY code;`
+  const query = `SELECT id, name FROM certificate_type ${filter} ORDER BY id;`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -62,13 +62,8 @@ CertificateType.getAll = (search, result) => {
 
 CertificateType.updateById = (id, certificatetype, result) => {
   sql.query(
-    'UPDATE certificate_type SET code = ?, country = ?, certificatetype = ? WHERE id = ?',
-    [
-      certificatetype.code,
-      certificatetype.country,
-      certificatetype.certificatetype,
-      id
-    ],
+    'UPDATE certificate_type SET name = ? WHERE id = ?',
+    [certificatetype.name, id],
     (err, res) => {
       if (err) {
         log.error('error: ', err)

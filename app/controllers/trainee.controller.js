@@ -22,10 +22,16 @@ exports.create = (req, res) => {
 
   Trainee.create(trainee, (err, data) => {
     if (err) {
-      res.status(500).send({
-        message:
-          err.message || 'Some error occurred while creating the Trainee.'
-      })
+      if (err.kind === 'already_exists') {
+        res.status(400).send({
+          message: `Trainee with same names and birth date already exists in database.`
+        })
+      } else {
+        res.status(500).send({
+          message:
+            err.message || 'Some error occurred while creating the Trainee.'
+        })
+      }
     } else res.send(data)
   })
 }

@@ -12,17 +12,34 @@ const User = function (user) {
   this.status = user.status
 }
 
-User.create = (user, result) => {
-  const newUser = { ...user, status: 1 }
-  sql.query('INSERT INTO user SET ?', newUser, (err, res) => {
-    if (err) {
-      log.error('error: ', err)
-      result(err, null)
-      return
-    }
+User.create = async (user, result) => {
+  const newUser = { ...user, status: 1, password: await passwordHash('axis') }
 
-    result(null, { id: res.insertId, ...newUser })
-  })
+  sql.query(
+    `SELECT COUNT(1) records FROM user WHERE name='${user.name}'`,
+    (err, res) => {
+      if (err) {
+        log.error('error: ', err)
+        result(err, null)
+        return
+      }
+
+      if (res[0].records) {
+        result({ kind: 'already_exists' }, null)
+        return
+      }
+
+      sql.query('INSERT INTO user SET ?', newUser, (err, res) => {
+        if (err) {
+          log.error('error: ', err)
+          result(err, null)
+          return
+        }
+
+        result(null, { id: res.insertId, ...newUser })
+      })
+    }
+  )
 }
 
 User.findById = (id, result) => {

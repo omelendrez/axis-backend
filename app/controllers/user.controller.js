@@ -17,9 +17,15 @@ exports.create = (req, res) => {
 
   User.create(user, (err, data) => {
     if (err) {
-      res.status(500).send({
-        message: err.message || 'Some error occurred while creating the User.'
-      })
+      if (err.kind === 'already_exists') {
+        res.status(400).send({
+          message: `User with same name already exists in database.`
+        })
+      } else {
+        res.status(500).send({
+          message: err.message || 'Some error occurred while creating the User.'
+        })
+      }
     } else res.send(data)
   })
 }

@@ -17,15 +17,33 @@ const Trainee = function (trainee) {
 
 Trainee.create = (trainee, result) => {
   const newTrainee = { ...trainee, status: 1 }
-  sql.query('INSERT INTO trainee SET ?', newTrainee, (err, res) => {
-    if (err) {
-      log.error('error: ', err)
-      result(err, null)
-      return
-    }
 
-    result(null, { id: res.insertId, ...newTrainee })
-  })
+  sql.query(
+    `SELECT COUNT(1) records FROM trainee WHERE last_name = ? AND first_name = ? AND DATE_FORMAT(birth_date, '%Y-%m-%d') = ?`,
+    [newTrainee.last_name, newTrainee.first_name, newTrainee.birth_date],
+    (err, res) => {
+      if (err) {
+        log.error('error: ', err)
+        result(err, null)
+        return
+      }
+
+      if (res[0].records) {
+        result({ kind: 'already_exists' }, null)
+        return
+      }
+
+      sql.query('INSERT INTO trainee SET ?', newTrainee, (err, res) => {
+        if (err) {
+          log.error('error: ', err)
+          result(err, null)
+          return
+        }
+
+        result(null, { id: res.insertId, ...newTrainee })
+      })
+    }
+  )
 }
 
 Trainee.findById = (id, result) => {

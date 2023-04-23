@@ -82,7 +82,7 @@ Course.getAll = (search, result) => {
 
 Course.updateById = (id, course, result) => {
   sql.query(
-    'UPDATE course SET code = ?, name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, cert_id_card = ?, opito_reg_code = ? WHERE id = ?',
+    'UPDATE course SET code = ?, name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, cert_id_card = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
     [
       course.code,
       course.name,
@@ -92,6 +92,7 @@ Course.updateById = (id, course, result) => {
       course.validity,
       course.cert_type,
       course.cert_id_card,
+      course.id_card,
       course.opito_reg_code,
       id
     ],

@@ -9,6 +9,7 @@ const app = express()
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:4173',
+  'http://192.168.0.139:5173',
   'https://axis-tolmann.vercel.app'
 ]
 

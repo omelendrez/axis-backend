@@ -43,7 +43,7 @@ Role.getAll = (search, result) => {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, name FROM role ${filter} ORDER BY id;`
+  const query = `SELECT id, name FROM role ${filter} ORDER BY id LIMIT 25;`
 
   sql.query(query, (err, res) => {
     if (err) {

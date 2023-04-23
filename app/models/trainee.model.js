@@ -74,7 +74,7 @@ Trainee.getAll = (search, result) => {
       ' , '
     )}) LIKE '%${search}%' AND t.status=1`
   }
-  const query = `SELECT t.id, t.type, t.badge, CONCAT(t.last_name,', ', t.first_name) full_name, t.sex, s.name state_name,  n.nationality nationality_name, DATE_FORMAT(t.birth_date, '%d-%m-%Y') birth_date, c.name company_name, CASE WHEN t.status=1 THEN 'Active' WHEN t.status=0 THEN 'Inactive' END status_name FROM trainee t INNER JOIN state s ON t.state=s.id INNER JOIN nationality n ON t.nationality=n.id INNER JOIN company c ON t.company=c.code ${filter} ORDER BY badge DESC LIMIT 50;`
+  const query = `SELECT t.id, t.type, t.badge, CONCAT(t.last_name,', ', t.first_name) full_name, t.sex, s.name state_name,  n.nationality nationality_name, DATE_FORMAT(t.birth_date, '%d-%m-%Y') birth_date, c.name company_name, CASE WHEN t.status=1 THEN 'Active' WHEN t.status=0 THEN 'Inactive' END status_name FROM trainee t INNER JOIN state s ON t.state=s.id INNER JOIN nationality n ON t.nationality=n.id INNER JOIN company c ON t.company=c.code ${filter} ORDER BY badge DESC LIMIT 25;`
 
   sql.query(query, (err, res) => {
     if (err) {

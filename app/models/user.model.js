@@ -97,7 +97,7 @@ User.getAll = (search, result) => {
     )}) LIKE '%${search}%' AND u.status=1`
   }
 
-  const query = `SELECT u.id, u.name, u.email, full_name, email, r.name role_name, CASE WHEN status=1 THEN 'Active' WHEN u.status=0 THEN 'Inactive' END status_name  FROM user u INNER JOIN role r ON u.role = r.id ${filter} ORDER BY id LIMIT 50;`
+  const query = `SELECT u.id, u.name, u.email, full_name, email, r.name role_name, CASE WHEN status=1 THEN 'Active' WHEN u.status=0 THEN 'Inactive' END status_name  FROM user u INNER JOIN role r ON u.role = r.id ${filter} ORDER BY id LIMIT 25;`
 
   sql.query(query, (err, res) => {
     if (err) {

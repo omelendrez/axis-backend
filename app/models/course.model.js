@@ -67,7 +67,7 @@ Course.getAll = (search, result) => {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT c.id, c.code, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY code;`
+  const query = `SELECT c.id, c.code, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY code LIMIT 25;`
 
   sql.query(query, (err, res) => {
     if (err) {

@@ -50,7 +50,7 @@ Trainee.findById = (id, result) => {
 
 Trainee.getAll = (search, result) => {
   let filter = ''
-  const fields = ['t.badge', 't.last_name', 't.first_name']
+  const fields = ['t.badge', 't.last_name', 't.first_name', 's.name']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(
       ' , '

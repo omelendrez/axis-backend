@@ -19,5 +19,5 @@ module.exports = (app) => {
 
   router.delete('/', secure, certificateType.deleteAll)
 
-  app.use('/api/certificateType', router)
+  app.use('/api/certificate-type', router)
 }

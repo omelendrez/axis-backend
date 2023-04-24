@@ -24,7 +24,8 @@ exports.create = (req, res) => {
     if (err) {
       if (err.kind === 'already_exists') {
         res.status(400).send({
-          message: `Trainee with same names and birth date already exists in database.`
+          message:
+            'Trainee with same names and birth date already exists in database.'
         })
       } else {
         res.status(500).send({
@@ -44,7 +45,9 @@ exports.findAll = (req, res) => {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Trainees.'
       })
-    } else res.send(data)
+    } else {
+      res.send(data)
+    }
   })
 }
 

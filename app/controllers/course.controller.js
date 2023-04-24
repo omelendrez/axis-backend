@@ -23,7 +23,7 @@ exports.create = (req, res) => {
     if (err) {
       if (err.kind === 'already_exists') {
         res.status(400).send({
-          message: `Course with same code or name already exists in database.`
+          message: 'Course with same code or name already exists in database.'
         })
       } else {
         res.status(500).send({

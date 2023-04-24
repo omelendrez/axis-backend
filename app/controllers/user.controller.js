@@ -19,7 +19,7 @@ exports.create = (req, res) => {
     if (err) {
       if (err.kind === 'already_exists') {
         res.status(400).send({
-          message: `User with same name already exists in database.`
+          message: 'User with same name already exists in database.'
         })
       } else {
         res.status(500).send({
@@ -51,7 +51,7 @@ exports.findOne = (req, res) => {
         })
       } else {
         res.status(500).send({
-          message: 'Error retrieving User with id ' + req.params.id
+          message: `Error retrieving User with id ${req.params.id}`
         })
       }
     } else res.send(data)
@@ -73,7 +73,7 @@ exports.update = (req, res) => {
         })
       } else {
         res.status(500).send({
-          message: 'Error updating User with id ' + req.params.id
+          message: `Error updating User with id ${req.params.id}`
         })
       }
     } else res.send(data)
@@ -101,7 +101,7 @@ exports.chgPwd = (req, res) => {
           break
         default:
           res.status(500).send({
-            message: 'Error updating User with id ' + req.params.id
+            message: `Error updating User with id ${req.params.id}`
           })
       }
     } else res.send({ message: 'Password changed successfuly.' })

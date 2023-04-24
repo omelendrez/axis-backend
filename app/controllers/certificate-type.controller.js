@@ -20,7 +20,9 @@ exports.create = (req, res) => {
           err.message ||
           'Some error occurred while creating the Certificate Type.'
       })
-    } else res.send(data)
+    } else {
+      res.send(data)
+    }
   })
 }
 
@@ -34,7 +36,9 @@ exports.findAll = (req, res) => {
           err.message ||
           'Some error occurred while retrieving Certificate Types.'
       })
-    } else res.send(data)
+    } else {
+      res.send(data)
+    }
   })
 }
 
@@ -50,7 +54,9 @@ exports.findOne = (req, res) => {
           message: 'Error retrieving Certificate Type with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.send(data)
+    }
   })
 }
 
@@ -75,7 +81,9 @@ exports.update = (req, res) => {
             message: 'Error updating Certificate Type with id ' + req.params.id
           })
         }
-      } else res.send(data)
+      } else {
+        res.send(data)
+      }
     }
   )
 }
@@ -100,7 +108,9 @@ exports.delete = (req, res) => {
               'Could not delete Certificate Type with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Certificate Type was deleted successfully!' })
+    } else {
+      res.send({ message: 'Certificate Type was deleted successfully!' })
+    }
   })
 }
 
@@ -112,7 +122,8 @@ exports.deleteAll = (req, res) => {
           err.message ||
           'Some error occurred while removing all Certificate Types.'
       })
-    } else
+    } else {
       res.send({ message: 'All Certificate Types were deleted successfully!' })
+    }
   })
 }

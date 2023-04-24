@@ -38,9 +38,9 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  const search = req.query.search
+  const pagination = req.query
 
-  Trainee.getAll(search, (err, data) => {
+  Trainee.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Trainees.'

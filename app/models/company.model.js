@@ -44,7 +44,7 @@ Company.getAll = (search, result) => {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, code, name FROM company ${filter} ORDER BY name LIMIT 25;`
+  const query = `SELECT id, code, name FROM company ${filter} ORDER BY name;`
 
   sql.query(query, (err, res) => {
     if (err) {

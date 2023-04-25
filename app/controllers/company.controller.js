@@ -8,7 +8,6 @@ exports.create = (req, res) => {
   }
 
   const company = new Company({
-    code: req.body.code,
     name: req.body.name
   })
 
@@ -23,9 +22,9 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  const search = req.query.search
+  const pagination = req.query
 
-  Company.getAll(search, (err, data) => {
+  Company.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Companys.'
@@ -73,7 +72,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  Company.remove(req.params.id, (err, data) => {
+  Company.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
@@ -96,7 +95,7 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-  Company.removeAll((err, data) => {
+  Company.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:

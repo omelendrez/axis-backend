@@ -81,7 +81,7 @@ exports.update = (req, res) => {
 }
 
 exports.chgPwd = (req, res) => {
-  User.chgPwd(req.params.id, req.body, (err, data) => {
+  User.chgPwd(req.params.id, req.body, (err) => {
     if (err) {
       switch (err.kind) {
         case 'same_password':
@@ -109,7 +109,7 @@ exports.chgPwd = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  User.remove(req.params.id, (err, data) => {
+  User.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
@@ -132,7 +132,7 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-  User.removeAll((err, data) => {
+  User.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while removing all Users.'

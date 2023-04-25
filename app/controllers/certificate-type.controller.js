@@ -27,9 +27,9 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  const search = req.query.search
+  const pagination = req.query
 
-  CertificateType.getAll(search, (err, data) => {
+  CertificateType.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message:
@@ -89,7 +89,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  CertificateType.remove(req.params.id, (err, data) => {
+  CertificateType.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
@@ -115,7 +115,7 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-  CertificateType.removeAll((err, data) => {
+  CertificateType.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:

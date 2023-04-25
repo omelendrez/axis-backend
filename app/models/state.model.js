@@ -7,15 +7,14 @@ const State = function (state) {
 }
 
 State.create = (state, result) => {
-  const newState = { ...state }
-  sql.query('INSERT INTO state SET ?', newState, (err, res) => {
+  sql.query('INSERT INTO state SET ?', state, (err, res) => {
     if (err) {
       log.error('error: ', err)
       result(err, null)
       return
     }
 
-    result(null, { id: res.insertId, ...newState })
+    result(null, { id: res.insertId, ...state })
   })
 }
 
@@ -36,14 +35,20 @@ State.findById = (id, result) => {
   })
 }
 
-State.getAll = (search, result) => {
+State.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
   const fields = ['name']
   if (search) {
-    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
+    filter = `WHERE CONCAT(${fields.join(
+      ', '
+    )}) LIKE '%${search}%' AND t.status=1`
+  } else {
+    filter = 'WHERE t.status=1'
   }
+  const queryData = `SELECT id, name FROM state ${filter} ORDER BY id LIMIT ${limit} OFFSET ${offset};`
+  const queryCount = `SELECT COUNT(1) records FROM state ${filter};`
 
-  const query = `SELECT id, name FROM state ${filter} ORDER BY name;`
+  const query = `${queryData}${queryCount}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -51,8 +56,13 @@ State.getAll = (search, result) => {
       result(null, err)
       return
     }
-    const results = res.map((state) => toWeb(state))
-    result(null, results)
+
+    const records = res[0]
+    const count = res[1][0].records
+
+    const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
   })
 }
 

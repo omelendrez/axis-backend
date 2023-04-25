@@ -38,14 +38,17 @@ Nationality.findById = (id, result) => {
   })
 }
 
-Nationality.getAll = (search, result) => {
+Nationality.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
   const fields = ['code', 'country', 'nationality']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, code, country, nationality FROM nationality ${filter} ORDER BY code;`
+  const queryData = `SELECT id, code, country, nationality FROM nationality LIMIT ${limit} OFFSET ${offset};`
+  const queryCount = `SELECT COUNT(1) records FROM nationality ${filter};`
+
+  const query = `${queryData}${queryCount}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -53,8 +56,13 @@ Nationality.getAll = (search, result) => {
       result(null, err)
       return
     }
-    const results = res.map((nationality) => toWeb(nationality))
-    result(null, results)
+
+    const records = res[0]
+    const count = res[1][0].records
+
+    const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
   })
 }
 

@@ -10,8 +10,8 @@
   "scripts": {
     "start": "nodemon app/",
     "lint": "eslint ./app --ext .js",
-    "update": "rm -rf node_modules && git pull && npm ci",
-    "lint-fix": "eslint --fix ./app --ext .js"
+    "lint:fix": "eslint --fix ./app --ext .js",
+    "update": "rm -rf node_modules && git pull && npm ci"
   },
   "author": "Omar Melendrez",
   "license": "ISC",

@@ -40,14 +40,17 @@ CertificateType.findById = (id, result) => {
   })
 }
 
-CertificateType.getAll = (search, result) => {
+CertificateType.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
   const fields = ['name']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, name FROM certificate_type ${filter} ORDER BY id LIMIT 25;`
+  const queryData = `SELECT id, name FROM certificate_type ${filter} ORDER BY id LIMIT ${limit} OFFSET ${offset};`
+  const queryCount = `SELECT COUNT(1) records FROM certificate_type ${filter};`
+
+  const query = `${queryData}${queryCount}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -55,8 +58,13 @@ CertificateType.getAll = (search, result) => {
       result(null, err)
       return
     }
-    const results = res.map((certificatetype) => toWeb(certificatetype))
-    result(null, results)
+
+    const records = res[0]
+    const count = res[1][0].records
+
+    const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
   })
 }
 

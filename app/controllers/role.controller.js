@@ -21,9 +21,9 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  const search = req.query.search
+  const pagination = req.query
 
-  Role.getAll(search, (err, data) => {
+  Role.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Roles.'
@@ -71,7 +71,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  Role.remove(req.params.id, (err, data) => {
+  Role.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
@@ -94,7 +94,7 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-  Role.removeAll((err, data) => {
+  Role.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while removing all Roles.'

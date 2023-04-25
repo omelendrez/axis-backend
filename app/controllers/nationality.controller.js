@@ -24,9 +24,9 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  const search = req.query.search
+  const pagination = req.query
 
-  Nationality.getAll(search, (err, data) => {
+  Nationality.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message:
@@ -79,7 +79,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  Nationality.remove(req.params.id, (err, data) => {
+  Nationality.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
@@ -102,7 +102,7 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-  Nationality.removeAll((err, data) => {
+  Nationality.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:

@@ -19,7 +19,7 @@ Trainee.create = (trainee, result) => {
   const newTrainee = { ...trainee, status: 1 }
 
   sql.query(
-    "SELECT COUNT(1) records FROM trainee WHERE last_name = ? AND first_name = ? AND DATE_FORMAT(birth_date, '%Y-%m-%d') = ?",
+    'SELECT COUNT(1) records FROM trainee WHERE last_name = ? AND first_name = ? AND DATE_FORMAT(birth_date, `%Y-%m-%d`) = ?',
     [newTrainee.last_name, newTrainee.first_name, newTrainee.birth_date],
     (err, res) => {
       if (err) {
@@ -70,7 +70,8 @@ Trainee.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
   const fields = [
     't.badge',
-    "CONCAT(t.last_name,', ',t.first_name)",
+    'CONCAT(t.last_name,',
+    ',t.first_name)',
     's.name',
     'n.nationality',
     'c.name'
@@ -97,7 +98,7 @@ Trainee.getAll = ({ search, limit, offset }, result) => {
     const records = res[0]
     const count = res[1][0].records
 
-    const rows = records.map((trainee) => toWeb(trainee))
+    const rows = records.map((data) => toWeb(data))
 
     result(null, { rows, count })
   })

@@ -37,14 +37,17 @@ Company.findById = (id, result) => {
   })
 }
 
-Company.getAll = (search, result) => {
+Company.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
-  const fields = ['code', 'name']
+  const fields = ['name']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, code, name FROM company ${filter} ORDER BY name;`
+  const queryData = `SELECT id, name FROM company ${filter} ORDER BY name LIMIT ${limit} OFFSET ${offset};`
+  const queryCount = `SELECT COUNT(1) records FROM company ${filter};`
+
+  const query = `${queryData}${queryCount}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -52,8 +55,13 @@ Company.getAll = (search, result) => {
       result(null, err)
       return
     }
-    const results = res.map((company) => toWeb(company))
-    result(null, results)
+
+    const records = res[0]
+    const count = res[1][0].records
+
+    const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
   })
 }
 

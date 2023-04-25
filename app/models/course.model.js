@@ -3,7 +3,6 @@ const { toWeb } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Course = function (course) {
-  this.code = course.code
   this.name = course.name
   this.front_id = course.front_id
   this.back_id = course.back_id
@@ -18,7 +17,7 @@ const Course = function (course) {
 Course.create = (course, result) => {
   const newCourse = { ...course }
   sql.query(
-    `SELECT COUNT(1) records FROM course WHERE code='${course.code}' OR name='${course.name}'`,
+    `SELECT COUNT(1) records FROM course WHERE name='${course.name}'`,
     (err, res) => {
       if (err) {
         log.error('error: ', err)
@@ -60,14 +59,17 @@ Course.findById = (id, result) => {
   })
 }
 
-Course.getAll = (search, result) => {
+Course.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
-  const fields = ['c.code', 'c.name', 'ct.name', 'c.opito_reg_code']
+  const fields = ['c.name', 'ct.name', 'c.opito_reg_code']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT c.id, c.code, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY code LIMIT 25;`
+  const queryData = `SELECT c.id, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY id LIMIT ${limit} OFFSET ${offset};`
+  const queryCount = `SELECT COUNT(1) records FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter};`
+
+  const query = `${queryData}${queryCount}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -75,16 +77,20 @@ Course.getAll = (search, result) => {
       result(null, err)
       return
     }
-    const results = res.map((course) => toWeb(course))
-    result(null, results)
+
+    const records = res[0]
+    const count = res[1][0].records
+
+    const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
   })
 }
 
 Course.updateById = (id, course, result) => {
   sql.query(
-    'UPDATE course SET code = ?, name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, cert_id_card = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
+    'UPDATE course SET name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, cert_id_card = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
     [
-      course.code,
       course.name,
       course.front_id,
       course.back_id,
@@ -115,7 +121,7 @@ Course.updateById = (id, course, result) => {
 
 Course.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM training WHERE course IN (SELECT code FROM course WHERE id = ?);',
+    'SELECT COUNT(1) records FROM training WHERE course = ?;',
     id,
     (err, res) => {
       if (err) {

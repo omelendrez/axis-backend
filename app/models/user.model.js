@@ -99,7 +99,7 @@ User.getAll = ({ search, limit, offset }, result) => {
     filter = ' WHERE u.status=1'
   }
 
-  const queryData = `SELECT u.id, u.name, u.email, full_name, email, r.name role_name, CASE WHEN status=1 THEN 'Active' WHEN u.status=0 THEN 'Inactive' END status_name  FROM user u INNER JOIN role r ON u.role = r.id ${filter} ORDER BY u.id LIMIT ${limit} OFFSET ${offset};`
+  const queryData = `SELECT u.id, u.name, u.email, full_name, email, r.name role_name, CASE WHEN status=1 THEN 'Active' WHEN u.status=0 THEN 'Inactive' END status_name FROM user u INNER JOIN role r ON u.role = r.id ${filter} ORDER BY u.id LIMIT ${limit} OFFSET ${offset};`
   const queryCount = `SELECT COUNT(1) records FROM user u INNER JOIN role r ON u.role = r.id ${filter};`
 
   const query = `${queryData}${queryCount}`
@@ -114,7 +114,7 @@ User.getAll = ({ search, limit, offset }, result) => {
     const records = res[0]
     const count = res[1][0].records
 
-    const rows = records.map((trainee) => toWeb(trainee))
+    const rows = records.map((data) => toWeb(data))
 
     result(null, { rows, count })
   })

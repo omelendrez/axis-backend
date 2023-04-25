@@ -36,14 +36,17 @@ Role.findById = (id, result) => {
   })
 }
 
-Role.getAll = (search, result) => {
+Role.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
   const fields = ['name']
   if (search) {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const query = `SELECT id, name FROM role ${filter} ORDER BY id LIMIT 25;`
+  const queryData = `SELECT id, name FROM role ${filter} ORDER BY id LIMIT ${limit} OFFSET ${offset};`
+  const queryCount = `SELECT COUNT(1) records FROM role ${filter};`
+
+  const query = `${queryData}${queryCount}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -51,8 +54,13 @@ Role.getAll = (search, result) => {
       result(null, err)
       return
     }
-    const results = res.map((role) => toWeb(role))
-    result(null, results)
+
+    const records = res[0]
+    const count = res[1][0].records
+
+    const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
   })
 }
 

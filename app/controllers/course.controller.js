@@ -8,7 +8,6 @@ exports.create = (req, res) => {
   }
 
   const course = new Course({
-    code: req.body.code,
     name: req.body.name,
     front_id: req.body.front_id,
     back_id: req.body.back_id,
@@ -23,7 +22,7 @@ exports.create = (req, res) => {
     if (err) {
       if (err.kind === 'already_exists') {
         res.status(400).send({
-          message: 'Course with same code or name already exists in database.'
+          message: 'Course with same name already exists in database.'
         })
       } else {
         res.status(500).send({
@@ -31,19 +30,23 @@ exports.create = (req, res) => {
             err.message || 'Some error occurred while creating the Course.'
         })
       }
-    } else res.send(data)
+    } else {
+      res.send(data)
+    }
   })
 }
 
 exports.findAll = (req, res) => {
-  const search = req.query.search
+  const pagination = req.query
 
-  Course.getAll(search, (err, data) => {
+  Course.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Courses.'
       })
-    } else res.send(data)
+    } else {
+      res.send(data)
+    }
   })
 }
 
@@ -86,7 +89,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  Course.remove(req.params.id, (err, data) => {
+  Course.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
@@ -109,7 +112,7 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-  Course.removeAll((err, data) => {
+  Course.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:

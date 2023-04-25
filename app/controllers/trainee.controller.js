@@ -90,7 +90,7 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  Trainee.remove(req.params.id, (err, data) => {
+  Trainee.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
@@ -113,7 +113,7 @@ exports.delete = (req, res) => {
 }
 
 exports.deleteAll = (req, res) => {
-  Trainee.removeAll((err, data) => {
+  Trainee.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:

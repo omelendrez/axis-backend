@@ -1,5 +1,5 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const CertificateType = function (certificatetype) {
@@ -40,25 +40,12 @@ CertificateType.findById = (id, result) => {
   })
 }
 
-CertificateType.getAll = ({ search, limit, offset }, result) => {
-  let filter = ''
+CertificateType.getAll = (pagination, result) => {
   const fields = ['name']
-  if (search) {
-    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
-  }
 
-  let queryData = `SELECT id, name FROM certificate_type ${filter} ORDER BY id`
+  const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  if (limit !== 'undefined') {
-    queryData += `LIMIT ${limit} `
-  }
-
-  if (offset !== 'undefined') {
-    queryData += `OFFSET ${offset} `
-  }
-
-  queryData += ';'
-
+  const queryData = `SELECT id, name FROM certificate_type ${filter} ORDER BY id ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM certificate_type ${filter};`
 
   const query = `${queryData}${queryCount}`

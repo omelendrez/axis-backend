@@ -1,5 +1,5 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Role = function (role) {
@@ -36,28 +36,13 @@ Role.findById = (id, result) => {
   })
 }
 
-Role.getAll = ({ search, limit, offset }, result) => {
-  let filter = ''
+Role.getAll = (pagination, result) => {
   const fields = ['name']
-  if (search) {
-    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
-  }
 
-  let queryData = `SELECT id, name FROM role ${filter} ORDER BY id `
+  const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  if (limit !== 'undefined') {
-    queryData += `LIMIT ${limit} `
-  }
-
-  if (offset !== 'undefined') {
-    queryData += `OFFSET ${offset} `
-  }
-
-  queryData += ';'
-
+  const queryData = `SELECT id, name FROM role ${filter} ORDER BY id ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM role ${filter};`
-
-  console.log(queryData)
 
   const query = `${queryData}${queryCount}`
 

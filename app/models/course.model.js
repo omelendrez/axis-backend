@@ -1,5 +1,5 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Course = function (course) {
@@ -59,25 +59,12 @@ Course.findById = (id, result) => {
   })
 }
 
-Course.getAll = ({ search, limit, offset }, result) => {
-  let filter = ''
+Course.getAll = (pagination, result) => {
   const fields = ['c.name', 'ct.name', 'c.opito_reg_code']
-  if (search) {
-    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
-  }
 
-  let queryData = `SELECT c.id, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY c.name`
+  const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  if (limit !== 'undefined') {
-    queryData += `LIMIT ${limit} `
-  }
-
-  if (offset !== 'undefined') {
-    queryData += `OFFSET ${offset} `
-  }
-
-  queryData += ';'
-
+  const queryData = `SELECT c.id, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY c.name ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter};`
 
   const query = `${queryData}${queryCount}`

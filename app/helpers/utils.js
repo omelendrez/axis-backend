@@ -12,4 +12,31 @@ const toWeb = (data) => {
   return newData
 }
 
-module.exports = { toWeb }
+const getPaginationFilters = (pagination, fields, filterField = '') => {
+  const { search, limit, offset } = pagination
+  let filter = ''
+  if (search) {
+    filter = `WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
+    if (filterField) {
+      filter += ` AND ${filterField}`
+    }
+  } else {
+    if (filterField) {
+      filter = `WHERE ${filterField}`
+    }
+  }
+
+  let limits = ''
+
+  if (limit) {
+    limits += `LIMIT ${limit} `
+  }
+
+  if (offset) {
+    limits += `OFFSET ${offset} `
+  }
+
+  return { filter, limits }
+}
+
+module.exports = { toWeb, getPaginationFilters }

@@ -1,5 +1,5 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Nationality = function (nationality) {
@@ -38,24 +38,12 @@ Nationality.findById = (id, result) => {
   })
 }
 
-Nationality.getAll = ({ search, limit, offset }, result) => {
-  let filter = ''
+Nationality.getAll = (pagination, result) => {
   const fields = ['code', 'country', 'nationality']
-  if (search) {
-    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
-  }
 
-  let queryData = `SELECT id, code, country, nationality FROM nationality ${filter} ORDER BY country`
-  if (limit !== 'undefined') {
-    queryData += `LIMIT ${limit} `
-  }
+  const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  if (offset !== 'undefined') {
-    queryData += `OFFSET ${offset} `
-  }
-
-  queryData += ';'
-
+  const queryData = `SELECT id, code, country, nationality FROM nationality ${filter} ORDER BY country ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM nationality ${filter};`
 
   const query = `${queryData}${queryCount}`

@@ -1,5 +1,5 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Company = function (company) {
@@ -37,30 +37,12 @@ Company.findById = (id, result) => {
   })
 }
 
-Company.getAll = ({ search, limit, offset }, result) => {
-  let filter = ''
+Company.getAll = (pagination, result) => {
   const fields = ['name']
 
-  if (search) {
-    filter = `WHERE CONCAT(${fields.join(
-      ', '
-    )}) LIKE '%${search}%' AND status=1`
-  } else {
-    filter = 'WHERE status=1'
-  }
+  const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  let queryData = `SELECT id, name FROM company ${filter} ORDER BY name`
-
-  if (limit !== 'undefined') {
-    queryData += `LIMIT ${limit} `
-  }
-
-  if (offset !== 'undefined') {
-    queryData += `OFFSET ${offset} `
-  }
-
-  queryData += ';'
-
+  const queryData = `SELECT id, name FROM company ${filter} ORDER BY name ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM company ${filter};`
 
   const query = `${queryData}${queryCount}`

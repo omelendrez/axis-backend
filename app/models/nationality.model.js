@@ -45,7 +45,7 @@ Nationality.getAll = ({ search, limit, offset }, result) => {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const queryData = `SELECT id, code, country, nationality FROM nationality LIMIT ${limit} OFFSET ${offset};`
+  const queryData = `SELECT id, code, country, nationality FROM nationality ${filter} ORDER BY country LIMIT ${limit} OFFSET ${offset};`
   const queryCount = `SELECT COUNT(1) records FROM nationality ${filter};`
 
   const query = `${queryData}${queryCount}`

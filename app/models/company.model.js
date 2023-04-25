@@ -40,8 +40,13 @@ Company.findById = (id, result) => {
 Company.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
   const fields = ['name']
+
   if (search) {
-    filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
+    filter = `WHERE CONCAT(${fields.join(
+      ', '
+    )}) LIKE '%${search}%' AND status=1`
+  } else {
+    filter = 'WHERE status=1'
   }
 
   const queryData = `SELECT id, name FROM company ${filter} ORDER BY name LIMIT ${limit} OFFSET ${offset};`

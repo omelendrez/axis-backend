@@ -39,13 +39,9 @@ State.getAll = ({ search, limit, offset }, result) => {
   let filter = ''
   const fields = ['name']
   if (search) {
-    filter = `WHERE CONCAT(${fields.join(
-      ', '
-    )}) LIKE '%${search}%' AND t.status=1`
-  } else {
-    filter = 'WHERE t.status=1'
+    filter = `WHERE CONCAT(${fields.join(', ')}) LIKE '%${search}%'`
   }
-  const queryData = `SELECT id, name FROM state ${filter} ORDER BY id LIMIT ${limit} OFFSET ${offset};`
+  const queryData = `SELECT id, name FROM state ${filter} ORDER BY name LIMIT ${limit} OFFSET ${offset};`
   const queryCount = `SELECT COUNT(1) records FROM state ${filter};`
 
   const query = `${queryData}${queryCount}`

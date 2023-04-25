@@ -43,8 +43,21 @@ Role.getAll = ({ search, limit, offset }, result) => {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const queryData = `SELECT id, name FROM role ${filter} ORDER BY id LIMIT ${limit} OFFSET ${offset};`
+  let queryData = `SELECT id, name FROM role ${filter} ORDER BY id `
+
+  if (limit !== 'undefined') {
+    queryData += `LIMIT ${limit} `
+  }
+
+  if (offset !== 'undefined') {
+    queryData += `OFFSET ${offset} `
+  }
+
+  queryData += ';'
+
   const queryCount = `SELECT COUNT(1) records FROM role ${filter};`
+
+  console.log(queryData)
 
   const query = `${queryData}${queryCount}`
 

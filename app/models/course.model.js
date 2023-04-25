@@ -66,7 +66,18 @@ Course.getAll = ({ search, limit, offset }, result) => {
     filter = ` WHERE CONCAT(${fields.join(' , ')}) LIKE '%${search}%'`
   }
 
-  const queryData = `SELECT c.id, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY c.name LIMIT ${limit} OFFSET ${offset};`
+  let queryData = `SELECT c.id, c.name, c.front_id, c.back_id, CASE WHEN c.id_card=1 THEN 'Yes' ELSE 'No' END id_card, c.duration, c.validity, CASE WHEN c.cert_id_card=1 THEN 'Yes' ELSE 'No' END cert_id_card, c.opito_reg_code, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY c.name`
+
+  if (limit !== 'undefined') {
+    queryData += `LIMIT ${limit} `
+  }
+
+  if (offset !== 'undefined') {
+    queryData += `OFFSET ${offset} `
+  }
+
+  queryData += ';'
+
   const queryCount = `SELECT COUNT(1) records FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter};`
 
   const query = `${queryData}${queryCount}`

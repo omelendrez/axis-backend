@@ -49,7 +49,18 @@ Company.getAll = ({ search, limit, offset }, result) => {
     filter = 'WHERE status=1'
   }
 
-  const queryData = `SELECT id, name FROM company ${filter} ORDER BY name LIMIT ${limit} OFFSET ${offset};`
+  let queryData = `SELECT id, name FROM company ${filter} ORDER BY name`
+
+  if (limit !== 'undefined') {
+    queryData += `LIMIT ${limit} `
+  }
+
+  if (offset !== 'undefined') {
+    queryData += `OFFSET ${offset} `
+  }
+
+  queryData += ';'
+
   const queryCount = `SELECT COUNT(1) records FROM company ${filter};`
 
   const query = `${queryData}${queryCount}`

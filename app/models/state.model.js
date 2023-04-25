@@ -41,7 +41,19 @@ State.getAll = ({ search, limit, offset }, result) => {
   if (search) {
     filter = `WHERE CONCAT(${fields.join(', ')}) LIKE '%${search}%'`
   }
-  const queryData = `SELECT id, name FROM state ${filter} ORDER BY name LIMIT ${limit} OFFSET ${offset};`
+
+  let queryData = `SELECT id, name FROM state ${filter} ORDER BY name`
+
+  if (limit !== 'undefined') {
+    queryData += `LIMIT ${limit} `
+  }
+
+  if (offset !== 'undefined') {
+    queryData += `OFFSET ${offset} `
+  }
+
+  queryData += ';'
+
   const queryCount = `SELECT COUNT(1) records FROM state ${filter};`
 
   const query = `${queryData}${queryCount}`

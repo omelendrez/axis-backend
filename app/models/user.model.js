@@ -4,10 +4,10 @@ const { log } = require('../helpers/log')
 const { createToken, comparePassword, passwordHash } = require('../secure')
 // constructor
 const User = function (user) {
-  this.email = user.email
-  this.password = user.password
-  this.name = user.name
-  this.full_name = user.full_name
+  this.email = user.email.trim()
+  this.password = user.password.trim()
+  this.name = user.name.trim()
+  this.full_name = user.full_name.trim()
   this.role = user.role
   this.status = user.status
 }
@@ -60,7 +60,7 @@ User.findById = (id, result) => {
 }
 
 User.login = (params, result) => {
-  const query = `SELECT * FROM user WHERE name = '${params.name}'`
+  const query = `SELECT * FROM user WHERE name = '${params.name.trim()}'`
   sql.query(query, async (err, res) => {
     if (err) {
       log.error('error: ', err)
@@ -69,7 +69,7 @@ User.login = (params, result) => {
     }
 
     if (res.length) {
-      const ok = await comparePassword(params.password, res[0].password)
+      const ok = await comparePassword(params.password.trim(), res[0].password)
 
       if (!ok) {
         log.error('error: user or password incorrect' + err)
@@ -140,7 +140,7 @@ User.updateById = (id, user, result) => {
 }
 
 User.chgPwd = async (id, user, result) => {
-  if (user.prevPass === user.password) {
+  if (user.prevPass.trim() === user.password.trim()) {
     result({ kind: 'same_password' }, null)
     return
   }
@@ -157,14 +157,14 @@ User.chgPwd = async (id, user, result) => {
       return
     }
 
-    const ok = await comparePassword(user.prevPass, res[0].password)
+    const ok = await comparePassword(user.prevPass.trim(), res[0].password)
 
     if (!ok) {
       result({ kind: 'wrong_curr_password' }, null)
       return
     }
 
-    const password = await passwordHash(user.password)
+    const password = await passwordHash(user.password.trim())
 
     sql.query(
       'UPDATE user SET password = ? WHERE id = ?',

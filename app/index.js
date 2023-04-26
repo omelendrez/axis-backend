@@ -52,14 +52,14 @@ app.get('/', (req, res) => {
 })
 
 require('./routes/user.routes.js')(app)
-require('./routes/trainee.routes.js')(app)
+require('./routes/training.routes.js')(app)
 require('./routes/role.routes.js')(app)
 require('./routes/nationality.routes.js')(app)
 require('./routes/state.routes.js')(app)
 require('./routes/company.routes.js')(app)
 require('./routes/course.routes.js')(app)
 require('./routes/certificate-type.routes.js')(app)
-require('./routes/training.routes.js')(app)
+require('./routes/trainee.routes.js')(app)
 
 const PORT = process.env.PORT || 3000
 

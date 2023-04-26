@@ -34,9 +34,7 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  const pagination = req.query
-
-  Training.getAll(pagination, (err, data) => {
+  Training.getAll((err, data) => {
     if (err) {
       res.status(500).send({
         message:

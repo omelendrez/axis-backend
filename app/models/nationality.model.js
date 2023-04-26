@@ -51,7 +51,7 @@ Nationality.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 
@@ -71,7 +71,7 @@ Nationality.updateById = (id, nationality, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -92,7 +92,7 @@ Nationality.remove = (id, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -104,7 +104,7 @@ Nationality.remove = (id, result) => {
       sql.query('DELETE FROM nationality WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error('error: ', err)
-          result(null, err)
+          result(err, null)
           return
         }
 
@@ -123,7 +123,7 @@ Nationality.removeAll = (result) => {
   sql.query('DELETE FROM nationality', (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 

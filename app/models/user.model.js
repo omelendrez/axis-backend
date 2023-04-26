@@ -105,7 +105,7 @@ User.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 
@@ -125,7 +125,7 @@ User.updateById = (id, user, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -172,7 +172,7 @@ User.chgPwd = async (id, user, result) => {
       (err, res) => {
         if (err) {
           log.error('error: ', err)
-          result(null, err)
+          result(err, null)
           return
         }
 
@@ -194,7 +194,7 @@ User.remove = (id, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -206,7 +206,7 @@ User.remove = (id, result) => {
       sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error('error: ', err)
-          result(null, err)
+          result(err, null)
           return
         }
 
@@ -225,7 +225,7 @@ User.removeAll = (result) => {
   sql.query('DELETE FROM user', (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 

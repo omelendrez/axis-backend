@@ -53,7 +53,7 @@ CertificateType.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 
@@ -73,7 +73,7 @@ CertificateType.updateById = (id, certificatetype, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -94,7 +94,7 @@ CertificateType.remove = (id, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -106,7 +106,7 @@ CertificateType.remove = (id, result) => {
       sql.query('DELETE FROM certificate_type WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error('error: ', err)
-          result(null, err)
+          result(err, null)
           return
         }
 
@@ -125,7 +125,7 @@ CertificateType.removeAll = (result) => {
   sql.query('DELETE FROM certificate_type', (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 

@@ -48,7 +48,7 @@ State.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 
@@ -68,7 +68,7 @@ State.updateById = (id, state, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -89,7 +89,7 @@ State.remove = (id, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -101,7 +101,7 @@ State.remove = (id, result) => {
       sql.query('DELETE FROM state WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error('error: ', err)
-          result(null, err)
+          result(err, null)
           return
         }
 
@@ -120,7 +120,7 @@ State.removeAll = (result) => {
   sql.query('DELETE FROM state', (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 

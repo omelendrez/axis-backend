@@ -83,7 +83,7 @@ Trainee.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 
@@ -115,7 +115,7 @@ Trainee.updateById = (id, trainee, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -136,7 +136,7 @@ Trainee.remove = (id, result) => {
     (err, res) => {
       if (err) {
         log.error('error: ', err)
-        result(null, err)
+        result(err, null)
         return
       }
 
@@ -148,7 +148,7 @@ Trainee.remove = (id, result) => {
       sql.query('DELETE FROM trainee WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error('error: ', err)
-          result(null, err)
+          result(err, null)
           return
         }
 
@@ -167,7 +167,7 @@ Trainee.removeAll = (result) => {
   sql.query('DELETE FROM trainee', (err, res) => {
     if (err) {
       log.error('error: ', err)
-      result(null, err)
+      result(err, null)
       return
     }
 

@@ -59,6 +59,7 @@ require('./routes/state.routes.js')(app)
 require('./routes/company.routes.js')(app)
 require('./routes/course.routes.js')(app)
 require('./routes/certificate-type.routes.js')(app)
+require('./routes/training.routes.js')(app)
 
 const PORT = process.env.PORT || 3000
 

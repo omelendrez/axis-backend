@@ -9,7 +9,7 @@ module.exports = (app) => {
 
   router.post('/', secure, training.create)
 
-  router.get('/', secure, training.findAll)
+  router.get('/:id/all', secure, training.findAll)
 
   router.get('/:id', secure, training.findOne)
 

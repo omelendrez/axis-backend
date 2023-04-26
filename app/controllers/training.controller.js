@@ -34,7 +34,7 @@ exports.create = (req, res) => {
 }
 
 exports.findAll = (req, res) => {
-  Training.getAll((err, data) => {
+  Training.getAll(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message:

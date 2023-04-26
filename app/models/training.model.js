@@ -72,7 +72,9 @@ Training.getAll = (id, result) => {
       return
     }
 
-    result(null, toWeb(res[0]))
+    const data = res.map((data) => toWeb(data))
+
+    result(null, data)
   })
 }
 

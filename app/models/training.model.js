@@ -63,7 +63,7 @@ Training.findById = (id, result) => {
 }
 
 Training.getAll = (id, result) => {
-  const query = `SELECT c.name, DATE_FORMAT(t.start, '%d-%m-%Y') start, DATE_FORMAT(t.expiry, '%d-%m-%Y') expiry, t.certificate, s.status FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE trainee = ${id}`
+  const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d-%m-%Y') start, DATE_FORMAT(t.expiry, '%d-%m-%Y') expiry, t.certificate, s.status FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE trainee = ${id}`
 
   sql.query(query, (err, res) => {
     if (err) {

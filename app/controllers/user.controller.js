@@ -147,7 +147,7 @@ exports.login = (req, res) => {
       switch (err.kind) {
         case 'not_found':
           res.status(404).send({
-            message: `Not found User with id ${req.params.id}.`
+            message: err.message || 'Login failed'
           })
           break
         case 'wrong_password':
@@ -157,7 +157,7 @@ exports.login = (req, res) => {
           break
         default:
           res.status(500).send({
-            message: 'Error retrieving User with id ' + req.params.id
+            message: err.message || 'Login failed'
           })
       }
     } else res.send(data)

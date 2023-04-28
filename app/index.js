@@ -6,25 +6,28 @@ require('dotenv').config()
 
 const app = express()
 
-// const whitelist = [
-//   'http://localhost:5173',
-//   'http://localhost:4173',
-//   'http://192.168.0.139:5173',
-//   'https://axis-tolmann.vercel.app'
-// ]
+const whitelist = [
+  'http://localhost:5173',
+  'http://localhost:4173',
+  'http://localhost:8080',
+  'http://axis2:8080',
+  'http://192.168.0.139:5173',
+  'http://192.168.1.88:8080',
+  'https://axis-tolmann.vercel.app'
+]
 
-// const corsOptions = {
-//   origin: function (origin, callback) {
-//     if (!origin) return callback(null, true)
-//     if (whitelist.indexOf(origin) === -1) {
-//       const msg =
-//         'The CORS policy for this site does not ' +
-//         'allow access from the specified Origin.'
-//       return callback(new Error(msg), false)
-//     }
-//     return callback(null, true)
-//   }
-// }
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true)
+    if (whitelist.indexOf(origin) === -1) {
+      const msg =
+        'The CORS policy for this site does not ' +
+        'allow access from the specified Origin.'
+      return callback(new Error(msg), false)
+    }
+    return callback(null, true)
+  }
+}
 
 // const corsOptions = {
 //   origin: '*',
@@ -33,7 +36,7 @@ const app = express()
 //   optionsSuccessStatus: 204
 // }
 
-app.use(cors())
+app.use(cors(corsOptions))
 
 app.use(express.json())
 

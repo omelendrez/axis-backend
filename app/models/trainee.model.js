@@ -75,7 +75,7 @@ Trainee.getAll = (pagination, result) => {
     't.status=1'
   )
 
-  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.last_name,', ', t.first_name) full_name, c.name company, x.name sex, s.name state, n.nationality nationality, TIMESTAMPDIFF(YEAR, t.birth_date, CURDATE()) age FROM trainee t INNER JOIN company c ON t.company=c.id INNER JOIN state s ON t.state=s.id INNER JOIN nationality n ON t.nationality=n.id INNER JOIN sex x ON t.sex=x.id ${filter} ORDER BY id DESC ${limits};`
+  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.last_name,', ', t.first_name) full_name, c.name company FROM trainee t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM trainee t INNER JOIN company c ON t.company=c.id ${filter};`
 
   const query = `${queryData}${queryCount}`

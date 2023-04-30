@@ -1,0 +1,12 @@
+{
+  "httpsError": "This app must be accessed over HTTPS.",
+  "resourceNotFound": "The requested resource was not found.",
+  "serverError": "Unexpected server error, please try again.",
+  "authenticationError": "Invalid or expired token provided.",
+  "integrationError": "No access token data exists for this user",
+  "unauthorizedAccessError": "Missing the permissions to view this.",
+  "noAccessToken": "Missing Authorization header. Format is x-access-token: [token]",
+  "invalidTokenType": "Invalid token type. Token must be  jwt format.",
+  "validationError": "Invalid or missing request parameters.",
+  "availabilityError": "Requested actions is temporarily not available."
+}

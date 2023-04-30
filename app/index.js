@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const { log } = require('./helpers/log.js')
 const logger = require('morgan')
+const errorHandler = require('./errors/error-handler.js')
 require('dotenv').config()
 
 const app = express()
@@ -74,6 +75,8 @@ require('./routes/company.routes.js')(app)
 require('./routes/course.routes.js')(app)
 require('./routes/certificate-type.routes.js')(app)
 require('./routes/trainee.routes.js')(app)
+
+app.use(errorHandler.middleware)
 
 const PORT = process.env.PORT || 3000
 

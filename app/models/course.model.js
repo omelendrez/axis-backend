@@ -20,7 +20,7 @@ Course.create = (course, result) => {
     `SELECT COUNT(1) records FROM course WHERE name='${course.name}'`,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -31,7 +31,7 @@ Course.create = (course, result) => {
       }
       sql.query('INSERT INTO course SET ?', newCourse, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -45,7 +45,7 @@ Course.create = (course, result) => {
 Course.findById = (id, result) => {
   sql.query(`SELECT * FROM course WHERE id = ${id}`, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -71,7 +71,7 @@ Course.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -102,7 +102,7 @@ Course.updateById = (id, course, result) => {
     ],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -123,7 +123,7 @@ Course.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -135,7 +135,7 @@ Course.remove = (id, result) => {
 
       sql.query('DELETE FROM course WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -154,7 +154,7 @@ Course.remove = (id, result) => {
 Course.removeAll = (result) => {
   sql.query('DELETE FROM course', (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }

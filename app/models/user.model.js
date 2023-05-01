@@ -19,7 +19,7 @@ User.create = async (user, result) => {
     `SELECT COUNT(1) records FROM user WHERE name='${user.name}'`,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -31,7 +31,7 @@ User.create = async (user, result) => {
 
       sql.query('INSERT INTO user SET ?', newUser, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -45,7 +45,7 @@ User.create = async (user, result) => {
 User.findById = (id, result) => {
   sql.query(`SELECT * FROM user WHERE id = ${id}`, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -63,7 +63,7 @@ User.login = (params, result) => {
   const query = `SELECT * FROM user WHERE name = '${params.name.trim()}'`
   sql.query(query, async (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -104,7 +104,7 @@ User.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -124,7 +124,7 @@ User.updateById = (id, user, result) => {
     [user.name, user.full_name, user.email, user.role, user.status, id],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -147,7 +147,7 @@ User.chgPwd = async (id, user, result) => {
 
   sql.query(`SELECT * FROM user WHERE id = '${id}'`, async (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -171,7 +171,7 @@ User.chgPwd = async (id, user, result) => {
       [password, id],
       (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -193,7 +193,7 @@ User.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -205,7 +205,7 @@ User.remove = (id, result) => {
 
       sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -224,7 +224,7 @@ User.remove = (id, result) => {
 User.removeAll = (result) => {
   sql.query('DELETE FROM user', (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }

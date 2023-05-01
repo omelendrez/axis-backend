@@ -23,7 +23,7 @@ Trainee.create = (trainee, result) => {
     [newTrainee.last_name, newTrainee.first_name, newTrainee.birth_date],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -35,7 +35,7 @@ Trainee.create = (trainee, result) => {
 
       sql.query('INSERT INTO trainee SET ?', newTrainee, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -51,7 +51,7 @@ Trainee.findById = (id, result) => {
     `SELECT id, type, badge, last_name, first_name, sex, state, nationality, DATE_FORMAT(birth_date, '%Y-%m-%d') birth_date, company, status FROM trainee WHERE id = ${id}`,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -82,7 +82,7 @@ Trainee.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -114,7 +114,7 @@ Trainee.updateById = (id, trainee, result) => {
     ],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -135,7 +135,7 @@ Trainee.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -147,7 +147,7 @@ Trainee.remove = (id, result) => {
 
       sql.query('DELETE FROM trainee WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -166,7 +166,7 @@ Trainee.remove = (id, result) => {
 Trainee.removeAll = (result) => {
   sql.query('DELETE FROM trainee', (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }

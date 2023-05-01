@@ -19,7 +19,7 @@ Training.create = (training, result) => {
     [newTraining.trainee, newTraining.code, newTraining.start],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -31,7 +31,7 @@ Training.create = (training, result) => {
 
       sql.query('INSERT INTO training SET ?', newTraining, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -47,7 +47,7 @@ Training.findById = (id, result) => {
     `SELECT id, trainee, code, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(ending, '%Y-%m-%d') ending, certificate, status FROM training WHERE id = ${id}`,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -67,7 +67,7 @@ Training.getAll = (id, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -92,7 +92,7 @@ Training.updateById = (id, training, result) => {
     ],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -113,7 +113,7 @@ Training.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -125,7 +125,7 @@ Training.remove = (id, result) => {
 
       sql.query('DELETE FROM training WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -144,7 +144,7 @@ Training.remove = (id, result) => {
 Training.removeAll = (result) => {
   sql.query('DELETE FROM training', (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }

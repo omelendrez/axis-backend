@@ -11,7 +11,7 @@ Company.create = (company, result) => {
   const newCompany = { ...company }
   sql.query('INSERT INTO company SET ?', newCompany, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -23,7 +23,7 @@ Company.create = (company, result) => {
 Company.findById = (id, result) => {
   sql.query(`SELECT * FROM company WHERE id = ${id}`, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -49,7 +49,7 @@ Company.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -69,7 +69,7 @@ Company.updateById = (id, company, result) => {
     [company.code, company.name, id],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -90,7 +90,7 @@ Company.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -102,7 +102,7 @@ Company.remove = (id, result) => {
 
       sql.query('DELETE FROM company WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -121,7 +121,7 @@ Company.remove = (id, result) => {
 Company.removeAll = (result) => {
   sql.query('DELETE FROM company', (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }

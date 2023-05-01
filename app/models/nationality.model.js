@@ -12,7 +12,7 @@ Nationality.create = (nationality, result) => {
   const newNationality = { ...nationality }
   sql.query('INSERT INTO nationality SET ?', newNationality, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -24,7 +24,7 @@ Nationality.create = (nationality, result) => {
 Nationality.findById = (id, result) => {
   sql.query(`SELECT * FROM nationality WHERE id = ${id}`, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -50,7 +50,7 @@ Nationality.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }
@@ -70,7 +70,7 @@ Nationality.updateById = (id, nationality, result) => {
     [nationality.code, nationality.country, nationality.nationality, id],
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -91,7 +91,7 @@ Nationality.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
-        log.error('error: ', err)
+        log.error(err)
         result(err, null)
         return
       }
@@ -103,7 +103,7 @@ Nationality.remove = (id, result) => {
 
       sql.query('DELETE FROM nationality WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error('error: ', err)
+          log.error(err)
           result(err, null)
           return
         }
@@ -122,7 +122,7 @@ Nationality.remove = (id, result) => {
 Nationality.removeAll = (result) => {
   sql.query('DELETE FROM nationality', (err, res) => {
     if (err) {
-      log.error('error: ', err)
+      log.error(err)
       result(err, null)
       return
     }

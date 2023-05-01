@@ -1,4 +1,3 @@
-const { log } = require('../helpers/log')
 const ContactInfo = require('../models/contact-info.model')
 
 exports.create = (req, res) => {
@@ -35,7 +34,6 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   ContactInfo.getAll(req.params.id, (err, data) => {
     if (err) {
-      log.warning(err)
       res.status(500).send({
         message:
           err.message || 'Some error occurred while retrieving Contact Info.'

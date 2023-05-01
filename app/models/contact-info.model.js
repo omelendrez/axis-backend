@@ -65,7 +65,6 @@ ContactInfo.findById = (id, result) => {
 
 ContactInfo.getAll = (id, result) => {
   const query = `SELECT i.id, t.name type, i.value FROM contact_info i INNER JOIN contact_type t ON i.type = t.id WHERE i.trainee = ${id}`
-  log.warning(query, true)
   sql.query(query, (err, res) => {
     if (err) {
       log.error(err)

@@ -9,11 +9,11 @@ const app = express()
 
 const whitelist = [
   'http://localhost:5173',
+  'http://localhost',
   'http://localhost:4173',
-  'http://localhost:8080',
-  'http://axis2:8080',
   'http://192.168.0.139:5173',
-  'http://192.168.1.88:8080',
+  'http://192.168.1.88',
+  'http://axis2',
   'https://axis-tolmann.vercel.app'
 ]
 
@@ -29,13 +29,6 @@ const corsOptions = {
     return callback(null, true)
   }
 }
-
-// const corsOptions = {
-//   origin: '*',
-//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   preflightContinue: false,
-//   optionsSuccessStatus: 204
-// }
 
 app.use(cors(corsOptions))
 

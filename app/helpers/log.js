@@ -38,9 +38,9 @@ function createConsoleMessage(styles, force) {
 
 const log = {
   error: createConsoleMessage(colors.BgRed, true),
-  info: createConsoleMessage(colors.BgCyan),
+  info: createConsoleMessage(colors.BgCyan, true),
   success: createConsoleMessage(colors.BgGreen),
-  warning: createConsoleMessage(colors.BgYellow, true)
+  warning: createConsoleMessage(colors.BgYellow)
 }
 
 module.exports = { log }

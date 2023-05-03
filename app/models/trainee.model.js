@@ -66,6 +66,26 @@ Trainee.findById = (id, result) => {
   )
 }
 
+Trainee.findByIdView = (id, result) => {
+  sql.query(
+    `SELECT t.id, t.type, t.badge, CONCAT(t.last_name, ', ', first_name) full_name,CASE WHEN t.sex = 'F' THEN 'Female' ELSE 'Male' END sex, s.name state, n.nationality, DATE_FORMAT(birth_date, '%d-%m-%Y') birth_date, c.name company, CASE WHEN t.status = 1 THEN 'Active' ELSE 'Inactive' END status FROM trainee t INNER JOIN company c ON t.company = c.id INNER JOIN state s ON t.state = s.id INNER JOIN nationality n ON t.nationality = n.id WHERE t.id = ${id}`,
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      if (res.length) {
+        result(null, toWeb(res[0]))
+        return
+      }
+
+      result({ kind: 'not_found' }, null)
+    }
+  )
+}
+
 Trainee.getAll = (pagination, result) => {
   const fields = ['t.badge', 'CONCAT(t.last_name,", ",t.first_name)', 'c.name']
 

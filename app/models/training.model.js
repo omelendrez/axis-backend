@@ -44,7 +44,7 @@ Training.create = (training, result) => {
 
 Training.findById = (id, result) => {
   sql.query(
-    `SELECT id, course, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(expiry, '%Y-%m-%d') expiry, certificate, status FROM training WHERE id = ${id}`,
+    `SELECT id, trainee, course, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(expiry, '%Y-%m-%d') expiry, certificate, status FROM training WHERE id = ${id}`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -80,7 +80,7 @@ Training.getAll = (id, result) => {
 
 Training.updateById = (id, training, result) => {
   sql.query(
-    'UPDATE training SET course = ?, start = ?, expiry = ?, certificate = ?, status = ? WHERE id = ?',
+    'UPDATE training SET trainee = ?, course = ?, start = ?, expiry = ?, certificate = ?, status = ? WHERE id = ?',
     [
       training.trainee,
       training.course,

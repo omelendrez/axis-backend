@@ -4,9 +4,9 @@ const { log } = require('../helpers/log.js')
 // constructor
 const Training = function (training) {
   this.trainee = training.trainee
-  this.code = training.code
+  this.course = training.course
   this.start = training.start
-  this.ending = training.ending
+  this.expiry = training.expiry
   this.certificate = training.certificate
   this.status = training.status
 }
@@ -15,8 +15,8 @@ Training.create = (training, result) => {
   const newTraining = { ...training, status: 1 }
 
   sql.query(
-    'SELECT COUNT(1) records FROM training WHERE trainee = ? AND code = ? AND DATE_FORMAT(start, `%Y-%m-%d`) = ?',
-    [newTraining.trainee, newTraining.code, newTraining.start],
+    'SELECT COUNT(1) records FROM training WHERE trainee = ? AND course = ? AND DATE_FORMAT(start, `%Y-%m-%d`) = ?',
+    [newTraining.trainee, newTraining.course, newTraining.start],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -44,7 +44,7 @@ Training.create = (training, result) => {
 
 Training.findById = (id, result) => {
   sql.query(
-    `SELECT id, trainee, code, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(ending, '%Y-%m-%d') ending, certificate, status FROM training WHERE id = ${id}`,
+    `SELECT id, course, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(expiry, '%Y-%m-%d') expiry, certificate, status FROM training WHERE id = ${id}`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -80,12 +80,12 @@ Training.getAll = (id, result) => {
 
 Training.updateById = (id, training, result) => {
   sql.query(
-    'UPDATE training SET trainee = ?, code = ?, start = ?, ending = ?, certificate = ?, status = ? WHERE id = ?',
+    'UPDATE training SET course = ?, start = ?, expiry = ?, certificate = ?, status = ? WHERE id = ?',
     [
       training.trainee,
-      training.code,
+      training.course,
       training.start,
-      training.ending,
+      training.expiry,
       training.certificate,
       training.status,
       id

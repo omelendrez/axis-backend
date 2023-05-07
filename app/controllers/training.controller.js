@@ -90,7 +90,7 @@ exports.delete = (req, res) => {
       switch (err.kind) {
         case 'cannot_delete':
           res.status(404).send({
-            message: 'Training has transactions and cannot be deleted.'
+            message: 'Training has changed status and cannot be deleted.'
           })
           break
         case 'not_found':

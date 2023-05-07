@@ -109,7 +109,7 @@ Training.updateById = (id, training, result) => {
 
 Training.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM training WHERE training = ?',
+    'SELECT COUNT(1) records FROM tracking WHERE training = ?',
     id,
     (err, res) => {
       if (err) {
@@ -118,24 +118,26 @@ Training.remove = (id, result) => {
         return
       }
 
-      if (res[0].records) {
+      if (res[0].records > 1) {
         result({ kind: 'cannot_delete' }, null)
         return
       }
 
-      sql.query('DELETE FROM training WHERE id = ?', id, (err, res) => {
-        if (err) {
-          log.error(err)
-          result(err, null)
-          return
-        }
+      sql.query('DELETE FROM tracking WHERE training = ?', id, () => {
+        sql.query('DELETE FROM training WHERE id = ?', id, (err, res) => {
+          if (err) {
+            log.error(err)
+            result(err, null)
+            return
+          }
 
-        if (res.affectedRows === 0) {
-          result({ kind: 'not_found' }, null)
-          return
-        }
+          if (res.affectedRows === 0) {
+            result({ kind: 'not_found' }, null)
+            return
+          }
 
-        result(null, id)
+          result(null, id)
+        })
       })
     }
   )

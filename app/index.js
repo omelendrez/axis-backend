@@ -70,6 +70,7 @@ require('./routes/certificate-type.routes.js')(app)
 require('./routes/trainee.routes.js')(app)
 require('./routes/training.routes.js')(app)
 require('./routes/contact-info.routes.js')(app)
+require('./routes/contact-type.routes.js')(app)
 
 app.use(errorHandler.middleware)
 

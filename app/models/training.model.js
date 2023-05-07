@@ -15,7 +15,7 @@ Training.create = (training, result) => {
   const newTraining = { ...training, status: 1 }
 
   sql.query(
-    'SELECT COUNT(1) records FROM training WHERE trainee = ? AND course = ? AND DATE_FORMAT(start, `%Y-%m-%d`) = ?',
+    'SELECT COUNT(1) records FROM training WHERE trainee = ? AND course = ? AND DATE_FORMAT(start, "%Y-%m-%d") = ?',
     [newTraining.trainee, newTraining.course, newTraining.start],
     (err, res) => {
       if (err) {

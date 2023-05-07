@@ -11,7 +11,7 @@ exports.create = (req, res) => {
     trainee: req.body.trainee,
     course: req.body.course,
     start: req.body.start,
-    ending: req.body.ending,
+    expiry: req.body.expiry,
     certificate: req.body.certificate,
     status: req.body.status
   })

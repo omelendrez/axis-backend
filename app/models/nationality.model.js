@@ -87,7 +87,7 @@ Nationality.updateById = (id, nationality, result) => {
 
 Nationality.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM trainee WHERE nationality = ?',
+    'SELECT COUNT(1) records FROM learner WHERE nationality = ?',
     id,
     (err, res) => {
       if (err) {

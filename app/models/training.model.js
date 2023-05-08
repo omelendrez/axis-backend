@@ -3,7 +3,7 @@ const { toWeb } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Training = function (training) {
-  this.trainee = training.trainee
+  this.learner = training.learner
   this.course = training.course
   this.start = training.start
   this.expiry = training.expiry
@@ -15,8 +15,8 @@ Training.create = (training, result) => {
   const newTraining = { ...training, status: 1 }
 
   sql.query(
-    'SELECT COUNT(1) records FROM training WHERE trainee = ? AND course = ? AND DATE_FORMAT(start, "%Y-%m-%d") = ?',
-    [newTraining.trainee, newTraining.course, newTraining.start],
+    'SELECT COUNT(1) records FROM training WHERE learner = ? AND course = ? AND DATE_FORMAT(start, "%Y-%m-%d") = ?',
+    [newTraining.learner, newTraining.course, newTraining.start],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -44,7 +44,7 @@ Training.create = (training, result) => {
 
 Training.findById = (id, result) => {
   sql.query(
-    `SELECT id, trainee, course, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(expiry, '%Y-%m-%d') expiry, certificate, status FROM training WHERE id = ${id}`,
+    `SELECT id, learner, course, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(expiry, '%Y-%m-%d') expiry, certificate, status FROM training WHERE id = ${id}`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -63,7 +63,7 @@ Training.findById = (id, result) => {
 }
 
 Training.getAll = (id, result) => {
-  const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d-%m-%Y') start, DATE_FORMAT(t.expiry, '%d-%m-%Y') expiry, t.certificate, s.status FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE trainee = ${id}`
+  const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d-%m-%Y') start, DATE_FORMAT(t.expiry, '%d-%m-%Y') expiry, t.certificate, s.status FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE learner = ${id}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -80,9 +80,9 @@ Training.getAll = (id, result) => {
 
 Training.updateById = (id, training, result) => {
   sql.query(
-    'UPDATE training SET trainee = ?, course = ?, start = ?, expiry = ?, certificate = ?, status = ? WHERE id = ?',
+    'UPDATE training SET learner = ?, course = ?, start = ?, expiry = ?, certificate = ?, status = ? WHERE id = ?',
     [
-      training.trainee,
+      training.learner,
       training.course,
       training.start,
       training.expiry,

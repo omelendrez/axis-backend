@@ -86,7 +86,7 @@ Company.updateById = (id, company, result) => {
 
 Company.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM trainee WHERE company IN (SELECT code FROM company WHERE id = ?)',
+    'SELECT COUNT(1) records FROM learner WHERE company IN (SELECT code FROM company WHERE id = ?)',
     id,
     (err, res) => {
       if (err) {

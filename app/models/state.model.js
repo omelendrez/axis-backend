@@ -84,7 +84,7 @@ State.updateById = (id, state, result) => {
 
 State.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM trainee WHERE state = ?',
+    'SELECT COUNT(1) records FROM learner WHERE state = ?',
     id,
     (err, res) => {
       if (err) {

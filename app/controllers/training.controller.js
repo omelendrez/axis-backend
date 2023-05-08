@@ -8,7 +8,7 @@ exports.create = (req, res) => {
   }
 
   const training = new Training({
-    trainee: req.body.trainee,
+    learner: req.body.learner,
     course: req.body.course,
     start: req.body.start,
     expiry: req.body.expiry,
@@ -21,7 +21,7 @@ exports.create = (req, res) => {
       if (err.kind === 'already_exists') {
         res.status(400).send({
           message:
-            'A Training with the same info already exists for this Trainee in database.'
+            'A Training with the same info already exists for this Learner in database.'
         })
       } else {
         res.status(500).send({

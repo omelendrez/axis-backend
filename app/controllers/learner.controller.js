@@ -1,4 +1,4 @@
-const Trainee = require('../models/trainee.model')
+const Learner = require('../models/learner.model')
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -7,7 +7,7 @@ exports.create = (req, res) => {
     })
   }
 
-  const trainee = new Trainee({
+  const learner = new Learner({
     type: req.body.type,
     badge: req.body.badge,
     last_name: req.body.last_name,
@@ -20,17 +20,17 @@ exports.create = (req, res) => {
     status: req.body.status
   })
 
-  Trainee.create(trainee, (err, data) => {
+  Learner.create(learner, (err, data) => {
     if (err) {
       if (err.kind === 'already_exists') {
         res.status(400).send({
           message:
-            'Trainee with same names and birth date already exists in database.'
+            'Learner with same names and birth date already exists in database.'
         })
       } else {
         res.status(500).send({
           message:
-            err.message || 'Some error occurred while creating the Trainee.'
+            err.message || 'Some error occurred while creating the Learner.'
         })
       }
     } else res.send(data)
@@ -40,10 +40,10 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const pagination = req.query
 
-  Trainee.getAll(pagination, (err, data) => {
+  Learner.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving Trainees.'
+        message: err.message || 'Some error occurred while retrieving Learners.'
       })
     } else {
       res.send(data)
@@ -52,15 +52,15 @@ exports.findAll = (req, res) => {
 }
 
 exports.findOne = (req, res) => {
-  Trainee.findById(req.params.id, (err, data) => {
+  Learner.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found Trainee with id ${req.params.id}.`
+          message: `Not found Learner with id ${req.params.id}.`
         })
       } else {
         res.status(500).send({
-          message: 'Error retrieving Trainee with id ' + req.params.id
+          message: 'Error retrieving Learner with id ' + req.params.id
         })
       }
     } else res.send(data)
@@ -68,15 +68,15 @@ exports.findOne = (req, res) => {
 }
 
 exports.findOneView = (req, res) => {
-  Trainee.findByIdView(req.params.id, (err, data) => {
+  Learner.findByIdView(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found Trainee with id ${req.params.id}.`
+          message: `Not found Learner with id ${req.params.id}.`
         })
       } else {
         res.status(500).send({
-          message: 'Error retrieving Trainee with id ' + req.params.id
+          message: 'Error retrieving Learner with id ' + req.params.id
         })
       }
     } else res.send(data)
@@ -90,15 +90,15 @@ exports.update = (req, res) => {
     })
   }
 
-  Trainee.updateById(req.params.id, new Trainee(req.body), (err, data) => {
+  Learner.updateById(req.params.id, new Learner(req.body), (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found Trainee with id ${req.params.id}.`
+          message: `Not found Learner with id ${req.params.id}.`
         })
       } else {
         res.status(500).send({
-          message: 'Error updating Trainee with id ' + req.params.id
+          message: 'Error updating Learner with id ' + req.params.id
         })
       }
     } else res.send(data)
@@ -106,35 +106,35 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  Trainee.remove(req.params.id, (err) => {
+  Learner.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
           res.status(404).send({
-            message: 'Trainee has transactions and cannot be deleted.'
+            message: 'Learner has transactions and cannot be deleted.'
           })
           break
         case 'not_found':
           res.status(404).send({
-            message: `Not found Trainee with id ${req.params.id}.`
+            message: `Not found Learner with id ${req.params.id}.`
           })
           break
         default:
           res.status(500).send({
-            message: 'Could not delete Trainee with id ' + req.params.id
+            message: 'Could not delete Learner with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Trainee was deleted successfully!' })
+    } else res.send({ message: 'Learner was deleted successfully!' })
   })
 }
 
 exports.deleteAll = (req, res) => {
-  Trainee.removeAll((err) => {
+  Learner.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:
-          err.message || 'Some error occurred while removing all Trainees.'
+          err.message || 'Some error occurred while removing all Learners.'
       })
-    } else res.send({ message: 'All Trainees were deleted successfully!' })
+    } else res.send({ message: 'All Learners were deleted successfully!' })
   })
 }

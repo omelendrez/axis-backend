@@ -3,7 +3,7 @@ const { toWeb } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const ContactInfo = function (info) {
-  this.trainee = info.trainee
+  this.learner = info.learner
   this.type = info.type
   this.value = info.value
 }
@@ -12,8 +12,8 @@ ContactInfo.create = (info, result) => {
   const newContactInfo = { ...info }
 
   sql.query(
-    'SELECT COUNT(1) records FROM contact_info WHERE trainee = ? AND type = ?',
-    [newContactInfo.trainee, newContactInfo.type],
+    'SELECT COUNT(1) records FROM contact_info WHERE learner = ? AND type = ?',
+    [newContactInfo.learner, newContactInfo.type],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -45,7 +45,7 @@ ContactInfo.create = (info, result) => {
 
 ContactInfo.findById = (id, result) => {
   sql.query(
-    `SELECT id, trainee, type, value FROM contact_info WHERE id = ${id}`,
+    `SELECT id, learner, type, value FROM contact_info WHERE id = ${id}`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -64,7 +64,7 @@ ContactInfo.findById = (id, result) => {
 }
 
 ContactInfo.getAll = (id, result) => {
-  const query = `SELECT i.id, t.name type, i.value FROM contact_info i INNER JOIN contact_type t ON i.type = t.id WHERE i.trainee = ${id}`
+  const query = `SELECT i.id, t.name type, i.value FROM contact_info i INNER JOIN contact_type t ON i.type = t.id WHERE i.learner = ${id}`
   sql.query(query, (err, res) => {
     if (err) {
       log.error(err)

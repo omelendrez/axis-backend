@@ -30,7 +30,7 @@ exports.findAll = (req, res) => {
     if (err) {
       res.status(500).send({
         message:
-          err.message || 'Some error occurred while retrieving Nationalitys.'
+          err.message || 'Some error occurred while retrieving Nationalities.'
       })
     } else res.send(data)
   })
@@ -106,8 +106,8 @@ exports.deleteAll = (req, res) => {
     if (err) {
       res.status(500).send({
         message:
-          err.message || 'Some error occurred while removing all Nationalitys.'
+          err.message || 'Some error occurred while removing all Nationalities.'
       })
-    } else res.send({ message: 'All Nationalitys were deleted successfully!' })
+    } else res.send({ message: 'All Nationalities were deleted successfully!' })
   })
 }

@@ -29,7 +29,20 @@ exports.create = (req, res) => {
             err.message || 'Some error occurred while creating the Training.'
         })
       }
-    } else res.send(data)
+    } else {
+      const trainingId = data.id
+      const userId = req.decoded.data.id
+      Training.addTracking(trainingId, userId, 1, (err, data) => {
+        if (err) {
+          res.status(500).send({
+            message:
+              err.message || 'Some error occurred while creating the Training.'
+          })
+        } else {
+          res.status(201).send(data)
+        }
+      })
+    }
   })
 }
 

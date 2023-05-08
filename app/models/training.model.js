@@ -12,7 +12,11 @@ const Training = function (training) {
 }
 
 Training.create = (training, result) => {
-  const newTraining = { ...training, status: 1 }
+  const newTraining = {
+    ...training,
+    status: 1,
+    expiry: training.expiry ? training.expiry : null
+  }
 
   sql.query(
     'SELECT COUNT(1) records FROM training WHERE learner = ? AND course = ? AND DATE_FORMAT(start, "%Y-%m-%d") = ?',
@@ -153,6 +157,21 @@ Training.removeAll = (result) => {
 
     result(null, res.affectedRows)
   })
+}
+
+Training.addTracking = (trainingId, userId, status, result) => {
+  sql.query(
+    'INSERT INTO tracking (training, user, status) VALUES (?,?,?)',
+    [trainingId, userId, status],
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+      result(null, res)
+    }
+  )
 }
 
 module.exports = Training

@@ -3,21 +3,21 @@ const auth = require('../middleware/auth')
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const course = require('../controllers/course.controller.js')
+  const courseItem = require('../controllers/course.controller.js')
 
   const router = require('express').Router()
 
-  router.post('/', secure, course.create)
+  router.post('/', secure, courseItem.create)
 
-  router.get('/', secure, course.findAll)
+  router.get('/', secure, courseItem.findAll)
 
-  router.get('/:id', secure, course.findOne)
+  router.get('/:id', secure, courseItem.findOne)
 
-  router.put('/:id', secure, course.update)
+  router.put('/:id', secure, courseItem.update)
 
-  router.delete('/:id', secure, course.delete)
+  router.delete('/:id', secure, courseItem.delete)
 
-  router.delete('/', secure, course.deleteAll)
+  router.delete('/', secure, courseItem.deleteAll)
 
-  app.use('/api/course', router)
+  app.use('/api/course-item', router)
 }

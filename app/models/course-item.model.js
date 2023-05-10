@@ -56,7 +56,7 @@ CourseItem.getAll = (pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT c.id, c.name ${filter} ORDER BY c.name ${limits};`
+  const queryData = `SELECT c.id, c.name FROM course_item c ${filter} ORDER BY c.name ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM course_item c ${filter};`
 
   const query = `${queryData}${queryCount}`
@@ -100,7 +100,7 @@ CourseItem.updateById = (id, courseItem, result) => {
 
 CourseItem.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM course_item_rel WHERE course_item = ?;',
+    'SELECT COUNT(1) records FROM course_item_rel WHERE item = ?;',
     id,
     (err, res) => {
       if (err) {

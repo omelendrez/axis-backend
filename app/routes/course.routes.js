@@ -19,5 +19,5 @@ module.exports = (app) => {
 
   router.delete('/', secure, courseItem.deleteAll)
 
-  app.use('/api/course-item', router)
+  app.use('/api/course', router)
 }

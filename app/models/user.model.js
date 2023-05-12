@@ -7,7 +7,7 @@ const User = function (user) {
   this.email = user.email.trim()
   this.full_name = user.full_name.trim()
   this.name = user.name.trim()
-  this.password = user.password.trim()
+  this.password = user.password
   this.role = user.role
   this.status = user.status
 }
@@ -125,7 +125,14 @@ User.updateById = (id, user, result) => {
   log.success(user)
   sql.query(
     'UPDATE user SET name = ?, full_name = ?, email = ?, role = ?, status = ? WHERE id = ?',
-    [user.name, user.full_name, user.email, user.role, user.status, id],
+    [
+      user.name.trim(),
+      user.full_name.trim(),
+      user.email.trim(),
+      user.role,
+      user.status,
+      id
+    ],
     (err, res) => {
       if (err) {
         log.error(err)

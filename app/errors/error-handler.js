@@ -66,6 +66,7 @@ errorHandler.handle = function (err) {
 errorHandler.middleware = function (err, req, res, _next) {
   // express error handling middleware need 'next' to be defined, otherwise
   // they will be incorrectly recognized as a normal middleware.
+
   const { code, body } = errorHandler.handle(err)
 
   if (req.log) {

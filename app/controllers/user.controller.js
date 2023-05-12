@@ -8,11 +8,12 @@ exports.create = (req, res) => {
   }
 
   const user = new User({
-    password: req.body.password,
-    name: req.body.name,
-    full_name: req.body.full_name,
     email: req.body.email,
-    role: req.body.role
+    full_name: req.body.full_name,
+    name: req.body.name,
+    password: req.body.password,
+    role: req.body.role,
+    status: req.body.status
   })
 
   User.create(user, (err, data) => {

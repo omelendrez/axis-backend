@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(
   logger('dev', {
-    skip: (req, res) => res.statusCode < 400
+    // skip: (req, res) => res.statusCode < 400
   })
 )
 

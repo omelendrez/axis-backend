@@ -5,15 +5,18 @@ const { createToken, comparePassword, passwordHash } = require('../secure')
 // constructor
 const User = function (user) {
   this.email = user.email.trim()
-  this.password = user.password.trim()
-  this.name = user.name.trim()
   this.full_name = user.full_name.trim()
+  this.name = user.name.trim()
+  this.password = user.password.trim()
   this.role = user.role
   this.status = user.status
 }
 
 User.create = async (user, result) => {
-  const newUser = { ...user, status: 1, password: await passwordHash('axis') }
+  const password = await passwordHash('axis')
+  const newUser = { ...user, password, status: 1 }
+
+  log.success(newUser)
 
   sql.query(
     `SELECT COUNT(1) records FROM user WHERE name='${user.name}'`,
@@ -119,6 +122,7 @@ User.getAll = (pagination, result) => {
 }
 
 User.updateById = (id, user, result) => {
+  log.success(user)
   sql.query(
     'UPDATE user SET name = ?, full_name = ?, email = ?, role = ?, status = ? WHERE id = ?',
     [user.name, user.full_name, user.email, user.role, user.status, id],

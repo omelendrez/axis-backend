@@ -3,21 +3,38 @@ const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Company = function (company) {
-  this.code = company.code
   this.name = company.name
+  this.status = company.status
 }
 
 Company.create = (company, result) => {
-  const newCompany = { ...company }
-  sql.query('INSERT INTO company SET ?', newCompany, (err, res) => {
-    if (err) {
-      log.error(err)
-      result(err, null)
-      return
-    }
+  const newCompany = { ...company, status: 1 }
 
-    result(null, { id: res.insertId, ...newCompany })
-  })
+  sql.query(
+    'SELECT COUNT(1) records FROM company WHERE name = ?',
+    [newCompany.name],
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      if (res[0].records) {
+        result({ kind: 'already_exists' }, null)
+        return
+      }
+      sql.query('INSERT INTO company SET ?', newCompany, (err, res) => {
+        if (err) {
+          log.error(err)
+          result(err, null)
+          return
+        }
+
+        result(null, { id: res.insertId, ...newCompany })
+      })
+    }
+  )
 }
 
 Company.findById = (id, result) => {
@@ -65,8 +82,8 @@ Company.getAll = (pagination, result) => {
 
 Company.updateById = (id, company, result) => {
   sql.query(
-    'UPDATE company SET code = ?, name = ? WHERE id = ?',
-    [company.code, company.name, id],
+    'UPDATE company SET name = ?, status = ? WHERE id = ?',
+    [company.name, company.status, id],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -86,7 +103,7 @@ Company.updateById = (id, company, result) => {
 
 Company.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM learner WHERE company IN (SELECT code FROM company WHERE id = ?)',
+    'SELECT COUNT(1) records FROM learner WHERE company = ?',
     id,
     (err, res) => {
       if (err) {

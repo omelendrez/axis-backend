@@ -8,16 +8,24 @@ exports.create = (req, res) => {
   }
 
   const company = new Company({
-    name: req.body.name
+    name: req.body.name,
+    status: req.body.status
   })
 
   Company.create(company, (err, data) => {
     if (err) {
-      res.status(500).send({
+      if (err.kind === 'already_exists') {
+        return res.status(400).send({
+          message: 'A Company with the same name already exists in database.'
+        })
+      }
+      return res.status(500).send({
         message:
           err.message || 'Some error occurred while creating the Company.'
       })
-    } else res.send(data)
+    }
+
+    res.send(data)
   })
 }
 

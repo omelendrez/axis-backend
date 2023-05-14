@@ -64,7 +64,7 @@ Course.getAll = (pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT c.id, c.name, ct.name cert_type_name FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY c.name ${limits};`
+  const queryData = `SELECT c.id, c.name, ct.name cert_type_name, c.opito_reg_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY c.name ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter};`
 
   const query = `${queryData}${queryCount}`

@@ -1,9 +1,13 @@
 const sql = require('./db.js')
-const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
+const {
+  toWeb,
+  getPaginationFilters,
+  loadModel
+} = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const CourseItem = function (courseItem) {
-  this.name = courseItem.name
+const CourseItem = function (payload) {
+  loadModel(payload, this)
 }
 
 CourseItem.create = (courseItem, result) => {

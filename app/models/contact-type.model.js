@@ -1,9 +1,13 @@
 const sql = require('./db.js')
-const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
+const {
+  toWeb,
+  getPaginationFilters,
+  loadModel
+} = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const ContactType = function (contactType) {
-  this.name = contactType.name
+const ContactType = function (payload) {
+  loadModel(payload, this)
 }
 
 ContactType.create = (contactType, result) => {

@@ -1,15 +1,10 @@
 const sql = require('./db.js')
-const { toWeb, getPaginationFilters } = require('../helpers/utils')
+const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
 const { createToken, comparePassword, passwordHash } = require('../secure')
 // constructor
-const User = function (user) {
-  this.email = user.email.trim()
-  this.full_name = user.full_name.trim()
-  this.name = user.name.trim()
-  this.password = user.password
-  this.role = user.role
-  this.status = user.status
+const User = function (payload) {
+  loadModel(payload, this)
 }
 
 User.create = async (user, result) => {

@@ -39,4 +39,7 @@ const getPaginationFilters = (pagination, fields, filterField = '') => {
   return { filter, limits }
 }
 
-module.exports = { toWeb, getPaginationFilters }
+const loadModel = (payload, object) =>
+  Object.keys(payload).forEach((key) => (object[key] = payload[key]))
+
+module.exports = { toWeb, getPaginationFilters, loadModel }

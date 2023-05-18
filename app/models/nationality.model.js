@@ -1,11 +1,13 @@
 const sql = require('./db.js')
-const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
+const {
+  toWeb,
+  getPaginationFilters,
+  loadModel
+} = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const Nationality = function (nationality) {
-  this.code = nationality.code
-  this.country = nationality.country
-  this.nationality = nationality.nationality
+const Nationality = function (payload) {
+  loadModel(payload, this)
 }
 
 Nationality.create = (nationality, result) => {

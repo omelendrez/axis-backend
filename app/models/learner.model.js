@@ -1,18 +1,10 @@
 const sql = require('./db.js')
-const { toWeb, getPaginationFilters } = require('../helpers/utils')
+const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log.js')
+
 // constructor
-const Learner = function (learner) {
-  this.type = learner.type
-  this.badge = learner.badge
-  this.last_name = learner.last_name
-  this.first_name = learner.first_name
-  this.sex = learner.sex
-  this.state = learner.state
-  this.nationality = learner.nationality
-  this.birth_date = learner.birth_date
-  this.company = learner.company
-  this.status = learner.status
+const Learner = function (payload) {
+  loadModel(payload, this)
 }
 
 Learner.create = (learner, result) => {

@@ -1,10 +1,9 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, loadModel } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const CourseItemRel = function (courseItemRel) {
-  this.course = courseItemRel.course
-  this.item = courseItemRel.item
+const CourseItemRel = function (payload) {
+  loadModel(payload, this)
 }
 
 CourseItemRel.create = (payload, result) => {

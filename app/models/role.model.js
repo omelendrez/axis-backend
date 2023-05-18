@@ -1,9 +1,13 @@
 const sql = require('./db.js')
-const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
+const {
+  toWeb,
+  getPaginationFilters,
+  loadModel
+} = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const Role = function (role) {
-  this.name = role.name
+const Role = function (payload) {
+  loadModel(payload, this)
 }
 
 Role.create = (role, result) => {

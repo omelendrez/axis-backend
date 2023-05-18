@@ -1,14 +1,9 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, loadModel } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const Training = function (training) {
-  this.learner = training.learner
-  this.course = training.course
-  this.start = training.start
-  this.expiry = training.expiry
-  this.certificate = training.certificate
-  this.status = training.status
+const Training = function (payload) {
+  loadModel(payload, this)
 }
 
 Training.create = (training, result) => {

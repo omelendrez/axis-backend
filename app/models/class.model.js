@@ -6,16 +6,16 @@ const {
 } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const Company = function (payload) {
+const Class = function (payload) {
   loadModel(payload, this)
 }
 
-Company.create = (company, result) => {
-  const newCompany = { ...company, status: 1 }
+Class.create = (classroom, result) => {
+  const newClass = { ...classroom, status: 1 }
 
   sql.query(
-    'SELECT COUNT(1) records FROM company WHERE name = ?',
-    [newCompany.name],
+    'SELECT COUNT(1) records FROM class WHERE course = ? AND start = ?',
+    [newClass.name, newClass.start],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -27,43 +27,46 @@ Company.create = (company, result) => {
         result({ kind: 'already_exists' }, null)
         return
       }
-      sql.query('INSERT INTO company SET ?', newCompany, (err, res) => {
+      sql.query('INSERT INTO class SET ?', newClass, (err, res) => {
         if (err) {
           log.error(err)
           result(err, null)
           return
         }
 
-        result(null, { id: res.insertId, ...newCompany })
+        result(null, { id: res.insertId, ...newClass })
       })
     }
   )
 }
 
-Company.findById = (id, result) => {
-  sql.query(`SELECT * FROM company WHERE id = ${id}`, (err, res) => {
-    if (err) {
-      log.error(err)
-      result(err, null)
-      return
-    }
+Class.findById = (id, result) => {
+  sql.query(
+    `SELECT id, course, DATE_FORMAT(start, '%Y-%m-%d') start, learners FROM class WHERE id = ${id}`,
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
 
-    if (res.length) {
-      result(null, toWeb(res[0]))
-      return
-    }
+      if (res.length) {
+        result(null, toWeb(res[0]))
+        return
+      }
 
-    result({ kind: 'not_found' }, null)
-  })
+      result({ kind: 'not_found' }, null)
+    }
+  )
 }
 
-Company.getAll = (pagination, result) => {
-  const fields = ['name']
+Class.getAll = (pagination, result) => {
+  const fields = ['course_name']
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT id, name FROM company ${filter} ORDER BY name ${limits};`
-  const queryCount = `SELECT COUNT(1) records FROM company ${filter};`
+  const queryData = `SELECT c.id, co.name course_name, DATE_FORMAT(c.start, '%d-%m-%Y') start, c.learners FROM class c INNER JOIN course co ON c.course = co.id ${filter} ORDER BY id DESC ${limits};`
+  const queryCount = `SELECT COUNT(1) records FROM class ${filter};`
 
   const query = `${queryData}${queryCount}`
 
@@ -83,10 +86,10 @@ Company.getAll = (pagination, result) => {
   })
 }
 
-Company.updateById = (id, company, result) => {
+Class.updateById = (id, classroom, result) => {
   sql.query(
-    'UPDATE company SET name = ?, status = ? WHERE id = ?',
-    [company.name, company.status, id],
+    'UPDATE class SET course = ?, start = ?, learners = ? WHERE id = ?',
+    [classroom.course, classroom.start, classroom.learners, id],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -99,14 +102,14 @@ Company.updateById = (id, company, result) => {
         return
       }
 
-      result(null, { id, ...toWeb(company) })
+      result(null, { id, ...toWeb(classroom) })
     }
   )
 }
 
-Company.remove = (id, result) => {
+Class.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM learner WHERE company = ?',
+    'SELECT learners records FROM class WHERE id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -120,7 +123,7 @@ Company.remove = (id, result) => {
         return
       }
 
-      sql.query('DELETE FROM company WHERE id = ?', id, (err, res) => {
+      sql.query('DELETE FROM class WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error(err)
           result(err, null)
@@ -138,8 +141,8 @@ Company.remove = (id, result) => {
   )
 }
 
-Company.removeAll = (result) => {
-  sql.query('DELETE FROM company', (err, res) => {
+Class.removeAll = (result) => {
+  sql.query('DELETE FROM class', (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -150,4 +153,4 @@ Company.removeAll = (result) => {
   })
 }
 
-module.exports = Company
+module.exports = Class

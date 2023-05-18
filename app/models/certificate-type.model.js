@@ -1,9 +1,13 @@
 const sql = require('./db.js')
-const { toWeb, getPaginationFilters } = require('../helpers/utils.js')
+const {
+  toWeb,
+  getPaginationFilters,
+  loadModel
+} = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const CertificateType = function (certificatetype) {
-  this.name = certificatetype.name
+const CertificateType = function (payload) {
+  loadModel(payload, this)
 }
 
 CertificateType.create = (certificatetype, result) => {

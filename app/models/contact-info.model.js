@@ -1,11 +1,9 @@
 const sql = require('./db.js')
-const { toWeb } = require('../helpers/utils.js')
+const { toWeb, loadModel } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const ContactInfo = function (info) {
-  this.learner = info.learner
-  this.type = info.type
-  this.value = info.value
+const ContactInfo = function (payload) {
+  loadModel(payload, this)
 }
 
 ContactInfo.create = (info, result) => {

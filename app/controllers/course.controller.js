@@ -66,6 +66,22 @@ exports.findOne = (req, res) => {
   })
 }
 
+exports.findOneView = (req, res) => {
+  Course.findByIdView(req.params.id, (err, data) => {
+    if (err) {
+      if (err.kind === 'not_found') {
+        res.status(404).send({
+          message: `Not found Course with id ${req.params.id}.`
+        })
+      } else {
+        res.status(500).send({
+          message: 'Error retrieving Course with id ' + req.params.id
+        })
+      }
+    } else res.send(data)
+  })
+}
+
 exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({

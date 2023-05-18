@@ -44,6 +44,19 @@ exports.findAll = (req, res) => {
   })
 }
 
+exports.findAllView = (req, res) => {
+  CourseItem.getAllView(req.params.id, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message:
+          err.message || 'Some error occurred while retrieving CourseItems.'
+      })
+    } else {
+      res.send(data)
+    }
+  })
+}
+
 exports.findOne = (req, res) => {
   CourseItem.findById(req.params.id, (err, data) => {
     if (err) {

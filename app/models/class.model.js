@@ -11,11 +11,10 @@ const Class = function (payload) {
 }
 
 Class.create = (classroom, result) => {
-  const newClass = { ...classroom, status: 1 }
-
+  const payload = { ...classroom, learners: 0 }
   sql.query(
     'SELECT COUNT(1) records FROM class WHERE course = ? AND start = ?',
-    [newClass.name, newClass.start],
+    [payload.course, payload.start],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -27,14 +26,15 @@ Class.create = (classroom, result) => {
         result({ kind: 'already_exists' }, null)
         return
       }
-      sql.query('INSERT INTO class SET ?', newClass, (err, res) => {
+
+      sql.query('INSERT INTO class SET ?', payload, (err, res) => {
         if (err) {
           log.error(err)
           result(err, null)
           return
         }
 
-        result(null, { id: res.insertId, ...newClass })
+        result(null, { id: res.insertId, ...payload })
       })
     }
   )

@@ -87,7 +87,7 @@ User.login = (params, result) => {
 }
 
 User.getAll = (pagination, result) => {
-  const fields = ['u.name', 'u.full_name']
+  const fields = ['u.name', 'u.full_name', 'r.name']
 
   const { filter, limits } = getPaginationFilters(
     pagination,

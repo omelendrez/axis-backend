@@ -16,7 +16,10 @@ const getPaginationFilters = (pagination, fields, filterField = '') => {
   const { search, limit, offset } = pagination
   let filter = ''
   if (search) {
-    filter = `WHERE CONCAT(${fields.join('," ",')}) LIKE '%${search.trim()}%'`
+    filter =
+      fields.length > 1
+        ? `WHERE CONCAT(${fields.join('," ",')}) LIKE '%${search.trim()}%'`
+        : `WHERE ${fields[0]} LIKE '%${search.trim()}%'`
     if (filterField) {
       filter += ` AND ${filterField}`
     }

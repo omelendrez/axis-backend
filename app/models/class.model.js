@@ -61,12 +61,13 @@ Class.findById = (id, result) => {
 }
 
 Class.getAll = (pagination, result) => {
-  const fields = ['course_name']
+  const fields = ['co.name']
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT c.id, co.name course_name, DATE_FORMAT(c.start, '%d-%m-%Y') start, c.learners FROM class c INNER JOIN course co ON c.course = co.id ${filter} ORDER BY id DESC ${limits};`
-  const queryCount = `SELECT COUNT(1) records FROM class ${filter};`
+  const queryData = `SELECT c.id, co.name course_name, DATE_FORMAT(c.start, '%d-%m-%Y') start, c.learners FROM class c INNER JOIN course co ON c.course = co.id ${filter} ORDER BY c.id DESC ${limits};`
+
+  const queryCount = `SELECT COUNT(1) records FROM class c INNER JOIN course co ON c.course = co.id ${filter};`
 
   const query = `${queryData}${queryCount}`
 

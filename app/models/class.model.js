@@ -11,7 +11,11 @@ const Class = function (payload) {
 }
 
 Class.create = (classroom, result) => {
-  const payload = { ...classroom, learners: 0 }
+  const payload = {
+    ...classroom,
+    learners: classroom.learners || 0
+  }
+
   sql.query(
     'SELECT COUNT(1) records FROM class WHERE course = ? AND start = ?',
     [payload.course, payload.start],

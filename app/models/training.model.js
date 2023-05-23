@@ -77,6 +77,23 @@ Training.getAll = (id, result) => {
   })
 }
 
+Training.getAllByStatus = (id, result) => {
+  const query =
+    'SELECT l.badge,CONCAT(l.last_name, ", ", l.first_name) full_name,c.name company,co.name course,t.start,s.state,s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status WHERE t.status = ? ORDER BY t.start DESC, co.name;'
+
+  sql.query(query, id, (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    const data = res.map((data) => toWeb(data))
+
+    result(null, data)
+  })
+}
+
 Training.updateById = (id, training, result) => {
   sql.query(
     'UPDATE training SET learner = ?, course = ?, start = ?, expiry = ?, certificate = ?, status = ? WHERE id = ?',

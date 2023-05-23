@@ -71,6 +71,7 @@ require('./routes/learner.routes.js')(app)
 require('./routes/nationality.routes.js')(app)
 require('./routes/role.routes.js')(app)
 require('./routes/state.routes.js')(app)
+require('./routes/status.routes.js')(app)
 require('./routes/training.routes.js')(app)
 require('./routes/user.routes.js')(app)
 

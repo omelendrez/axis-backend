@@ -11,7 +11,7 @@ Learner.create = (learner, result) => {
   const newLearner = { ...learner, status: 1 }
 
   sql.query(
-    'SELECT COUNT(1) records FROM learner WHERE last_name = ? AND first_name = ? AND DATE_FORMAT(birth_date, `%Y-%m-%d`) = ?',
+    'SELECT COUNT(1) records FROM learner WHERE last_name = ? AND first_name = ? AND DATE_FORMAT(birth_date, "%Y-%m-%d") = ?',
     [newLearner.last_name, newLearner.first_name, newLearner.birth_date],
     (err, res) => {
       if (err) {

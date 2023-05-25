@@ -153,7 +153,7 @@ exports.login = (req, res) => {
           break
         case 'wrong_password':
           res.status(401).send({
-            message: 'Email or password incorrect.'
+            message: 'Username or password incorrect.'
           })
           break
         default:

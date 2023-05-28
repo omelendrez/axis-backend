@@ -55,41 +55,20 @@ CourseAssesmentRel.getAllAvailable = (id, result) => {
 }
 
 CourseAssesmentRel.remove = (id, result) => {
-  sql.query(
-    'SELECT COUNT(1) records FROM course_assesment_rel WHERE assesment = ?;',
-    id,
-    (err, res) => {
-      if (err) {
-        log.error(err)
-        result(err, null)
-        return
-      }
-
-      if (res[0].records) {
-        result({ kind: 'cannot_delete' }, null)
-        return
-      }
-
-      sql.query(
-        'DELETE FROM course_assesment_rel WHERE id = ?',
-        id,
-        (err, res) => {
-          if (err) {
-            log.error(err)
-            result(err, null)
-            return
-          }
-
-          if (res.affectedRows === 0) {
-            result({ kind: 'not_found' }, null)
-            return
-          }
-
-          result(null, id)
-        }
-      )
+  sql.query('DELETE FROM course_assesment_rel WHERE id = ?', id, (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
     }
-  )
+
+    if (res.affectedRows === 0) {
+      result({ kind: 'not_found' }, null)
+      return
+    }
+
+    result(null, id)
+  })
 }
 
 CourseAssesmentRel.removeAll = (result) => {

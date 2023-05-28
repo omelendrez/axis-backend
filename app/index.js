@@ -74,7 +74,7 @@ require('./routes/state.routes.js')(app)
 require('./routes/status.routes.js')(app)
 require('./routes/training.routes.js')(app)
 require('./routes/user.routes.js')(app)
-require('./routes/assesment.routes.js')(app)
+require('./routes/course-assesment.routes.js')(app)
 
 app.use(errorHandler.middleware)
 

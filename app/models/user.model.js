@@ -91,7 +91,7 @@ User.getAll = (pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `u.id, u.name, u.full_name, u.email, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u ${filter} ORDER BY u.id ${limits};`
+  const queryData = `SELECT u.id, u.name, u.full_name, u.email, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u ${filter} ORDER BY u.id ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM user u ${filter};`
 
   const query = `${queryData}${queryCount}`

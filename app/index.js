@@ -75,6 +75,7 @@ require('./routes/role.routes.js')(app)
 require('./routes/state.routes.js')(app)
 require('./routes/status.routes.js')(app)
 require('./routes/training.routes.js')(app)
+require('./routes/user-role.routes.js')(app)
 require('./routes/user.routes.js')(app)
 
 app.use(errorHandler.middleware)

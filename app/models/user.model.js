@@ -91,7 +91,7 @@ User.getAll = (pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `u.id, u.name, u.full_name, u.email, case when ur.user is null then "[]" else json_arrayagg(json_object("id", r.id, "name", r.name)) end roles, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u left outer join user_role ur on ur.user = u.id left outer join role r on r.id = ur.role ${filter} ORDER BY u.id ${limits};`
+  const queryData = `SELECT u.id, u.name, u.full_name, u.email, case when ur.user is null then "[]" else json_arrayagg(json_object("id", r.id, "name", r.name)) end roles, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u left outer join user_role ur on ur.user = u.id left outer join role r on r.id = ur.role ${filter} ORDER BY u.id ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM user u left outer join user_role ur on ur.user = u.id left outer join role r on r.id = ur.role ${filter};`
 
   const query = `${queryData}${queryCount}`

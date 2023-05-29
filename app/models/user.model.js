@@ -113,24 +113,23 @@ User.getAll = (pagination, result) => {
 }
 
 User.findByIdView = (id, result) => {
-  sql.query(
-    'SELECT u.id, u.name, u.full_name, u.email, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u WHERE u.id=?',
-    id,
-    (err, res) => {
-      if (err) {
-        log.error(err)
-        result(err, null)
-        return
-      }
+  const query =
+    'SELECT u.id, u.name, u.full_name, u.email, json_arrayagg(json_object(id, r.id,name, r.name)) roles, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u inner join user_role ur on ur.user = u.id inner join role r on r.id = ur.role WHERE u.id=?'
 
-      if (res.length) {
-        result(null, toWeb(res[0]))
-        return
-      }
-
-      result({ kind: 'not_found' }, null)
+  sql.query(query, id, (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
     }
-  )
+
+    if (res.length) {
+      result(null, res[0])
+      return
+    }
+
+    result({ kind: 'not_found' }, null)
+  })
 }
 
 User.updateById = (id, user, result) => {

@@ -58,8 +58,9 @@ User.findById = (id, result) => {
 }
 
 User.login = (params, result) => {
-  const query = `SELECT * FROM user WHERE name = '${params.name.trim()}'`
-  sql.query(query, async (err, res) => {
+  const query =
+    'SELECT u.id, u.name, u.full_name, u.password, case when ur.user is null then "[]" else json_arrayagg(json_object("id", r.id, "name", r.name)) end roles, u.status FROM user u left outer join user_role ur on ur.user = u.id left outer join role r on r.id = ur.role WHERE name = ?'
+  sql.query(query, params.name.trim(), async (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

@@ -116,6 +116,27 @@ User.getAll = (pagination, result) => {
   })
 }
 
+User.findByIdView = (id, result) => {
+  sql.query(
+    'SELECT u.id, u.name, u.full_name, u.email, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u WHERE u.id=?',
+    id,
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      if (res.length) {
+        result(null, toWeb(res[0]))
+        return
+      }
+
+      result({ kind: 'not_found' }, null)
+    }
+  )
+}
+
 User.updateById = (id, user, result) => {
   log.success(user)
   sql.query(

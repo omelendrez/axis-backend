@@ -13,6 +13,8 @@ module.exports = (app) => {
 
   router.get('/:id', secure, user.findOne)
 
+  router.get('/:id/view', secure, user.findOneView)
+
   router.put('/:id', secure, user.update)
 
   router.put('/:id/chgpwd', secure, user.chgPwd)

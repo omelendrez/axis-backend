@@ -57,7 +57,8 @@ Course.findById = (id, result) => {
 
 Course.findByIdView = (id, result) => {
   sql.query(
-    `SELECT c.id, c.name, ct.name 'type', CASE WHEN c.id_card = 1 THEN 'Yes' ELSE 'No' END card_id, CASE WHEN c.cert_id_card = 1 THEN 'Yes' ELSE 'No' END cert_card_id, c.front_id, c.back_id, c.duration, c.validity, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ${id}`,
+    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, CASE WHEN c.cert_id_card = 1 THEN "Yes" ELSE "No" END cert_card_id, c.front_id, c.back_id, c.duration, c.validity, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
+    id,
     (err, res) => {
       if (err) {
         log.error(err)

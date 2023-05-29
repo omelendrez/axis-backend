@@ -87,16 +87,12 @@ User.login = (params, result) => {
 }
 
 User.getAll = (pagination, result) => {
-  const fields = ['u.name', 'u.full_name', 'r.name']
+  const fields = ['u.name', 'u.full_name', 'u.email']
 
-  const { filter, limits } = getPaginationFilters(
-    pagination,
-    fields,
-    'u.status=1'
-  )
+  const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT u.id, u.name, full_name, r.name role_name FROM user u INNER JOIN role r ON u.role = r.id ${filter} ORDER BY u.id ${limits};`
-  const queryCount = `SELECT COUNT(1) records FROM user u INNER JOIN role r ON u.role = r.id ${filter};`
+  const queryData = `u.id, u.name, u.full_name, u.email, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u ${filter} ORDER BY u.id ${limits};`
+  const queryCount = `SELECT COUNT(1) records FROM user u ${filter};`
 
   const query = `${queryData}${queryCount}`
 

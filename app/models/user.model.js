@@ -114,7 +114,7 @@ User.getAll = (pagination, result) => {
 
 User.findByIdView = (id, result) => {
   const query =
-    'SELECT u.id, u.name, u.full_name, u.email, json_arrayagg(json_object(id, r.id, name, r.name)) roles, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u inner join user_role ur on ur.user = u.id inner join role r on r.id = ur.role WHERE u.id=?'
+    'SELECT u.id, u.name, u.full_name, u.email, json_arrayagg(json_object("id", r.id, "name", r.name)) roles, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u inner join user_role ur on ur.user = u.id inner join role r on r.id = ur.role WHERE u.id=?'
 
   sql.query(query, id, (err, res) => {
     if (err) {

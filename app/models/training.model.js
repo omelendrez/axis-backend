@@ -104,7 +104,7 @@ Training.getAllByStatus = (id, pagination, result) => {
 
   const query = `${queryData}${queryCount}`
 
-  sql.query(query, id, (err, res) => {
+  sql.query(query, [id, id], (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

@@ -137,12 +137,11 @@ User.findByIdView = (id, result) => {
 User.updateById = (id, user, result) => {
   log.success(user)
   sql.query(
-    'UPDATE user SET name = ?, full_name = ?, email = ?, role = ?, status = ? WHERE id = ?',
+    'UPDATE user SET name = ?, full_name = ?, email = ?, status = ? WHERE id = ?',
     [
       user.name.trim(),
       user.full_name.trim(),
       user.email.trim(),
-      user.role,
       user.status,
       id
     ],

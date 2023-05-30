@@ -93,10 +93,12 @@ Training.getAllByStatus = (id, pagination, result) => {
 
   let newFilter = filter
 
+  const ids = id.split('-').join(',')
+
   if (filter.includes('WHERE')) {
-    newFilter = ' AND ? LIKE CONCAT("%", t.status, "%")'
+    newFilter = ` AND t.status IN (${ids})`
   } else {
-    newFilter = 'WHERE ? LIKE CONCAT("%", t.status, "%")'
+    newFilter = ` WHERE t.status IN (${ids})`
   }
 
   const queryData = `SELECT t.id, l.badge,CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, "%d-%m-%Y") start, t.status status_id,  s.state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter} ORDER BY t.start DESC, co.name ${limits};`

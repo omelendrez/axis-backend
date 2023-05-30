@@ -76,7 +76,8 @@ exports.findOne = (req, res) => {
 }
 
 exports.findAllByStatus = (req, res) => {
-  Training.getAllByStatus(req.params.id, (err, data) => {
+  const pagination = req.query
+  Training.getAllByStatus(req.params.id, pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message:

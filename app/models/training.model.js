@@ -1,5 +1,9 @@
 const sql = require('./db.js')
-const { toWeb, loadModel } = require('../helpers/utils.js')
+const {
+  toWeb,
+  loadModel,
+  getPaginationFilters
+} = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
 const Training = function (payload) {
@@ -77,9 +81,28 @@ Training.getAll = (id, result) => {
   })
 }
 
-Training.getAllByStatus = (id, result) => {
-  const query =
-    'SELECT t.id, l.badge,CONCAT(l.last_name, ", ", l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, \'%d-%m-%Y\') start,s.state,s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status WHERE ? LIKE CONCAT("%", t.status, "%") ORDER BY t.start DESC, co.name;'
+Training.getAllByStatus = (id, pagination, result) => {
+  const fields = [
+    'l.badge',
+    'CONCAT(l.last_name, ", ", l.first_name) ',
+    'c.name',
+    'co.name'
+  ]
+
+  const { filter, limits } = getPaginationFilters(pagination, fields)
+
+  let newFilter = filter
+
+  if (filter.includes('WHERE')) {
+    newFilter = ' AND ? LIKE CONCAT("%", t.status, "%")'
+  } else {
+    newFilter = 'WHERE ? LIKE CONCAT("%", t.status, "%")'
+  }
+
+  const queryData = `SELECT t.id, l.badge,CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, "%d-%m-%Y") start,s.state,s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter} ORDER BY t.start DESC, co.name ${limits};`
+  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter};`
+
+  const query = `${queryData}${queryCount}`
 
   sql.query(query, id, (err, res) => {
     if (err) {
@@ -88,9 +111,12 @@ Training.getAllByStatus = (id, result) => {
       return
     }
 
-    const data = res.map((data) => toWeb(data))
+    const records = res[0]
+    const count = res[1][0].records
 
-    result(null, data)
+    const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
   })
 }
 

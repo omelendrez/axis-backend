@@ -75,6 +75,22 @@ exports.findOne = (req, res) => {
   })
 }
 
+exports.findOneView = (req, res) => {
+  Training.findByIdView(req.params.id, (err, data) => {
+    if (err) {
+      if (err.kind === 'not_found') {
+        res.status(404).send({
+          message: `Not found Training with id ${req.params.id}.`
+        })
+      } else {
+        res.status(500).send({
+          message: 'Error retrieving Training with id ' + req.params.id
+        })
+      }
+    } else res.send(data)
+  })
+}
+
 exports.findAllByStatus = (req, res) => {
   const pagination = req.query
   Training.getAllByStatus(req.params.id, pagination, (err, data) => {

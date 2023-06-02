@@ -13,6 +13,8 @@ module.exports = (app) => {
 
   router.get('/:id/status', secure, training.findAllByStatus)
 
+  router.get('/:id/view', secure, training.findOneView)
+
   router.get('/:id', secure, training.findOne)
 
   router.put('/:id', secure, training.update)

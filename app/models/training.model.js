@@ -65,6 +65,28 @@ Training.findById = (id, result) => {
   )
 }
 
+Training.findByIdView = (id, result) => {
+  sql.query(
+    'SELECT t.id, l.badge,CONCAT(l.last_name, ',
+    ', l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, "%d-%m-%Y") start, t.status status_id,  s.state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status WHERE t.id = ?',
+    id,
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      if (res.length) {
+        result(null, toWeb(res[0]))
+        return
+      }
+
+      result({ kind: 'not_found' }, null)
+    }
+  )
+}
+
 Training.getAll = (id, result) => {
   const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d-%m-%Y') start, DATE_FORMAT(t.expiry, '%d-%m-%Y') expiry, t.certificate, s.state FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE learner = ${id}`
 

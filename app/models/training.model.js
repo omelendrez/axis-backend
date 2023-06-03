@@ -67,7 +67,7 @@ Training.findById = (id, result) => {
 
 Training.findByIdView = (id, result) => {
   sql.query(
-    'SELECT t.id, l.badge,CONCAT(l.last_name, ",", l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, "%d-%m-%Y") start, t.status status_id,  s.state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status WHERE t.id = ?',
+    'SELECT t.id, l.badge, l.type, CONCAT(l.last_name, ", ", l.first_name) full_name, DATE_FORMAT(l.birth_date, "%d-%m-%Y") birth_date, CASE WHEN l.sex = "F" THEN "Female" ELSE "Male" END sex, n.nationality, c.name company,co.name course, DATE_FORMAT(t.start, "%d-%m-%Y") start, t.status status_id, st.name state, s.state course_state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN nationality n ON l.nationality = n.id INNER JOIN state st ON l.state = st.id INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status WHERE t.id = ?',
     id,
     (err, res) => {
       if (err) {

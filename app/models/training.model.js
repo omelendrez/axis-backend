@@ -67,7 +67,7 @@ Training.findById = (id, result) => {
 
 Training.findByIdView = (id, result) => {
   sql.query(
-    'SELECT t.id, l.badge, l.type, CONCAT(l.last_name, ", ", l.first_name) full_name, DATE_FORMAT(l.birth_date, "%d-%m-%Y") birth_date, CASE WHEN l.sex = "F" THEN "Female" ELSE "Male" END sex, n.nationality, c.name company,co.name course, DATE_FORMAT(t.start, "%d-%m-%Y") start, t.status status_id, st.name state, s.state course_state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN nationality n ON l.nationality = n.id INNER JOIN state st ON l.state = st.id INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status WHERE t.id = ?',
+    'SELECT t.id, l.badge, l.type, CONCAT(l.last_name, ", ", l.first_name) full_name, DATE_FORMAT(l.birth_date, "%d/%m/%Y") birth_date, CASE WHEN l.sex = "F" THEN "Female" ELSE "Male" END sex, n.nationality, c.name company,co.name course, DATE_FORMAT(t.start, "%d/%m/%Y") start, t.status status_id, st.name state, s.state course_state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN nationality n ON l.nationality = n.id INNER JOIN state st ON l.state = st.id INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status WHERE t.id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -87,7 +87,7 @@ Training.findByIdView = (id, result) => {
 }
 
 Training.getAll = (id, result) => {
-  const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d-%m-%Y') start, DATE_FORMAT(t.expiry, '%d-%m-%Y') expiry, t.certificate, s.state FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE learner = ${id}`
+  const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate, s.state FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE learner = ${id}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -122,7 +122,7 @@ Training.getAllByStatus = (id, pagination, result) => {
     newFilter = ` WHERE t.status IN (${ids})`
   }
 
-  const queryData = `SELECT t.id, l.badge,CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, "%d-%m-%Y") start, t.status status_id,  s.state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter} ORDER BY t.start DESC, co.name ${limits};`
+  const queryData = `SELECT t.id, l.badge,CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, "%d/%m/%Y") start, t.status status_id,  s.state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter} ORDER BY t.start DESC, co.name ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter};`
 
   const query = `${queryData}${queryCount}`
@@ -224,6 +224,21 @@ Training.addTracking = (trainingId, userId, status, result) => {
   sql.query(
     'INSERT INTO tracking (training, user, status) VALUES (?,?,?)',
     [trainingId, userId, status],
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+      result(null, res)
+    }
+  )
+}
+
+Training.getTracking = (trainingId, result) => {
+  sql.query(
+    'SELECT s.status, u.full_name, DATE_FORMAT(t.updated, "%d/%m/%Y") updated FROM tracking t INNER JOIN status s ON t.status = s.id INNER JOIN user u ON t.user = u.id WHERE t.training = ?;',
+    [trainingId],
     (err, res) => {
       if (err) {
         log.error(err)

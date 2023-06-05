@@ -15,6 +15,8 @@ module.exports = (app) => {
 
   router.get('/:id/view', secure, training.findOneView)
 
+  router.get('/:id/tracking', secure, training.findTracking)
+
   router.get('/:id', secure, training.findOne)
 
   router.put('/:id', secure, training.update)

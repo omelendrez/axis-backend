@@ -118,9 +118,6 @@ Training.getAllByClassroom = (id, pagination, result) => {
     filter.length > 0 ? ' AND ' : ' WHERE '
   } cl.id = ?;`
 
-  console.log(queryData)
-  console.log(queryCount)
-
   const query = `${queryData}${queryCount}`
 
   sql.query(query, [id, id], (err, res) => {

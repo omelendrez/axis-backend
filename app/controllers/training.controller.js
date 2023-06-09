@@ -91,9 +91,9 @@ exports.findOneView = (req, res) => {
   })
 }
 
-exports.findAllByStatus = (req, res) => {
+exports.findAllByClassroom = (req, res) => {
   const pagination = req.query
-  Training.getAllByStatus(req.params.id, pagination, (err, data) => {
+  Training.getAllByClassroom(req.params.id, pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message:

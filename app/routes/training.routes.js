@@ -11,7 +11,7 @@ module.exports = (app) => {
 
   router.get('/:id/all', secure, training.findAll)
 
-  router.get('/:id/status', secure, training.findAllByStatus)
+  router.get('/:id/classroom', secure, training.findAllByClassroom)
 
   router.get('/:id/view', secure, training.findOneView)
 

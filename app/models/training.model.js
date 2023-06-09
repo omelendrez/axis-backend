@@ -102,28 +102,24 @@ Training.getAll = (id, result) => {
   })
 }
 
-Training.getAllByStatus = (id, pagination, result) => {
+Training.getAllByClassroom = (id, pagination, result) => {
   const fields = [
     'l.badge',
     'CONCAT(l.last_name, ", ", l.first_name) ',
-    'c.name',
-    'co.name'
+    'c.name'
   ]
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  let newFilter = filter
+  const queryData = `SELECT t.id, l.badge, CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company, t.status status_id, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN class cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
+    filter.length > 0 ? ' AND ' : ' WHERE '
+  } cl.id = ? ${limits} ;`
+  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN class cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
+    filter.length > 0 ? ' AND ' : ' WHERE '
+  } cl.id = ?;`
 
-  const ids = id.split('-').join(',')
-
-  if (filter.includes('WHERE')) {
-    newFilter = ` AND t.status IN (${ids})`
-  } else {
-    newFilter = ` WHERE t.status IN (${ids})`
-  }
-
-  const queryData = `SELECT t.id, l.badge,CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company,co.name course, DATE_FORMAT(t.start, "%d/%m/%Y") start, t.status status_id,  s.state, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter} ORDER BY t.start DESC, co.name ${limits};`
-  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN course co ON co.id = t.course INNER JOIN status s ON s.id = t.status ${filter} ${newFilter};`
+  console.log(queryData)
+  console.log(queryCount)
 
   const query = `${queryData}${queryCount}`
 

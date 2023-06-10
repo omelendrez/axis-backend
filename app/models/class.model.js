@@ -64,6 +64,27 @@ Class.findById = (id, result) => {
   )
 }
 
+Class.findByIdView = (id, result) => {
+  sql.query(
+    'SELECT co.name course, DATE_FORMAT(start, "%d/%m/%Y") start FROM class c INNER JOIN course co ON co.id = c.course WHERE c.id = ?;',
+    id,
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      if (res.length) {
+        result(null, toWeb(res[0]))
+        return
+      }
+
+      result({ kind: 'not_found' }, null)
+    }
+  )
+}
+
 Class.getAll = (pagination, result) => {
   const fields = ['co.name']
 

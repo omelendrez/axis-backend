@@ -47,7 +47,8 @@ Training.create = (training, result) => {
 
 Training.findById = (id, result) => {
   sql.query(
-    `SELECT id, learner, course, DATE_FORMAT(start, '%Y-%m-%d') start, DATE_FORMAT(expiry, '%Y-%m-%d') expiry, certificate, status FROM training WHERE id = ${id}`,
+    'SELECT id, learner, course, DATE_FORMAT(start, "%Y-%m-%d") start,DATE_FORMAT(end, "%Y-%m-%d") end,DATE_FORMAT(issued, "%Y-%m-%d") issued, DATE_FORMAT(expiry, "%Y-%m-%d") expiry, certificate, status FROM training WHERE id = ?',
+    id,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -87,7 +88,7 @@ Training.findByIdView = (id, result) => {
 }
 
 Training.getAll = (id, result) => {
-  const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate, s.state FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE learner = ${id}`
+  const query = `SELECT t.id, c.name course, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.end, '%d/%m/%Y') end, DATE_FORMAT(t.issued, '%d/%m/%Y') issued, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate, s.state FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id WHERE learner = ${id}`
 
   sql.query(query, (err, res) => {
     if (err) {

@@ -86,7 +86,7 @@ Class.findByIdView = (id, result) => {
 }
 
 Class.getAll = (pagination, result) => {
-  const fields = ['co.name']
+  const fields = ['co.name', 'DATE_FORMAT(c.start, "%d/%m/%Y")']
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 

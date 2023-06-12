@@ -60,7 +60,7 @@ app.use(function (req, res, next) {
 })
 
 require('./routes/certificate-type.routes.js')(app)
-require('./routes/class.routes.js')(app)
+require('./routes/classroom.routes.js')(app)
 require('./routes/company.routes.js')(app)
 require('./routes/contact-info.routes.js')(app)
 require('./routes/contact-type.routes.js')(app)

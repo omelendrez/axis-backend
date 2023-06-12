@@ -3,7 +3,7 @@ const auth = require('../middleware/auth')
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const classroom = require('../controllers/class.controller.js')
+  const classroom = require('../controllers/classroom.controller.js')
 
   const router = require('express').Router()
 
@@ -20,5 +20,5 @@ module.exports = (app) => {
 
   router.delete('/', secure, classroom.deleteAll)
 
-  app.use('/api/class', router)
+  app.use('/api/classroom', router)
 }

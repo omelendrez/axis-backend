@@ -1,4 +1,4 @@
-const Class = require('../models/class.model')
+const Classroom = require('../models/classroom.model')
 
 exports.create = (req, res) => {
   if (!req.body) {
@@ -7,22 +7,23 @@ exports.create = (req, res) => {
     })
   }
 
-  const classroom = new Class({
+  const classroom = new Classroom({
     course: req.body.course,
     start: req.body.start,
     learners: req.body.learners
   })
 
-  Class.create(classroom, (err, data) => {
+  Classroom.create(classroom, (err, data) => {
     if (err) {
       if (err.kind === 'already_exists') {
         return res.status(400).send({
           message:
-            'A Class with the same course and start date already exists in database.'
+            'A Classroom with the same course and start date already exists in database.'
         })
       }
       return res.status(500).send({
-        message: err.message || 'Some error occurred while creating the Class.'
+        message:
+          err.message || 'Some error occurred while creating the Classroom.'
       })
     }
 
@@ -33,7 +34,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
   const pagination = req.query
 
-  Class.getAll(pagination, (err, data) => {
+  Classroom.getAll(pagination, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Classes.'
@@ -43,15 +44,15 @@ exports.findAll = (req, res) => {
 }
 
 exports.findOne = (req, res) => {
-  Class.findById(req.params.id, (err, data) => {
+  Classroom.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found Class with id ${req.params.id}.`
+          message: `Not found Classroom with id ${req.params.id}.`
         })
       } else {
         res.status(500).send({
-          message: 'Error retrieving Class with id ' + req.params.id
+          message: 'Error retrieving Classroom with id ' + req.params.id
         })
       }
     } else res.send(data)
@@ -59,15 +60,15 @@ exports.findOne = (req, res) => {
 }
 
 exports.findOneView = (req, res) => {
-  Class.findByIdView(req.params.id, (err, data) => {
+  Classroom.findByIdView(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found Class with id ${req.params.id}.`
+          message: `Not found Classroom with id ${req.params.id}.`
         })
       } else {
         res.status(500).send({
-          message: 'Error retrieving Class with id ' + req.params.id
+          message: 'Error retrieving Classroom with id ' + req.params.id
         })
       }
     } else res.send(data)
@@ -81,15 +82,15 @@ exports.update = (req, res) => {
     })
   }
 
-  Class.updateById(req.params.id, new Class(req.body), (err, data) => {
+  Classroom.updateById(req.params.id, new Classroom(req.body), (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found Class with id ${req.params.id}.`
+          message: `Not found Classroom with id ${req.params.id}.`
         })
       } else {
         res.status(500).send({
-          message: 'Error updating Class with id ' + req.params.id
+          message: 'Error updating Classroom with id ' + req.params.id
         })
       }
     } else res.send(data)
@@ -97,30 +98,30 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
-  Class.remove(req.params.id, (err) => {
+  Classroom.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
         case 'cannot_delete':
           res.status(404).send({
-            message: 'Class has learners and cannot be deleted.'
+            message: 'Classroom has learners and cannot be deleted.'
           })
           break
         case 'not_found':
           res.status(404).send({
-            message: `Not found Class with id ${req.params.id}.`
+            message: `Not found Classroom with id ${req.params.id}.`
           })
           break
         default:
           res.status(500).send({
-            message: 'Could not delete Class with id ' + req.params.id
+            message: 'Could not delete Classroom with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Class was deleted successfully!' })
+    } else res.send({ message: 'Classroom was deleted successfully!' })
   })
 }
 
 exports.deleteAll = (req, res) => {
-  Class.removeAll((err) => {
+  Classroom.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while removing all Classs.'

@@ -6,18 +6,18 @@ const {
 } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const Class = function (payload) {
+const Classroom = function (payload) {
   loadModel(payload, this)
 }
 
-Class.create = (classroom, result) => {
+Classroom.create = (classroom, result) => {
   const payload = {
     ...classroom,
     learners: classroom.learners || 0
   }
 
   sql.query(
-    'SELECT COUNT(1) records FROM class WHERE course = ? AND start = ?',
+    'SELECT COUNT(1) records FROM classroom WHERE course = ? AND start = ?',
     [payload.course, payload.start],
     (err, res) => {
       if (err) {
@@ -31,7 +31,7 @@ Class.create = (classroom, result) => {
         return
       }
 
-      sql.query('INSERT INTO class SET ?', payload, (err, res) => {
+      sql.query('INSERT INTO classroom SET ?', payload, (err, res) => {
         if (err) {
           log.error(err)
           result(err, null)
@@ -44,9 +44,9 @@ Class.create = (classroom, result) => {
   )
 }
 
-Class.findById = (id, result) => {
+Classroom.findById = (id, result) => {
   sql.query(
-    `SELECT id, course, DATE_FORMAT(start, '%Y-%m-%d') start, learners FROM class WHERE id = ${id}`,
+    `SELECT id, course, DATE_FORMAT(start, '%Y-%m-%d') start, learners FROM classroom WHERE id = ${id}`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -64,9 +64,9 @@ Class.findById = (id, result) => {
   )
 }
 
-Class.findByIdView = (id, result) => {
+Classroom.findByIdView = (id, result) => {
   sql.query(
-    'SELECT co.name course, DATE_FORMAT(start, "%d/%m/%Y") start FROM class c INNER JOIN course co ON co.id = c.course WHERE c.id = ?;',
+    'SELECT co.name course, DATE_FORMAT(start, "%d/%m/%Y") start FROM classroom c INNER JOIN course co ON co.id = c.course WHERE c.id = ?;',
     id,
     (err, res) => {
       if (err) {
@@ -85,14 +85,14 @@ Class.findByIdView = (id, result) => {
   )
 }
 
-Class.getAll = (pagination, result) => {
+Classroom.getAll = (pagination, result) => {
   const fields = ['co.name', 'DATE_FORMAT(c.start, "%d/%m/%Y")']
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT c.id, co.name course_name, DATE_FORMAT(c.start, '%d/%m/%Y') start, c.learners FROM class c INNER JOIN course co ON c.course = co.id ${filter} ORDER BY c.id DESC ${limits};`
+  const queryData = `SELECT c.id, co.name course_name, DATE_FORMAT(c.start, '%d/%m/%Y') start, c.learners FROM classroom c INNER JOIN course co ON c.course = co.id ${filter} ORDER BY c.id DESC ${limits};`
 
-  const queryCount = `SELECT COUNT(1) records FROM class c INNER JOIN course co ON c.course = co.id ${filter};`
+  const queryCount = `SELECT COUNT(1) records FROM classroom c INNER JOIN course co ON c.course = co.id ${filter};`
 
   const query = `${queryData}${queryCount}`
 
@@ -112,9 +112,9 @@ Class.getAll = (pagination, result) => {
   })
 }
 
-Class.updateById = (id, classroom, result) => {
+Classroom.updateById = (id, classroom, result) => {
   sql.query(
-    'UPDATE class SET course = ?, start = ?, learners = ? WHERE id = ?',
+    'UPDATE classroom SET course = ?, start = ?, learners = ? WHERE id = ?',
     [classroom.course, classroom.start, classroom.learners, id],
     (err, res) => {
       if (err) {
@@ -133,9 +133,9 @@ Class.updateById = (id, classroom, result) => {
   )
 }
 
-Class.remove = (id, result) => {
+Classroom.remove = (id, result) => {
   sql.query(
-    'SELECT learners records FROM class WHERE id = ?',
+    'SELECT learners records FROM classroom WHERE id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -149,7 +149,7 @@ Class.remove = (id, result) => {
         return
       }
 
-      sql.query('DELETE FROM class WHERE id = ?', id, (err, res) => {
+      sql.query('DELETE FROM classroom WHERE id = ?', id, (err, res) => {
         if (err) {
           log.error(err)
           result(err, null)
@@ -167,8 +167,8 @@ Class.remove = (id, result) => {
   )
 }
 
-Class.removeAll = (result) => {
-  sql.query('DELETE FROM class', (err, res) => {
+Classroom.removeAll = (result) => {
+  sql.query('DELETE FROM classroom', (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -179,4 +179,4 @@ Class.removeAll = (result) => {
   })
 }
 
-module.exports = Class
+module.exports = Classroom

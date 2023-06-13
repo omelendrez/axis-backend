@@ -11,8 +11,6 @@ User.create = async (user, result) => {
   const password = await passwordHash('axis')
   const newUser = { ...user, password, status: 1 }
 
-  log.success(newUser)
-
   sql.query(
     `SELECT COUNT(1) records FROM user WHERE name='${user.name}'`,
     (err, res) => {
@@ -135,7 +133,6 @@ User.findByIdView = (id, result) => {
 }
 
 User.updateById = (id, user, result) => {
-  log.success(user)
   sql.query(
     'UPDATE user SET name = ?, full_name = ?, email = ?, status = ? WHERE id = ?',
     [

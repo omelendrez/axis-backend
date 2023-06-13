@@ -59,6 +59,7 @@ app.use(function (req, res, next) {
   next()
 })
 
+require('./routes/approvals.routes.js')(app)
 require('./routes/certificate-type.routes.js')(app)
 require('./routes/classroom.routes.js')(app)
 require('./routes/company.routes.js')(app)

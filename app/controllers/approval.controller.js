@@ -1,0 +1,63 @@
+const Approval = require('../models/approval.model')
+
+exports.approve = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: 'Content can not be empty!'
+    })
+  }
+
+  const data = new Approval({
+    finance_status: req.body.finance_status,
+    systolic: req.body.systolic,
+    diastolic: req.body.diastolic,
+    assesments: req.body.assesments
+  })
+
+  Approval.approve(
+    parseInt(req.params.id, 10),
+    parseInt(req.params.status, 10),
+    data,
+    req.decoded,
+    (err, data) => {
+      if (err) {
+        if (err.kind === 'not_found') {
+          res.status(404).send({
+            message: `Not found Training with id ${req.params.id}.`
+          })
+        } else {
+          res.status(500).send({
+            message: 'Error updating Training with id ' + req.params.id
+          })
+        }
+      } else {
+        res.send(data)
+      }
+    }
+  )
+}
+
+exports.undo = (req, res) => {
+  Approval.undo(parseInt(req.params.id, 10), (err, data) => {
+    if (err) {
+      switch (err.kind) {
+        case 'not_found':
+          res.status(404).send({
+            message: `Not found Training with id ${req.params.id}.`
+          })
+          break
+        case 'cannot_delete':
+          res.status(401).send({
+            message: `Cannot undone Training with id ${req.params.id}.`
+          })
+          break
+        default:
+          res.status(500).send({
+            message: `Error undoing Training with id ${req.params.id}`
+          })
+      }
+    } else {
+      res.send(data)
+    }
+  })
+}

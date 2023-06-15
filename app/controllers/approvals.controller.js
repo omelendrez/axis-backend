@@ -27,3 +27,21 @@ exports.finance = (req, res) => {
     }
   })
 }
+
+exports.undo = (req, res) => {
+  Approvals.undo(req.params.id, (err, data) => {
+    if (err) {
+      if (err.kind === 'not_found') {
+        res.status(404).send({
+          message: `Not found Training with id ${req.params.id}.`
+        })
+      } else {
+        res.status(500).send({
+          message: `Error undoing Training with id ${req.params.id}`
+        })
+      }
+    } else {
+      res.send(data)
+    }
+  })
+}

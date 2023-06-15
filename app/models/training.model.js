@@ -112,10 +112,10 @@ Training.getAllByClassroom = (id, pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT t.id, l.badge, CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company, t.status status_id, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN class cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
+  const queryData = `SELECT t.id, l.badge, CONCAT(l.last_name, ', ', l.first_name) full_name,c.name company, t.status status_id, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
     filter.length > 0 ? ' AND ' : ' WHERE '
   } cl.id = ? ${limits} ;`
-  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN class cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
+  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
     filter.length > 0 ? ' AND ' : ' WHERE '
   } cl.id = ?;`
 

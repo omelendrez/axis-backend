@@ -9,5 +9,7 @@ module.exports = (app) => {
 
   router.post('/finance/:id', secure, approvals.finance)
 
+  router.post('/finance/:id/cancel', secure, approvals.undo)
+
   app.use('/api/approvals', router)
 }

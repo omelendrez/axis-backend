@@ -7,6 +7,11 @@ const Approval = function (payload) {
 }
 
 Approval.approve = (id, status, payload, user, result) => {
+  const trainingRecordShouldBeCancelled =
+    payload?.fit === 0 || payload?.finance_status === 0
+
+  console.log(payload)
+
   let query = 'INSERT INTO tracking (training, status, user) VALUES (?,?,?);'
   const params = [id, status, user.data.id]
 
@@ -33,12 +38,14 @@ Approval.approve = (id, status, payload, user, result) => {
     case 7: // Finance
       query += 'UPDATE training SET finance_status = ? WHERE id = ?;'
       params.push(payload.finance_status, id)
-      if (payload.finance_status === 0) {
-        query += 'INSERT INTO tracking (training, status, user) VALUES (?,?,?);'
-        params.push(id, 12, user.data.id)
-      }
+
       break
     default:
+  }
+
+  if (trainingRecordShouldBeCancelled) {
+    query += 'INSERT INTO tracking (training, status, user) VALUES (?,?,?);'
+    params.push(id, 12, user.data.id)
   }
 
   sql.query(query, params, (err, res) => {

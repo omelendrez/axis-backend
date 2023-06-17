@@ -244,4 +244,39 @@ Training.getTracking = (trainingId, result) => {
   )
 }
 
+Training.getMedicalData = (trainingId, result) => {
+  const query = `
+  SELECT
+  t.status,
+  CASE
+    WHEN tm.training IS NULL THEN NULL
+    ELSE JSON_ARRAYAGG(
+      JSON_OBJECT(
+        'systolic',
+        tm.systolic,
+        'diastolic',
+        tm.diastolic
+      )
+    )
+  END bp
+FROM
+  tracking t
+  LEFT OUTER JOIN training_medical tm ON tm.training = t.training
+  AND t.status = 3
+WHERE
+  t.training = ?
+  AND t.status IN (3, 12)
+GROUP BY
+  t.status;
+`
+  sql.query(query, [trainingId], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+    result(null, res)
+  })
+}
+
 module.exports = Training

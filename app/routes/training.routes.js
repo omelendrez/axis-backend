@@ -17,6 +17,8 @@ module.exports = (app) => {
 
   router.get('/:id/tracking', secure, training.findTracking)
 
+  router.get('/:id/medical', secure, training.findMedicalData)
+
   router.get('/:id', secure, training.findOne)
 
   router.put('/:id', secure, training.update)

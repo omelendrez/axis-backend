@@ -91,6 +91,22 @@ exports.findOneView = (req, res) => {
   })
 }
 
+exports.findMedicalData = (req, res) => {
+  Training.getMedicalData(req.params.id, (err, data) => {
+    if (err) {
+      if (err.kind === 'not_found') {
+        res.status(404).send({
+          message: `Not found Medical Data with id ${req.params.id}.`
+        })
+      } else {
+        res.status(500).send({
+          message: 'Error retrieving Medical Data with id ' + req.params.id
+        })
+      }
+    } else res.send(data)
+  })
+}
+
 exports.findAllByClassroom = (req, res) => {
   const pagination = req.query
   Training.getAllByClassroom(req.params.id, pagination, (err, data) => {

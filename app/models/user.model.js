@@ -112,9 +112,32 @@ User.getAll = (pagination, result) => {
   })
 }
 
+// TODO: Consider using JSON_ARRAYAGG and JSON_OBJECT to generate JSON nested queries for Training, Learner and Course endpoints
+
 User.findByIdView = (id, result) => {
-  const query =
-    'SELECT u.id, u.name, u.full_name, u.email, case when ur.user is null then "[]" else json_arrayagg(json_object("id", r.id, "name", r.name)) end roles, CASE u.status WHEN 1 THEN "Active" ELSE "Inactive" END status FROM user u left outer join user_role ur on ur.user = u.id left outer join role r on r.id = ur.role WHERE u.id=?'
+  const query = `
+  SELECT
+    u.id,
+    u.name,
+    u.full_name,
+    u.email,
+    CASE ur.user
+        WHEN NULL THEN '[]'
+        ELSE JSON_ARRAYAGG(JSON_OBJECT('id', r.id, 'name', r.name))
+    END roles,
+    CASE u.status
+        WHEN 1 THEN 'Active'
+        ELSE 'Inactive'
+    END status
+  FROM
+    user u
+        LEFT OUTER JOIN
+    user_role ur ON ur.user = u.id
+        LEFT OUTER JOIN
+    role r ON r.id = ur.role
+  WHERE
+    u.id = ?;
+  `
 
   sql.query(query, id, (err, res) => {
     if (err) {

@@ -3,6 +3,7 @@ const cors = require('cors')
 const { log } = require('./helpers/log.js')
 const logger = require('morgan')
 const errorHandler = require('./errors/error-handler.js')
+const { listEndpoints } = require('./helpers/utils.js')
 require('dotenv').config()
 
 const app = express()
@@ -38,7 +39,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(
   logger('dev', {
-    // skip: (req, res) => res.statusCode < 400
+    skip: (req, res) => res.statusCode < 400
   })
 )
 
@@ -86,3 +87,5 @@ const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
   log.info(`Server is running on port ${PORT}.`)
 })
+
+listEndpoints(app, '')

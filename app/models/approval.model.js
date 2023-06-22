@@ -64,7 +64,7 @@ Approval.approve = (id, status, payload, user, result) => {
 
 Approval.undo = (id, result) => {
   sql.query(
-    'SELECT status FROM tracking WHERE training = ? ORDER BY id DESC LIMIT 1;',
+    'SELECT status FROM tracking WHERE training = ? ORDER BY id DESC LIMIT 2;',
     id,
     (err, res) => {
       if (err) {
@@ -81,9 +81,18 @@ Approval.undo = (id, result) => {
       const { status } = res[0]
 
       if (status > 1) {
-        const params = [id, status]
+        const statuses = []
 
-        const query = 'DELETE FROM tracking WHERE training = ? AND status = ?;'
+        const query =
+          'DELETE FROM tracking WHERE training = ? AND status IN (?);'
+
+        statuses.push(status)
+
+        if (status === 12) {
+          statuses.push(res[1].status)
+        }
+
+        const params = [id, statuses]
 
         sql.query(query, params, (err) => {
           if (err) {
@@ -91,11 +100,11 @@ Approval.undo = (id, result) => {
             result(err, null)
             return
           }
-        })
 
-        result(null, {
-          id,
-          message: 'Status undone successfully!'
+          result(null, {
+            id,
+            message: 'Status undone successfully!'
+          })
         })
       } else {
         result({ kind: 'cannot_delete' }, null)

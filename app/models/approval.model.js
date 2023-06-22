@@ -1,5 +1,5 @@
 const sql = require('./db.js')
-const { loadModel } = require('../helpers/utils.js')
+const { loadModel, TRAINING_STATUS } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 
 const Approval = function (payload) {
@@ -11,7 +11,7 @@ Approval.approve = (id, status, payload, user, result) => {
   const params = [id, status, user.data.id]
 
   switch (status) {
-    case 3: // Medical
+    case TRAINING_STATUS.MEDICAL:
       query +=
         'INSERT INTO training_medical (training, systolic, diastolic) VALUES (?,?,?);'
       params.push(
@@ -21,7 +21,7 @@ Approval.approve = (id, status, payload, user, result) => {
       )
       break
 
-    case 5: // Assesment
+    case TRAINING_STATUS.ASSESSMENT:
       query +=
         'INSERT INTO training_assesment (training, assesment, status) VALUES (?,?,?);'
       payload.assesments.forEach((a) => {
@@ -30,7 +30,7 @@ Approval.approve = (id, status, payload, user, result) => {
 
       break
 
-    case 7: // Finance
+    case TRAINING_STATUS.FINANCE:
       query += 'UPDATE training SET finance_status = ? WHERE id = ?;'
       params.push(payload.approved, id)
 
@@ -40,7 +40,7 @@ Approval.approve = (id, status, payload, user, result) => {
 
   if (payload?.approved === 0) {
     query += 'INSERT INTO tracking (training, status, user) VALUES (?,?,?);'
-    params.push(id, 12, user.data.id)
+    params.push(id, TRAINING_STATUS.CANCELLED, user.data.id)
   }
 
   sql.query(query, params, (err, res) => {
@@ -80,7 +80,7 @@ Approval.undo = (id, result) => {
 
       const { status } = res[0]
 
-      if (status > 1) {
+      if (status > TRAINING_STATUS.ADMIN) {
         const statuses = []
 
         const query =
@@ -88,7 +88,7 @@ Approval.undo = (id, result) => {
 
         statuses.push(status)
 
-        if (status === 12) {
+        if (status === TRAINING_STATUS.CANCELLED) {
           statuses.push(res[1].status)
         }
 

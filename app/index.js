@@ -70,4 +70,6 @@ app.listen(PORT, () => {
   log.info(`Server is running on port ${PORT}.`)
 })
 
-listEndpoints(app, '')
+if (process.env.NODE_ENV !== 'production') {
+  listEndpoints(app, '')
+}

@@ -275,7 +275,7 @@ Training.addTracking = (trainingId, userId, status, result) => {
 
 Training.getTracking = (trainingId, result) => {
   sql.query(
-    'SELECT s.status, u.full_name, DATE_FORMAT(t.updated, "%d/%m/%Y %H:%i:%s") updated FROM tracking t INNER JOIN status s ON t.status = s.id INNER JOIN user u ON t.user = u.id WHERE t.training = ? ORDER BY t.updated;',
+    'SELECT s.id status_id, s.status, u.full_name, DATE_FORMAT(t.updated, "%d/%m/%Y %H:%i:%s") updated FROM tracking t INNER JOIN status s ON t.status = s.id INNER JOIN user u ON t.user = u.id WHERE t.training = ? ORDER BY t.updated;',
     [trainingId],
     (err, res) => {
       if (err) {

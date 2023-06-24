@@ -12,6 +12,7 @@ module.exports = (app) => {
   require('./course.routes.js')(app)
   require('./learner.routes.js')(app)
   require('./nationality.routes.js')(app)
+  require('./opito.routes.js')(app)
   require('./role.routes.js')(app)
   require('./state.routes.js')(app)
   require('./status.routes.js')(app)

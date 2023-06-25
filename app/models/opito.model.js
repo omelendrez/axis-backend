@@ -39,7 +39,7 @@ WHERE
         AND t.expiry IS NOT NULL
         AND t.certificate IS NOT NULL
         AND c.cert_type = 4
-        AND t.opito_generated = 0
+        AND t.opito_file = ''
 ORDER BY t.id DESC;
   `
 

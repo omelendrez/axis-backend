@@ -13,7 +13,7 @@ Opito.getAll = (result) => {
     DATE_FORMAT(t.expiry, '%d/%m/%Y') end,
     '' title,
     l.first_name,
-    '' middle_name,
+    l.middle_name,
     l.last_name,
     co.name company,
     DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date,

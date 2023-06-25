@@ -12,6 +12,12 @@ const Course = function (payload) {
 
 Course.create = (course, result) => {
   const newCourse = { ...course }
+
+  if (course.cert_type === 4 && !course.front_id) {
+    result({ kind: 'missing_front_id' }, null)
+    return
+  }
+
   sql.query(
     `SELECT COUNT(1) records FROM course WHERE name='${course.name}'`,
     (err, res) => {
@@ -103,6 +109,11 @@ Course.getAll = (pagination, result) => {
 }
 
 Course.updateById = (id, course, result) => {
+  if (course.cert_type === 4 && !course.front_id) {
+    result({ kind: 'missing_front_id' }, null)
+    return
+  }
+
   sql.query(
     'UPDATE course SET name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, cert_id_card = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
     [

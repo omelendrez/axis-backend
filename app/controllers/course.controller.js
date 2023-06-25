@@ -20,15 +20,22 @@ exports.create = (req, res) => {
 
   Course.create(course, (err, data) => {
     if (err) {
-      if (err.kind === 'already_exists') {
-        res.status(400).send({
-          message: 'Course with same name already exists in database.'
-        })
-      } else {
-        res.status(500).send({
-          message:
-            err.message || 'Some error occurred while creating the Course.'
-        })
+      switch (err.kind) {
+        case 'missing_front_id':
+          res.status(400).send({
+            message: 'Front Id field is mandatory in Opito Courses.'
+          })
+          break
+        case 'already_exists':
+          res.status(400).send({
+            message: 'Course with same name already exists in database.'
+          })
+          break
+        default:
+          res.status(500).send({
+            message:
+              err.message || 'Some error occurred while retrieving Courses.'
+          })
       }
     } else {
       res.send(data)
@@ -91,14 +98,21 @@ exports.update = (req, res) => {
 
   Course.updateById(req.params.id, new Course(req.body), (err, data) => {
     if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Course with id ${req.params.id}.`
-        })
-      } else {
-        res.status(500).send({
-          message: 'Error updating Course with id ' + req.params.id
-        })
+      switch (err.kind) {
+        case 'missing_front_id':
+          res.status(400).send({
+            message: 'Front Id field is mandatory in Opito Courses.'
+          })
+          break
+        case 'not_found':
+          res.status(404).send({
+            message: `Not found Course with id ${req.params.id}.`
+          })
+          break
+        default:
+          res.status(500).send({
+            message: 'Error updating Course with id ' + req.params.id
+          })
       }
     } else res.send(data)
   })

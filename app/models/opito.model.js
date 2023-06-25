@@ -11,7 +11,7 @@ Opito.getAll = (result) => {
     c.opito_reg_code,
     DATE_FORMAT(t.issued, '%d/%m/%Y') start,
     DATE_FORMAT(t.expiry, '%d/%m/%Y') end,
-    '' title,
+    ti.name title,
     l.first_name,
     l.middle_name,
     l.last_name,
@@ -31,12 +31,16 @@ FROM
         INNER JOIN
     learner l ON t.learner = l.id
         INNER JOIN
+    title ti ON l.title = ti.id
+        INNER JOIN
     company co ON l.company = co.id
 WHERE
-    t.certificate <> '' AND c.cert_type = 4
-        AND c.front_id <> ''
-ORDER BY t.id DESC
-LIMIT 200;
+    c.front_id IS NOT NULL
+        AND t.expiry IS NOT NULL
+        AND t.certificate IS NOT NULL
+        AND c.cert_type = 4
+        AND t.opito_generated = 0
+ORDER BY t.id DESC;
   `
 
   sql.query(query, (err, res) => {

@@ -86,7 +86,12 @@ Learner.findByIdView = (id, result) => {
 Learner.getAll = (pagination, result) => {
   const fields = [
     't.badge',
-    'CONCAT(t.first_name, "  ", t.middle_name, "  ", t.last_name)',
+    'CONCAT(t.first_name, " ", t.middle_name, " ", t.last_name)',
+    'CONCAT(t.first_name, " ", t.last_name, " ", t.middle_name)',
+    'CONCAT(t.middle_name, " ", t.first_name, " ", t.last_name)',
+    'CONCAT(t.middle_name, " ", t.last_name, " ", t.first_name)',
+    'CONCAT(t.last_name, " ", t.first_name, " ", t.middle_name)',
+    'CONCAT(t.last_name, " ", t.middle_name, " ", t.first_name)',
     'c.name'
   ]
 
@@ -96,7 +101,7 @@ Learner.getAll = (pagination, result) => {
     't.status=1'
   )
 
-  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, "  ", t.middle_name, "  ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
+  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, " ", t.middle_name, " ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM learner t INNER JOIN company c ON t.company=c.id ${filter};`
 
   const query = `${queryData}${queryCount}`

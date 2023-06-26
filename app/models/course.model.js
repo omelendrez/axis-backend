@@ -63,7 +63,7 @@ Course.findById = (id, result) => {
 
 Course.findByIdView = (id, result) => {
   sql.query(
-    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, CASE WHEN c.cert_id_card = 1 THEN "Yes" ELSE "No" END cert_card_id, c.front_id, c.back_id, c.duration, c.validity, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
+    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, c.front_id, c.back_id, c.duration, c.validity, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -115,7 +115,7 @@ Course.updateById = (id, course, result) => {
   }
 
   sql.query(
-    'UPDATE course SET name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, cert_id_card = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
+    'UPDATE course SET name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
     [
       course.name,
       course.front_id,
@@ -123,7 +123,6 @@ Course.updateById = (id, course, result) => {
       course.duration,
       course.validity,
       course.cert_type,
-      course.cert_id_card,
       course.id_card,
       course.opito_reg_code,
       id

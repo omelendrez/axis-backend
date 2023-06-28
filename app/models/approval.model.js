@@ -1,5 +1,6 @@
 const sql = require('./db.js')
 const { loadModel, TRAINING_STATUS } = require('../helpers/utils.js')
+const socketIO = require('../socket.io')
 const { log } = require('../helpers/log.js')
 
 const Approval = function (payload) {
@@ -59,10 +60,14 @@ Approval.approve = (id, status, payload, user, result) => {
       id,
       message: 'Status updated successfully!'
     })
+
+    socketIO.notify('training-status-changed', { id, status })
   })
 }
 
 Approval.undo = (id, result) => {
+  socketIO.notify('data', id)
+
   sql.query(
     'SELECT status FROM tracking WHERE training = ? ORDER BY id DESC LIMIT 2;',
     id,
@@ -105,6 +110,8 @@ Approval.undo = (id, result) => {
             id,
             message: 'Status undone successfully!'
           })
+
+          socketIO.notify('training-status-changed', { id, status })
         })
       } else {
         result({ kind: 'cannot_delete' }, null)

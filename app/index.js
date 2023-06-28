@@ -1,12 +1,16 @@
 const express = require('express')
 const cors = require('cors')
-const { log } = require('./helpers/log.js')
 const logger = require('morgan')
+const { log } = require('./helpers/log.js')
 const errorHandler = require('./errors/error-handler.js')
 const { listEndpoints } = require('./helpers/utils.js')
 require('dotenv').config()
 
+const socketIO = require('./socket.io')
+
 const app = express()
+
+const httpServer = require('http').createServer(app)
 
 const whitelist = [
   'http://localhost:5173',
@@ -22,16 +26,22 @@ const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true)
     if (whitelist.indexOf(origin) === -1) {
-      const msg =
+      const reason =
         'The CORS policy for this site does not ' +
         'allow access from the specified Origin.'
-      return callback(new Error(msg), false)
+      return callback(new Error(reason), false)
     }
     return callback(null, true)
   }
 }
 
 app.use(cors(corsOptions))
+
+const io = require('socket.io')(httpServer, {
+  cors: {
+    origin: whitelist
+  }
+})
 
 app.use(express.json())
 
@@ -66,8 +76,15 @@ app.use(errorHandler.middleware)
 
 const PORT = process.env.PORT || 3000
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   log.info(`Server is running on port ${PORT}.`)
+})
+
+io.on('connection', (socket) => {
+  socket.on('disconnect', () => {
+    console.info(`Socket ${socket.id} has disconnected.`)
+  })
+  socketIO.set(socket)
 })
 
 if (process.env.NODE_ENV !== 'production') {

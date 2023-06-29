@@ -15,6 +15,7 @@ exports.create = (req, res) => {
     duration: req.body.duration,
     validity: req.body.validity,
     cert_type: req.body.cert_type,
+    expiry_type: req.body.expiry_type,
     opito_reg_code: req.body.opito_reg_code
   })
 

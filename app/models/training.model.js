@@ -79,6 +79,7 @@ SELECT
     co.id_card,
     co.front_id_text,
     co.back_id_text,
+    co.expiry_type,
     CONCAT(l.first_name, ' ', l.middle_name, ' ', l.last_name) full_name,
     DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date,
     CASE

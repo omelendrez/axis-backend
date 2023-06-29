@@ -19,6 +19,8 @@ module.exports = (app) => {
 
   router.get('/:id/medical', secure, training.findMedicalData)
 
+  router.get('/:id/course-items', secure, training.findCourseItems)
+
   router.get('/:id', secure, training.findOne)
 
   router.put('/:id', secure, training.update)

@@ -323,4 +323,34 @@ GROUP BY
   })
 }
 
+Training.getCourseItemData = (trainingId, result) => {
+  const query = `
+  SELECT
+      id, name
+  FROM
+      course_item
+  WHERE
+      id IN (SELECT
+              item
+          FROM
+              course_item_rel
+          WHERE
+              course IN (SELECT
+                      course
+                  FROM
+                      training
+                  WHERE
+                      id = ?))
+  ORDER BY name;`
+
+  sql.query(query, [trainingId], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+    result(null, res)
+  })
+}
+
 module.exports = Training

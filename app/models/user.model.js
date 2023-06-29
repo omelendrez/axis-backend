@@ -232,7 +232,7 @@ User.chgPwd = async (id, user, result) => {
 
 User.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM tracking WHERE user = ?',
+    'SELECT COUNT(1) records FROM training_tracking WHERE user = ?',
     id,
     (err, res) => {
       if (err) {

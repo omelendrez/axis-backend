@@ -77,8 +77,8 @@ SELECT
     t.finance_status,
     co.cert_type,
     co.id_card,
-    co.front_id,
-    co.back_id,
+    co.front_id_text,
+    co.back_id_text,
     CONCAT(l.first_name, ' ', l.middle_name, ' ', l.last_name) full_name,
     DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date,
     CASE
@@ -212,7 +212,7 @@ Training.updateById = (id, training, result) => {
 
 Training.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM tracking WHERE training = ?',
+    'SELECT COUNT(1) records FROM training_tracking WHERE training = ?',
     id,
     (err, res) => {
       if (err) {
@@ -226,7 +226,7 @@ Training.remove = (id, result) => {
         return
       }
 
-      sql.query('DELETE FROM tracking WHERE training = ?', id, () => {
+      sql.query('DELETE FROM training_tracking WHERE training = ?', id, () => {
         sql.query('DELETE FROM training WHERE id = ?', id, (err, res) => {
           if (err) {
             log.error(err)
@@ -260,7 +260,7 @@ Training.removeAll = (result) => {
 
 Training.addTracking = (trainingId, userId, status, result) => {
   sql.query(
-    'INSERT INTO tracking (training, user, status) VALUES (?,?,?)',
+    'INSERT INTO training_tracking (training, user, status) VALUES (?,?,?)',
     [trainingId, userId, status],
     (err, res) => {
       if (err) {
@@ -275,7 +275,7 @@ Training.addTracking = (trainingId, userId, status, result) => {
 
 Training.getTracking = (trainingId, result) => {
   sql.query(
-    'SELECT s.id status_id, s.status, u.full_name, DATE_FORMAT(t.updated, "%d/%m/%Y %H:%i:%s") updated FROM tracking t INNER JOIN status s ON t.status = s.id INNER JOIN user u ON t.user = u.id WHERE t.training = ? ORDER BY t.updated;',
+    'SELECT s.id status_id, s.status, u.full_name, DATE_FORMAT(t.updated, "%d/%m/%Y %H:%i:%s") updated FROM training_tracking t INNER JOIN status s ON t.status = s.id INNER JOIN user u ON t.user = u.id WHERE t.training = ? ORDER BY t.updated;',
     [trainingId],
     (err, res) => {
       if (err) {
@@ -304,7 +304,7 @@ Training.getMedicalData = (trainingId, result) => {
     )
   END bp
 FROM
-  tracking t
+  training_tracking t
   LEFT OUTER JOIN training_medical tm ON tm.training = t.training
   AND t.status = 3
 WHERE

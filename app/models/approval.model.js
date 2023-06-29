@@ -8,7 +8,8 @@ const Approval = function (payload) {
 }
 
 Approval.approve = (id, status, payload, user, result) => {
-  let query = 'INSERT INTO tracking (training, status, user) VALUES (?,?,?);'
+  let query =
+    'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
   const params = [id, status, user.data.id]
 
   switch (status) {
@@ -40,7 +41,8 @@ Approval.approve = (id, status, payload, user, result) => {
   }
 
   if (payload?.approved === 0) {
-    query += 'INSERT INTO tracking (training, status, user) VALUES (?,?,?);'
+    query +=
+      'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
     params.push(id, TRAINING_STATUS.CANCELLED, user.data.id)
   }
 
@@ -69,7 +71,7 @@ Approval.undo = (id, result) => {
   socketIO.notify('data', id)
 
   sql.query(
-    'SELECT status FROM tracking WHERE training = ? ORDER BY id DESC LIMIT 2;',
+    'SELECT status FROM training_tracking WHERE training = ? ORDER BY id DESC LIMIT 2;',
     id,
     (err, res) => {
       if (err) {
@@ -89,7 +91,7 @@ Approval.undo = (id, result) => {
         const statuses = []
 
         const query =
-          'DELETE FROM tracking WHERE training = ? AND status IN (?);'
+          'DELETE FROM training_tracking WHERE training = ? AND status IN (?);'
 
         statuses.push(status)
 

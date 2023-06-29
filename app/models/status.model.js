@@ -88,7 +88,7 @@ Status.updateById = (id, status, result) => {
 
 Status.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM tracking WHERE status = ?',
+    'SELECT COUNT(1) records FROM training_tracking WHERE status = ?',
     id,
     (err, res) => {
       if (err) {

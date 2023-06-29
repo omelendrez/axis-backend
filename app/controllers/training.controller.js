@@ -127,7 +127,7 @@ exports.findTracking = (req, res) => {
       res.status(500).send({
         message:
           err.message ||
-          'Some error occurred while retrieving Tracking records.'
+          'Some error occurred while retrieving Training tracking records.'
       })
     } else {
       res.send(data)

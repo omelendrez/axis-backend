@@ -13,7 +13,7 @@ const Course = function (payload) {
 Course.create = (course, result) => {
   const newCourse = { ...course }
 
-  if (course.cert_type === 4 && !course.front_id) {
+  if (course.cert_type === 4 && !course.front_id_text) {
     result({ kind: 'missing_front_id' }, null)
     return
   }
@@ -63,7 +63,7 @@ Course.findById = (id, result) => {
 
 Course.findByIdView = (id, result) => {
   sql.query(
-    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, c.front_id, c.back_id, c.duration, c.validity, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
+    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, c.front_id_text, c.back_id_text, c.duration, c.validity, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -109,17 +109,17 @@ Course.getAll = (pagination, result) => {
 }
 
 Course.updateById = (id, course, result) => {
-  if (course.cert_type === 4 && !course.front_id) {
+  if (course.cert_type === 4 && !course.front_id_text) {
     result({ kind: 'missing_front_id' }, null)
     return
   }
 
   sql.query(
-    'UPDATE course SET name = ?, front_id = ?, back_id = ?, duration = ?, validity = ?, cert_type = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
+    'UPDATE course SET name = ?, front_id_text = ?, back_id_text = ?, duration = ?, validity = ?, cert_type = ?, id_card = ?, opito_reg_code = ? WHERE id = ?',
     [
       course.name,
-      course.front_id,
-      course.back_id,
+      course.front_id_text,
+      course.back_id_text,
       course.duration,
       course.validity,
       course.cert_type,

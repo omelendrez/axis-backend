@@ -7,7 +7,7 @@ const Opito = function () {}
 Opito.getAll = (result) => {
   const query = `
   SELECT
-    c.front_id,
+    c.front_id_text,
     c.opito_reg_code,
     DATE_FORMAT(t.issued, '%d/%m/%Y') start,
     DATE_FORMAT(t.expiry, '%d/%m/%Y') end,
@@ -35,7 +35,7 @@ FROM
         INNER JOIN
     company co ON l.company = co.id
 WHERE
-    c.front_id IS NOT NULL
+    c.front_id_text IS NOT NULL
         AND t.expiry IS NOT NULL
         AND t.certificate IS NOT NULL
         AND c.cert_type = 4

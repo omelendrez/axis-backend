@@ -81,9 +81,6 @@ httpServer.listen(PORT, () => {
 })
 
 io.on('connection', (socket) => {
-  socket.on('disconnect', () => {
-    console.info(`Socket ${socket.id} has disconnected.`)
-  })
   socketIO.set(socket)
 })
 

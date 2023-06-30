@@ -95,8 +95,8 @@ SELECT
     DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
     t.status status_id,
     st.name state,
-    s.state course_state,
-    s.status
+    CASE WHEN t.status = 0 THEN 'New record' ELSE s.state END course_state,
+    CASE WHEN t.status = 0 THEN 'Admin pending' ELSE s.status END status
 FROM
     learner l
         INNER JOIN
@@ -109,7 +109,7 @@ FROM
     state st ON l.state = st.id
         INNER JOIN
     course co ON co.id = t.course
-        INNER JOIN
+        LEFT OUTER JOIN
     status s ON s.id = t.status
 WHERE
     t.id = ?;
@@ -157,10 +157,34 @@ Training.getAllByClassroom = (id, pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT t.id, l.badge, CONCAT(l.first_name, ' ', l.middle_name, ' ', l.last_name) full_name,c.name company, t.status status_id, s.status FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
-    filter.length > 0 ? ' AND ' : ' WHERE '
-  } cl.id = ? ${limits} ;`
-  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
+  const queryData = `SELECT
+  t.id,
+  l.badge,
+  CONCAT(l.first_name,
+          ' ',
+          l.middle_name,
+          ' ',
+          l.last_name) full_name,
+  c.name company,
+  t.status status_id,
+  CASE
+      WHEN t.status = 0 THEN 'New record'
+      ELSE s.status
+  END status
+FROM
+  learner l
+      INNER JOIN
+  training t ON l.id = t.learner
+      INNER JOIN
+  company c ON c.id = l.company
+      LEFT OUTER JOIN
+  status s ON s.id = t.status
+      INNER JOIN
+  classroom cl ON t.course = cl.course
+      AND t.start = cl.start
+  ${filter} ${filter.length > 0 ? ' AND ' : ' WHERE '} cl.id = ? ${limits} ;`
+
+  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company LEFT OUTER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
     filter.length > 0 ? ' AND ' : ' WHERE '
   } cl.id = ?;`
 

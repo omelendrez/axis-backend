@@ -87,37 +87,33 @@ Approval.undo = (id, result) => {
 
       const { status } = res[0]
 
-      if (status > TRAINING_STATUS.ADMIN) {
-        const statuses = []
+      const statuses = []
 
-        const query =
-          'DELETE FROM training_tracking WHERE training = ? AND status IN (?);'
+      const query =
+        'DELETE FROM training_tracking WHERE training = ? AND status IN (?);'
 
-        statuses.push(status)
+      statuses.push(status)
 
-        if (status === TRAINING_STATUS.CANCELLED) {
-          statuses.push(res[1].status)
+      if (status === TRAINING_STATUS.CANCELLED) {
+        statuses.push(res[1].status)
+      }
+
+      const params = [id, statuses]
+
+      sql.query(query, params, (err) => {
+        if (err) {
+          log.error(err)
+          // result(err, null)
+          // return
         }
 
-        const params = [id, statuses]
-
-        sql.query(query, params, (err) => {
-          if (err) {
-            log.error(err)
-            result(err, null)
-            return
-          }
-
-          result(null, {
-            id,
-            message: 'Status undone successfully!'
-          })
-
-          socketIO.notify('training-status-changed', { id, status })
+        result(null, {
+          id,
+          message: 'Status undone successfully!'
         })
-      } else {
-        result({ kind: 'cannot_delete' }, null)
-      }
+
+        socketIO.notify('training-status-changed', { id, status })
+      })
     }
   )
 }

@@ -81,7 +81,7 @@ Approval.undo = (id, result) => {
       }
 
       if (res.length === 0) {
-        result({ kind: 'not_found' }, null)
+        result({ kind: 'cannot_undo' }, null)
         return
       }
 

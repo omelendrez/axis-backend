@@ -26,18 +26,19 @@ const USER_TYPES = {
 }
 
 const TRAINING_STATUS = {
-  ADMIN: 1,
-  FRONTDESK: 2,
-  MEDICAL: 3,
-  TRAINING_COORDINATOR: 4,
-  ASSESSMENT: 5,
-  QA: 6,
-  FINANCE: 7,
-  MD: 8,
-  CERT_PRINT: 9,
-  ID_CARD_PRNT: 10,
-  COMPLETED: 11,
-  CANCELLED: 12
+  NEW: 1,
+  ADMIN: 2,
+  FRONTDESK: 3,
+  MEDICAL: 4,
+  TRAINING_COORDINATOR: 5,
+  ASSESSMENT: 6,
+  QA: 7,
+  FINANCE: 8,
+  MD: 9,
+  CERT_PRINT: 10,
+  ID_CARD_PRNT: 11,
+  COMPLETED: 12,
+  CANCELLED: 13
 }
 
 const getPaginationFilters = (pagination, fields, filterField = '') => {

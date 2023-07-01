@@ -13,7 +13,6 @@ const Training = function (payload) {
 Training.create = (training, result) => {
   const newTraining = {
     ...training,
-    status: 1,
     expiry: training.expiry ? training.expiry : null
   }
 
@@ -47,7 +46,7 @@ Training.create = (training, result) => {
 
 Training.findById = (id, result) => {
   sql.query(
-    'SELECT id, learner, course, DATE_FORMAT(start, "%Y-%m-%d") start,DATE_FORMAT(end, "%Y-%m-%d") end,DATE_FORMAT(issued, "%Y-%m-%d") issued, DATE_FORMAT(expiry, "%Y-%m-%d") expiry, certificate, status FROM training WHERE id = ?',
+    'SELECT id, course, DATE_FORMAT(start, "%Y-%m-%d") start, DATE_FORMAT(end, "%Y-%m-%d") end, DATE_FORMAT(issued, "%Y-%m-%d") issued  FROM training WHERE id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -95,8 +94,8 @@ SELECT
     DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
     t.status status_id,
     st.name state,
-    CASE WHEN t.status = 0 THEN 'New record' ELSE s.state END course_state,
-    CASE WHEN t.status = 0 THEN 'Admin pending' ELSE s.status END status
+    s.state course_state,
+    s.status status
 FROM
     learner l
         INNER JOIN
@@ -109,7 +108,7 @@ FROM
     state st ON l.state = st.id
         INNER JOIN
     course co ON co.id = t.course
-        LEFT OUTER JOIN
+        INNER JOIN
     status s ON s.id = t.status
 WHERE
     t.id = ?;
@@ -167,24 +166,21 @@ Training.getAllByClassroom = (id, pagination, result) => {
           l.last_name) full_name,
   c.name company,
   t.status status_id,
-  CASE
-      WHEN t.status = 0 THEN 'New record'
-      ELSE s.status
-  END status
+  s.status
 FROM
   learner l
       INNER JOIN
   training t ON l.id = t.learner
       INNER JOIN
   company c ON c.id = l.company
-      LEFT OUTER JOIN
+      INNER JOIN
   status s ON s.id = t.status
       INNER JOIN
   classroom cl ON t.course = cl.course
       AND t.start = cl.start
   ${filter} ${filter.length > 0 ? ' AND ' : ' WHERE '} cl.id = ? ${limits} ;`
 
-  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company LEFT OUTER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
+  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
     filter.length > 0 ? ' AND ' : ' WHERE '
   } cl.id = ?;`
 
@@ -208,16 +204,8 @@ FROM
 
 Training.updateById = (id, training, result) => {
   sql.query(
-    'UPDATE training SET learner = ?, course = ?, start = ?, expiry = ?, certificate = ?, status = ? WHERE id = ?',
-    [
-      training.learner,
-      training.course,
-      training.start,
-      training.expiry,
-      training.certificate,
-      training.status,
-      id
-    ],
+    'UPDATE training SET course = ?, start = ?, end = ?, issued = ? WHERE id = ?',
+    [training.course, training.start, training.end, training.issued, id],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -331,10 +319,10 @@ Training.getMedicalData = (trainingId, result) => {
 FROM
   training_tracking t
   LEFT OUTER JOIN training_medical tm ON tm.training = t.training
-  AND t.status = 3
+  AND t.status = 4
 WHERE
   t.training = ?
-  AND t.status IN (3, 12)
+  AND t.status IN (4, 13)
 GROUP BY
   t.status;
 `

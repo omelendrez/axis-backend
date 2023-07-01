@@ -46,9 +46,9 @@ exports.undo = (req, res) => {
             message: `Not found Training with id ${req.params.id}.`
           })
           break
-        case 'cannot_delete':
-          res.status(401).send({
-            message: `Cannot undone Training with id ${req.params.id}.`
+        case 'cannot_undo':
+          res.status(400).send({
+            message: `There is nothing to undo for training with id ${req.params.id}.`
           })
           break
         default:

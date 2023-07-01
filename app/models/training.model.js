@@ -13,7 +13,9 @@ const Training = function (payload) {
 Training.create = (training, result) => {
   const newTraining = {
     ...training,
-    expiry: training.expiry ? training.expiry : null
+    issued: training.issued ? training.issued : null,
+    expiry: training.expiry ? training.expiry : null,
+    prev_expiry: training.prev_expiry ? training.prev_expiry : null
   }
 
   sql.query(
@@ -46,7 +48,7 @@ Training.create = (training, result) => {
 
 Training.findById = (id, result) => {
   sql.query(
-    'SELECT id, course, DATE_FORMAT(start, "%Y-%m-%d") start, DATE_FORMAT(end, "%Y-%m-%d") end, DATE_FORMAT(issued, "%Y-%m-%d") issued  FROM training WHERE id = ?',
+    'SELECT id, course, DATE_FORMAT(start, "%Y-%m-%d") start, DATE_FORMAT(end, "%Y-%m-%d") end, DATE_FORMAT(issued, "%Y-%m-%d") issued, DATE_FORMAT(prev_expiry, "%Y-%m-%d") prev_expiry  FROM training WHERE id = ?',
     id,
     (err, res) => {
       if (err) {

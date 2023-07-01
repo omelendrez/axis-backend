@@ -13,7 +13,7 @@ exports.create = (req, res) => {
     start: req.body.start,
     end: req.body.end,
     issued: req.body.issued,
-    certificate: req.body.certificate
+    prev_expiry: req.body.prev_expiry
   })
 
   Training.create(training, (err, data) => {

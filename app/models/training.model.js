@@ -204,8 +204,15 @@ FROM
 
 Training.updateById = (id, training, result) => {
   sql.query(
-    'UPDATE training SET course = ?, start = ?, end = ?, issued = ? WHERE id = ?',
-    [training.course, training.start, training.end, training.issued, id],
+    'UPDATE training SET course = ?, start = ?, end = ?, issued = ?, prev_expiry = ? WHERE id = ?',
+    [
+      training.course,
+      training.start,
+      training.end,
+      training.issued,
+      training.prev_expiry,
+      id
+    ],
     (err, res) => {
       if (err) {
         log.error(err)

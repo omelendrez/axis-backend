@@ -114,6 +114,7 @@ SELECT
     co.name course,
     DATE_FORMAT(t.start, '%d/%m/%Y') start,
     DATE_FORMAT(t.end, '%d/%m/%Y') end,
+    DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry,
     DATE_FORMAT(t.issued, '%d/%m/%Y') issued,
     DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
     t.status status_id,

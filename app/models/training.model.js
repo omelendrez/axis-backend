@@ -18,6 +18,11 @@ Training.create = (training, result) => {
     prev_expiry: training.prev_expiry ? training.prev_expiry : null
   }
 
+  if (!newTraining.start || !newTraining.end) {
+    result({ kind: 'training_dates' }, null)
+    return
+  }
+
   sql.query(
     'SELECT COUNT(1) records FROM training WHERE learner = ? AND course = ? AND DATE_FORMAT(start, "%Y-%m-%d") = ?',
     [newTraining.learner, newTraining.course, newTraining.start],
@@ -33,15 +38,32 @@ Training.create = (training, result) => {
         return
       }
 
-      sql.query('INSERT INTO training SET ?', newTraining, (err, res) => {
-        if (err) {
-          log.error(err)
-          result(err, null)
-          return
-        }
+      sql.query(
+        'SELECT expiry_type FROM course WHERE id = ? ',
+        [newTraining.course],
+        (err, res) => {
+          if (err) {
+            log.error(err)
+            result(err, null)
+            return
+          }
 
-        result(null, { id: res.insertId, ...newTraining })
-      })
+          if (res[0].expiry_type === 2 && !newTraining.prev_expiry) {
+            result({ kind: 'missing_prev_expiry' }, null)
+            return
+          }
+
+          sql.query('INSERT INTO training SET ?', newTraining, (err, res) => {
+            if (err) {
+              log.error(err)
+              result(err, null)
+              return
+            }
+
+            result(null, { id: res.insertId, ...newTraining })
+          })
+        }
+      )
     }
   )
 }
@@ -206,15 +228,8 @@ FROM
 
 Training.updateById = (id, training, result) => {
   sql.query(
-    'UPDATE training SET course = ?, start = ?, end = ?, issued = ?, prev_expiry = ? WHERE id = ?',
-    [
-      training.course,
-      training.start,
-      training.end,
-      training.issued,
-      training.prev_expiry,
-      id
-    ],
+    'SELECT expiry_type FROM course WHERE id = ? ',
+    [training.course],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -222,12 +237,36 @@ Training.updateById = (id, training, result) => {
         return
       }
 
-      if (res.affectedRows === 0) {
-        result({ kind: 'not_found' }, null)
+      if (res[0].expiry_type === 2 && !training.prev_expiry) {
+        result({ kind: 'missing_prev_expiry' }, null)
         return
       }
 
-      result(null, { id, ...toWeb(training) })
+      sql.query(
+        'UPDATE training SET course = ?, start = ?, end = ?, issued = ?, prev_expiry = ? WHERE id = ?',
+        [
+          training.course,
+          training.start,
+          training.end,
+          training.issued,
+          res[0].expiry_type === 2 ? training.prev_expiry : null,
+          id
+        ],
+        (err, res) => {
+          if (err) {
+            log.error(err)
+            result(err, null)
+            return
+          }
+
+          if (res.affectedRows === 0) {
+            result({ kind: 'not_found' }, null)
+            return
+          }
+
+          result(null, { id, ...toWeb(training) })
+        }
+      )
     }
   )
 }

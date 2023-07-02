@@ -18,16 +18,28 @@ exports.create = (req, res) => {
 
   Training.create(training, (err, data) => {
     if (err) {
-      if (err.kind === 'already_exists') {
-        res.status(400).send({
-          message:
-            'A Training with the same info already exists for this Learner in database.'
-        })
-      } else {
-        res.status(500).send({
-          message:
-            err.message || 'Some error occurred while creating the Training.'
-        })
+      switch (err.kind) {
+        case 'already_exists':
+          res.status(400).send({
+            message:
+              'A Training with the same info already exists for this Learner in database.'
+          })
+          break
+        case 'missing_prev_expiry':
+          res.status(400).send({
+            message: 'Previous Expire Date is required for this course.'
+          })
+          break
+        case 'training_dates':
+          res.status(400).send({
+            message: 'Start and End course dates are required.'
+          })
+          break
+        default:
+          res.status(500).send({
+            message:
+              err.message || 'Some error occurred while creating the Training.'
+          })
       }
     } else {
       const trainingId = data.id
@@ -158,14 +170,27 @@ exports.update = (req, res) => {
 
   Training.updateById(req.params.id, new Training(req.body), (err, data) => {
     if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: `Not found Training with id ${req.params.id}.`
-        })
-      } else {
-        res.status(500).send({
-          message: 'Error updating Training with id ' + req.params.id
-        })
+      switch (err.kind) {
+        case 'not_found':
+          res.status(404).send({
+            message: `Not found Training with id ${req.params.id}.`
+          })
+
+          break
+        case 'missing_prev_expiry':
+          res.status(400).send({
+            message: 'Previous Expire Date is required for this course.'
+          })
+          break
+        case 'training_dates':
+          res.status(400).send({
+            message: 'Start and End course dates are required.'
+          })
+          break
+        default:
+          res.status(500).send({
+            message: 'Error updating Training with id ' + req.params.id
+          })
       }
     } else res.send(data)
   })

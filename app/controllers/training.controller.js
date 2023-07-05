@@ -147,6 +147,20 @@ exports.findTracking = (req, res) => {
   })
 }
 
+exports.findCourse = (req, res) => {
+  Training.getCourseData(req.params.id, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message:
+          err.message ||
+          'Some error occurred while retrieving training ourse data.'
+      })
+    } else {
+      res.send(data)
+    }
+  })
+}
+
 exports.findCourseItems = (req, res) => {
   Training.getCourseItemData(req.params.id, (err, data) => {
     if (err) {

@@ -91,53 +91,43 @@ Training.findById = (id, result) => {
 
 Training.findByIdView = (id, result) => {
   sql.query(
-    `
-SELECT
-    t.id,
-    l.badge,
-    l.type,
-    t.certificate,
-    t.finance_status,
-    co.cert_type,
-    co.id_card,
-    co.front_id_text,
-    co.back_id_text,
-    co.expiry_type,
-    CONCAT(l.first_name, ' ', l.middle_name, ' ', l.last_name) full_name,
-    DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date,
-    CASE
-        WHEN l.sex = 'F' THEN 'Female'
-        ELSE 'Male'
-    END sex,
-    n.nationality,
-    c.name company,
-    co.name course,
-    DATE_FORMAT(t.start, '%d/%m/%Y') start,
-    DATE_FORMAT(t.end, '%d/%m/%Y') end,
-    DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry,
-    DATE_FORMAT(t.issued, '%d/%m/%Y') issued,
-    DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
-    t.status status_id,
-    st.name state,
-    s.state course_state,
-    s.status status
-FROM
-    learner l
-        INNER JOIN
-    training t ON l.id = t.learner
-        INNER JOIN
-    company c ON c.id = l.company
-        INNER JOIN
-    nationality n ON l.nationality = n.id
-        INNER JOIN
-    state st ON l.state = st.id
-        INNER JOIN
-    course co ON co.id = t.course
-        INNER JOIN
-    status s ON s.id = t.status
-WHERE
-    t.id = ?;
-    `,
+    `SELECT
+        t.id,
+        l.badge,
+        l.type,
+        t.certificate,
+        t.finance_status,
+        CONCAT(l.first_name, ' ', l.middle_name, ' ', l.last_name) full_name,
+        DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date,
+        CASE
+            WHEN l.sex = 'F' THEN 'Female'
+            ELSE 'Male'
+        END sex,
+        n.nationality,
+        c.name company,
+        DATE_FORMAT(t.start, '%d/%m/%Y') start,
+        DATE_FORMAT(t.end, '%d/%m/%Y') end,
+        DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry,
+        DATE_FORMAT(t.issued, '%d/%m/%Y') issued,
+        DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
+        t.status status_id,
+        st.name state,
+        s.state course_state,
+        s.status status
+    FROM
+        learner l
+            INNER JOIN
+        training t ON l.id = t.learner
+            INNER JOIN
+        company c ON c.id = l.company
+            INNER JOIN
+        nationality n ON l.nationality = n.id
+            INNER JOIN
+        state st ON l.state = st.id
+            INNER JOIN
+        status s ON s.id = t.status
+    WHERE
+        t.id = ?;`,
     id,
     (err, res) => {
       if (err) {
@@ -381,6 +371,40 @@ GROUP BY
       result(err, null)
       return
     }
+    result(null, res)
+  })
+}
+
+Training.getCourseData = (trainingId, result) => {
+  const query = `
+  SELECT
+    id,
+    name,
+    front_id_text,
+    back_id_text,
+    id_card,
+    duration,
+    validity,
+    cert_type,
+    expiry_type,
+    opito_reg_code
+FROM
+    course
+WHERE
+    id = (SELECT
+            course
+        FROM
+            training
+        WHERE
+            id = ?);`
+
+  sql.query(query, [trainingId], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
     result(null, res)
   })
 }

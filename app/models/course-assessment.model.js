@@ -6,14 +6,14 @@ const {
 } = require('../helpers/utils.js')
 const { log } = require('../helpers/log.js')
 // constructor
-const CourseAssesment = function (payload) {
+const CourseAssessment = function (payload) {
   loadModel(payload, this)
 }
 
-CourseAssesment.create = (assesment, result) => {
-  const newAssesment = { ...assesment }
+CourseAssessment.create = (assessment, result) => {
+  const newAssessment = { ...assessment }
   sql.query(
-    `SELECT COUNT(1) records FROM course_assesment WHERE name='${assesment.name}'`,
+    `SELECT COUNT(1) records FROM course_assessment WHERE name='${assessment.name}'`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -26,8 +26,8 @@ CourseAssesment.create = (assesment, result) => {
         return
       }
       sql.query(
-        'INSERT INTO course_assesment SET ?',
-        newAssesment,
+        'INSERT INTO course_assessment SET ?',
+        newAssessment,
         (err, res) => {
           if (err) {
             log.error(err)
@@ -35,15 +35,15 @@ CourseAssesment.create = (assesment, result) => {
             return
           }
 
-          result(null, { id: res.insertId, ...newAssesment })
+          result(null, { id: res.insertId, ...newAssessment })
         }
       )
     }
   )
 }
 
-CourseAssesment.findById = (id, result) => {
-  sql.query(`SELECT * FROM course_assesment WHERE id = ${id}`, (err, res) => {
+CourseAssessment.findById = (id, result) => {
+  sql.query(`SELECT * FROM course_assessment WHERE id = ${id}`, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -59,13 +59,13 @@ CourseAssesment.findById = (id, result) => {
   })
 }
 
-CourseAssesment.getAll = (pagination, result) => {
+CourseAssessment.getAll = (pagination, result) => {
   const fields = ['c.name']
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT c.id, c.name FROM course_assesment c ${filter} ORDER BY c.name ${limits};`
-  const queryCount = `SELECT COUNT(1) records FROM course_assesment c ${filter};`
+  const queryData = `SELECT c.id, c.name FROM course_assessment c ${filter} ORDER BY c.name ${limits};`
+  const queryCount = `SELECT COUNT(1) records FROM course_assessment c ${filter};`
 
   const query = `${queryData}${queryCount}`
 
@@ -85,10 +85,10 @@ CourseAssesment.getAll = (pagination, result) => {
   })
 }
 
-CourseAssesment.updateById = (id, assesment, result) => {
+CourseAssessment.updateById = (id, assessment, result) => {
   sql.query(
-    'UPDATE course_assesment SET name = ? WHERE id = ?',
-    [assesment.name, id],
+    'UPDATE course_assessment SET name = ? WHERE id = ?',
+    [assessment.name, id],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -101,14 +101,14 @@ CourseAssesment.updateById = (id, assesment, result) => {
         return
       }
 
-      result(null, { id, ...toWeb(assesment) })
+      result(null, { id, ...toWeb(assessment) })
     }
   )
 }
 
-CourseAssesment.remove = (id, result) => {
+CourseAssessment.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM course_assesment_rel WHERE item = ?;',
+    'SELECT COUNT(1) records FROM course_assessment_rel WHERE item = ?;',
     id,
     (err, res) => {
       if (err) {
@@ -140,7 +140,7 @@ CourseAssesment.remove = (id, result) => {
   )
 }
 
-CourseAssesment.removeAll = (result) => {
+CourseAssessment.removeAll = (result) => {
   sql.query('DELETE FROM course_item', (err, res) => {
     if (err) {
       log.error(err)
@@ -152,4 +152,4 @@ CourseAssesment.removeAll = (result) => {
   })
 }
 
-module.exports = CourseAssesment
+module.exports = CourseAssessment

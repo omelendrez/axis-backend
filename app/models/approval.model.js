@@ -25,9 +25,9 @@ Approval.approve = (id, status, payload, user, result) => {
 
     case TRAINING_STATUS.ASSESSMENT:
       query +=
-        'INSERT INTO training_assesment (training, assesment, status) VALUES (?,?,?);'
-      payload.assesments.forEach((a) => {
-        params.push([id, parseInt(a.assesment, 10), parseInt(a.status, 10)])
+        'INSERT INTO training_assessment (training, assessment, status) VALUES (?,?,?);'
+      payload.assessments.forEach((a) => {
+        params.push([id, parseInt(a.assessment, 10), parseInt(a.status, 10)])
       })
 
       break

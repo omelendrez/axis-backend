@@ -108,7 +108,7 @@ CourseAssessment.updateById = (id, assessment, result) => {
 
 CourseAssessment.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM course_assessment_rel WHERE item = ?;',
+    'SELECT COUNT(1) records FROM course_assessment_rel WHERE assessment = ?;',
     id,
     (err, res) => {
       if (err) {
@@ -122,26 +122,30 @@ CourseAssessment.remove = (id, result) => {
         return
       }
 
-      sql.query('DELETE FROM course_item WHERE id = ?', id, (err, res) => {
-        if (err) {
-          log.error(err)
-          result(err, null)
-          return
-        }
+      sql.query(
+        'DELETE FROM course_assessment WHERE id = ?',
+        id,
+        (err, res) => {
+          if (err) {
+            log.error(err)
+            result(err, null)
+            return
+          }
 
-        if (res.affectedRows === 0) {
-          result({ kind: 'not_found' }, null)
-          return
-        }
+          if (res.affectedRows === 0) {
+            result({ kind: 'not_found' }, null)
+            return
+          }
 
-        result(null, id)
-      })
+          result(null, id)
+        }
+      )
     }
   )
 }
 
 CourseAssessment.removeAll = (result) => {
-  sql.query('DELETE FROM course_item', (err, res) => {
+  sql.query('DELETE FROM course_assessment', (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

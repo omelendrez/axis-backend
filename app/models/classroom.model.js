@@ -46,7 +46,8 @@ Classroom.create = (classroom, result) => {
 
 Classroom.findById = (id, result) => {
   sql.query(
-    `SELECT id, course, DATE_FORMAT(start, '%Y-%m-%d') start, learners FROM classroom WHERE id = ${id}`,
+    'SELECT id, course, DATE_FORMAT(start, "%Y-%m-%d") start, learners FROM classroom WHERE id = ?;',
+    [id],
     (err, res) => {
       if (err) {
         log.error(err)

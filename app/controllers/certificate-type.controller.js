@@ -94,7 +94,8 @@ exports.delete = (req, res) => {
       switch (err.kind) {
         case 'cannot_delete':
           res.status(404).send({
-            message: 'Certificate Type has transactions and cannot be deleted.'
+            message:
+              'Certificate Type has rows assigned with another table and cannot be deleted.'
           })
           break
         case 'not_found':

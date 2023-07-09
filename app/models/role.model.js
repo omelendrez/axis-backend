@@ -88,8 +88,13 @@ Role.updateById = (id, role, result) => {
 }
 
 Role.remove = (id, result) => {
+  if (parseInt(id, 10) === 1) {
+    result({ kind: 'cannot_delete_sys_admin' }, null)
+    return
+  }
+
   sql.query(
-    'SELECT COUNT(1) records FROM user WHERE role = ?',
+    'SELECT COUNT(1) records FROM user_role WHERE role = ?',
     id,
     (err, res) => {
       if (err) {

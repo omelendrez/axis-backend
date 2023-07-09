@@ -125,7 +125,8 @@ exports.delete = (req, res) => {
       switch (err.kind) {
         case 'cannot_delete':
           res.status(400).send({
-            message: 'Course has transactions and cannot be deleted.'
+            message:
+              'Course has rows assigned with another table and cannot be deleted.'
           })
           break
         case 'not_found':

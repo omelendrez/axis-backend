@@ -74,9 +74,15 @@ exports.delete = (req, res) => {
   Role.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
+        case 'cannot_delete_sys_admin':
+          res.status(404).send({
+            message: 'Role System Admin cannot be deleted.'
+          })
+          break
         case 'cannot_delete':
           res.status(404).send({
-            message: 'Role has transactions and cannot be deleted.'
+            message:
+              'Role has rows assigned with another table and cannot be deleted.'
           })
           break
         case 'not_found':

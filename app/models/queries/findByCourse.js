@@ -1,20 +1,19 @@
 module.exports = `
 SELECT
-  cr.id,
   c.name course_name,
   CASE WHEN u.full_name IS NULL THEN 'No instructor assinged' ELSE u.full_name END instructor_name,
-  cr.learners
+  count(*) learners
 FROM
-  classroom cr
+  training t
 INNER JOIN
   course c
 ON
-  cr.course = c.id
+  t.course = c.id
 LEFT OUTER JOIN
-  user u
-ON
-  cr.instructor = u.id
+  user u ON t.instructor = u.id
 WHERE
-  cr.start = ?
+  t.start = ?
+GROUP BY
+	c.name, u.full_name
 ORDER BY
    2;`

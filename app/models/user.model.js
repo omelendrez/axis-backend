@@ -1,4 +1,4 @@
-const sql = require('./db.js')
+const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
 const { createToken, comparePassword, passwordHash } = require('../secure')

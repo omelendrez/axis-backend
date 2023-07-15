@@ -1,6 +1,6 @@
-const sql = require('./db.js')
+const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log.js')
+const { log } = require('../helpers/log')
 
 // constructor
 const Learner = function (payload) {

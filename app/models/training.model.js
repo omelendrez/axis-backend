@@ -1,11 +1,8 @@
-const sql = require('./db.js')
+const sql = require('./db')
 const findByIdView = require('./queries/findByIdView')
-const {
-  toWeb,
-  loadModel,
-  getPaginationFilters
-} = require('../helpers/utils.js')
-const { log } = require('../helpers/log.js')
+const { TRAINING_STATUS } = require('../helpers/utils')
+const { toWeb, loadModel, getPaginationFilters } = require('../helpers/utils')
+const { log } = require('../helpers/log')
 // constructor
 const Training = function (payload) {
   loadModel(payload, this)
@@ -14,9 +11,10 @@ const Training = function (payload) {
 Training.create = (training, result) => {
   const newTraining = {
     ...training,
-    issued: training.issued ? training.issued : null,
-    expiry: training.expiry ? training.expiry : null,
-    prev_expiry: training.prev_expiry ? training.prev_expiry : null
+    issued: null,
+    expiry: null,
+    prev_expiry: training.prev_expiry ? training.prev_expiry : null,
+    status: TRAINING_STATUS.NEW
   }
 
   if (!newTraining.start || !newTraining.end) {

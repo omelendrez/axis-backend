@@ -1,7 +1,7 @@
-const sql = require('./db.js')
-const { loadModel, TRAINING_STATUS } = require('../helpers/utils.js')
+const sql = require('./db')
+const { loadModel, TRAINING_STATUS } = require('../helpers/utils')
 const socketIO = require('../socket.io')
-const { log } = require('../helpers/log.js')
+const { log } = require('../helpers/log')
 
 const Approval = function (payload) {
   loadModel(payload, this)

@@ -3,7 +3,7 @@ const auth = require('../middleware/auth')
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const opito = require('../controllers/opito.controller.js')
+  const opito = require('../controllers/opito.controller')
 
   const router = require('express').Router()
 

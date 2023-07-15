@@ -1,9 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const logger = require('morgan')
-const { log } = require('./helpers/log.js')
-const errorHandler = require('./errors/error-handler.js')
-const { listEndpoints } = require('./helpers/utils.js')
+const { log } = require('./helpers/log')
+const errorHandler = require('./errors/error-handler')
+const { listEndpoints } = require('./helpers/utils')
 require('dotenv').config()
 
 const socketIO = require('./socket.io')

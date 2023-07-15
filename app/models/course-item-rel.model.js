@@ -1,6 +1,6 @@
-const sql = require('./db.js')
-const { toWeb, loadModel } = require('../helpers/utils.js')
-const { log } = require('../helpers/log.js')
+const sql = require('./db')
+const { toWeb, loadModel } = require('../helpers/utils')
+const { log } = require('../helpers/log')
 // constructor
 const CourseItemRel = function (payload) {
   loadModel(payload, this)

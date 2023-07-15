@@ -3,7 +3,7 @@ const auth = require('../middleware/auth')
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const userRole = require('../controllers/user-role.controller.js')
+  const userRole = require('../controllers/user-role.controller')
 
   const router = require('express').Router()
 

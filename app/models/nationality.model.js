@@ -1,10 +1,6 @@
-const sql = require('./db.js')
-const {
-  toWeb,
-  getPaginationFilters,
-  loadModel
-} = require('../helpers/utils.js')
-const { log } = require('../helpers/log.js')
+const sql = require('./db')
+const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
+const { log } = require('../helpers/log')
 // constructor
 const Nationality = function (payload) {
   loadModel(payload, this)

@@ -1,7 +1,7 @@
 module.exports = `
 SELECT
   c.name course_name,
-  CASE WHEN u.full_name IS NULL THEN 'No instructor assinged' ELSE u.full_name END instructor_name,
+  u.full_name instructor_name,
   count(*) learners
 FROM
   training t

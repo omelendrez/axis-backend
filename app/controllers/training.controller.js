@@ -13,7 +13,8 @@ exports.create = (req, res) => {
     start: req.body.start,
     end: req.body.end,
     issued: req.body.issued,
-    prev_expiry: req.body.prev_expiry
+    prev_expiry: req.body.prev_expiry,
+    instructor: req.body.instructor
   })
 
   Training.create(training, (err, data) => {

@@ -1,7 +1,7 @@
 const sql = require('./db')
 const findByIdView = require('./queries/findByIdView')
 const { TRAINING_STATUS } = require('../helpers/utils')
-const { toWeb, loadModel, getPaginationFilters } = require('../helpers/utils')
+const { toWeb, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
 // constructor
 const Training = function (payload) {
@@ -14,6 +14,7 @@ Training.create = (training, result) => {
     issued: null,
     expiry: null,
     prev_expiry: training.prev_expiry ? training.prev_expiry : null,
+    instructor: training.instructor ? training.instructor : null,
     status: TRAINING_STATUS.NEW
   }
 
@@ -128,61 +129,6 @@ Training.getAll = (id, result) => {
   })
 }
 
-Training.getAllByClassroom = (id, pagination, result) => {
-  const fields = [
-    'l.badge',
-    'CONCAT(l.first_name, " ", l.middle_name, " ", l.last_name) ',
-    'c.name'
-  ]
-
-  const { filter, limits } = getPaginationFilters(pagination, fields)
-
-  const queryData = `SELECT
-  t.id,
-  l.badge,
-  CONCAT(l.first_name,
-          ' ',
-          l.middle_name,
-          ' ',
-          l.last_name) full_name,
-  c.name company,
-  t.status status_id,
-  s.status
-FROM
-  learner l
-      INNER JOIN
-  training t ON l.id = t.learner
-      INNER JOIN
-  company c ON c.id = l.company
-      INNER JOIN
-  status s ON s.id = t.status
-      INNER JOIN
-  classroom cl ON t.course = cl.course
-      AND t.start = cl.start
-  ${filter} ${filter.length > 0 ? ' AND ' : ' WHERE '} cl.id = ? ${limits} ;`
-
-  const queryCount = `SELECT COUNT(1) records FROM learner l INNER JOIN training t ON l.id = t.learner INNER JOIN company c ON c.id = l.company INNER JOIN status s ON s.id = t.status INNER JOIN classroom cl ON t.course = cl.course AND t.start = cl.start ${filter} ${
-    filter.length > 0 ? ' AND ' : ' WHERE '
-  } cl.id = ?;`
-
-  const query = `${queryData}${queryCount}`
-
-  sql.query(query, [id, id], (err, res) => {
-    if (err) {
-      log.error(err)
-      result(err, null)
-      return
-    }
-
-    const records = res[0]
-    const count = res[1][0].records
-
-    const rows = records.map((data) => toWeb(data))
-
-    result(null, { rows, count })
-  })
-}
-
 Training.updateById = (id, training, result) => {
   sql.query(
     'SELECT expiry_type FROM course WHERE id = ? ',
@@ -200,13 +146,14 @@ Training.updateById = (id, training, result) => {
       }
 
       sql.query(
-        'UPDATE training SET course = ?, start = ?, end = ?, issued = ?, prev_expiry = ? WHERE id = ?',
+        'UPDATE training SET course = ?, start = ?, end = ?, issued = ?, prev_expiry = ?, instructor = ? WHERE id = ?',
         [
           training.course,
           training.start,
           training.end,
           training.issued,
           res[0].expiry_type === 2 ? training.prev_expiry : null,
+          training.instructor,
           id
         ],
         (err, res) => {

@@ -1,5 +1,8 @@
 const sql = require('./db')
+
 const findByIdView = require('./queries/findByIdView')
+const findAll = require('./queries/findAll')
+
 const { TRAINING_STATUS } = require('../helpers/utils')
 const { toWeb, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
@@ -113,7 +116,7 @@ Training.findByIdView = (id, result) => {
   })
 }
 
-Training.getAll = (id, result) => {
+Training.findAll = (id, result) => {
   const query = `SELECT t.id, c.name course, u.name instructor, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.end, '%d/%m/%Y') end, DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry, DATE_FORMAT(t.issued, '%d/%m/%Y') issued, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate, s.state FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id LEFT OUTER JOIN user u ON t.instructor = u.id WHERE learner = ${id}`
 
   sql.query(query, (err, res) => {
@@ -126,6 +129,25 @@ Training.getAll = (id, result) => {
     const data = res.map((data) => toWeb(data))
 
     result(null, data)
+  })
+}
+
+Training.findByDate = (date, statuses, result) => {
+  const query = findAll.replace(
+    '{{status_filter}}',
+    statuses ? `AND t.status IN (${statuses.split('-').join(',')})` : null
+  )
+
+  sql.query(query, [date], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    const data = res.map((data) => toWeb(data))
+
+    result(null, { rows: data, count: data.length })
   })
 }
 
@@ -236,120 +258,6 @@ Training.addTracking = (trainingId, userId, status, result) => {
       result(null, res)
     }
   )
-}
-
-Training.getTracking = (trainingId, result) => {
-  sql.query(
-    'SELECT s.id status_id, s.status, u.full_name, DATE_FORMAT(t.updated, "%d/%m/%Y %H:%i:%s") updated FROM training_tracking t INNER JOIN status s ON t.status = s.id INNER JOIN user u ON t.user = u.id WHERE t.training = ? ORDER BY t.updated;',
-    [trainingId],
-    (err, res) => {
-      if (err) {
-        log.error(err)
-        result(err, null)
-        return
-      }
-      result(null, res)
-    }
-  )
-}
-
-Training.getMedicalData = (trainingId, result) => {
-  const query = `
-  SELECT
-  t.status,
-  CASE
-    WHEN tm.training IS NULL THEN NULL
-    ELSE JSON_ARRAYAGG(
-      JSON_OBJECT(
-        'systolic',
-        tm.systolic,
-        'diastolic',
-        tm.diastolic
-      )
-    )
-  END bp
-FROM
-  training_tracking t
-  LEFT OUTER JOIN training_medical tm ON tm.training = t.training
-  AND t.status = 4
-WHERE
-  t.training = ?
-  AND t.status IN (4, 13)
-GROUP BY
-  t.status;
-`
-  sql.query(query, [trainingId], (err, res) => {
-    if (err) {
-      log.error(err)
-      result(err, null)
-      return
-    }
-    result(null, res)
-  })
-}
-
-Training.getCourseData = (trainingId, result) => {
-  const query = `
-  SELECT
-    id,
-    name,
-    front_id_text,
-    back_id_text,
-    id_card,
-    duration,
-    validity,
-    cert_type,
-    expiry_type,
-    opito_reg_code
-FROM
-    course
-WHERE
-    id = (SELECT
-            course
-        FROM
-            training
-        WHERE
-            id = ?);`
-
-  sql.query(query, [trainingId], (err, res) => {
-    if (err) {
-      log.error(err)
-      result(err, null)
-      return
-    }
-
-    result(null, res)
-  })
-}
-
-Training.getCourseItemData = (trainingId, result) => {
-  const query = `
-  SELECT
-      id, name
-  FROM
-      course_item
-  WHERE
-      id IN (SELECT
-              item
-          FROM
-              course_item_rel
-          WHERE
-              course IN (SELECT
-                      course
-                  FROM
-                      training
-                  WHERE
-                      id = ?))
-  ORDER BY name;`
-
-  sql.query(query, [trainingId], (err, res) => {
-    if (err) {
-      log.error(err)
-      result(err, null)
-      return
-    }
-    result(null, res)
-  })
 }
 
 module.exports = Training

@@ -27,7 +27,6 @@ ON
   t.status = s.id
 WHERE
   t.start = ?
-AND
-  t.status IN (?)
+{{status_filter}}
 ORDER BY 3;
 `

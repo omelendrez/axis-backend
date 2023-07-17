@@ -13,6 +13,8 @@ LEFT OUTER JOIN
   user u ON t.instructor = u.id
 WHERE
   t.start = ?
+AND
+  (t.status IS NULL OR t.status IN (?))
 GROUP BY
 	c.name, u.full_name
 ORDER BY

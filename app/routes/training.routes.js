@@ -7,29 +7,26 @@ module.exports = (app) => {
 
   const router = require('express').Router()
 
-  router.post('/', secure, training.create) // Create training in learner view
+  // POST
+  router
+    .post('/', secure, training.create) // Create training in learner view
 
-  router.get('/:id/all', secure, training.findAll) // Used by the learner view controller
+    // GET
+    .get('/:id/all', secure, training.getAll) // List all training records by a given learner
 
-  router.get('/:id/classroom', secure, training.findAllByClassroom)
+    .get('/:id/view', secure, training.getOneView) // Gets the data needed for the Training View component and subcomponents
 
-  router.get('/:id/view', secure, training.findOneView)
+    .get('/:date/:statuses', secure, training.getAllByDate) // List all training records for a given date and status
 
-  router.get('/:id/tracking', secure, training.findTracking)
+    .get('/:id', secure, training.getOne) // Gets training record for a given id (for Edit form)
 
-  router.get('/:id/medical', secure, training.findMedicalData)
+    // PUT
+    .put('/:id', secure, training.update) // Used by save training in learner view
 
-  router.get('/:id/course', secure, training.findCourse)
+    // DELETE
+    .delete('/:id', secure, training.delete)
 
-  router.get('/:id/course-items', secure, training.findCourseItems)
-
-  router.get('/:id', secure, training.findOne) // Used by Edit training in learner view
-
-  router.put('/:id', secure, training.update) // Used by save training in learner view
-
-  router.delete('/:id', secure, training.delete)
-
-  router.delete('/', secure, training.deleteAll)
+    .delete('/', secure, training.deleteAll)
 
   app.use('/api/training', router)
 }

@@ -16,7 +16,7 @@ ON
 WHERE
   t.start = ?
 AND
-  t.status IN (?)
+  (t.status IS NULL OR t.status IN (?))
 GROUP BY
   l.company,
   co.name

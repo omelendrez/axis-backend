@@ -59,8 +59,8 @@ exports.create = (req, res) => {
   })
 }
 
-exports.findAll = (req, res) => {
-  Training.getAll(req.params.id, (err, data) => {
+exports.getAll = (req, res) => {
+  Training.findAll(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message:
@@ -72,7 +72,7 @@ exports.findAll = (req, res) => {
   })
 }
 
-exports.findOne = (req, res) => {
+exports.getOne = (req, res) => {
   Training.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -88,7 +88,7 @@ exports.findOne = (req, res) => {
   })
 }
 
-exports.findOneView = (req, res) => {
+exports.getOneView = (req, res) => {
   Training.findByIdView(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -104,75 +104,19 @@ exports.findOneView = (req, res) => {
   })
 }
 
-exports.findMedicalData = (req, res) => {
-  Training.getMedicalData(req.params.id, (err, data) => {
+exports.getAllByDate = (req, res) => {
+  Training.findByDate(req.params.date, req.params.statuses, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
         res.status(404).send({
-          message: `Not found Medical Data with id ${req.params.id}.`
+          message: 'Not records found for the given date.'
         })
       } else {
         res.status(500).send({
-          message: 'Error retrieving Medical Data with id ' + req.params.id
+          message: 'Internal database error'
         })
       }
     } else res.send(data)
-  })
-}
-
-exports.findAllByClassroom = (req, res) => {
-  const pagination = req.query
-  Training.getAllByClassroom(req.params.id, pagination, (err, data) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message || 'Some error occurred while retrieving Trainings.'
-      })
-    } else {
-      res.send(data)
-    }
-  })
-}
-
-exports.findTracking = (req, res) => {
-  Training.getTracking(req.params.id, (err, data) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message ||
-          'Some error occurred while retrieving Training tracking records.'
-      })
-    } else {
-      res.send(data)
-    }
-  })
-}
-
-exports.findCourse = (req, res) => {
-  Training.getCourseData(req.params.id, (err, data) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message ||
-          'Some error occurred while retrieving training ourse data.'
-      })
-    } else {
-      res.send(data)
-    }
-  })
-}
-
-exports.findCourseItems = (req, res) => {
-  Training.getCourseItemData(req.params.id, (err, data) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message ||
-          'Some error occurred while retrieving Training tracking records.'
-      })
-    } else {
-      res.send(data)
-    }
   })
 }
 

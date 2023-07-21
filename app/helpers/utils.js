@@ -38,7 +38,8 @@ const TRAINING_STATUS = {
   CERT_PRINT: 10,
   ID_CARD_PRNT: 11,
   COMPLETED: 12,
-  CANCELLED: 13
+  CANCELLED: 13,
+  REJECTED: 14
 }
 
 const getPaginationFilters = (pagination, fields, filterField = '') => {

@@ -9,7 +9,9 @@ exports.create = (req, res) => {
 
   const company = new Company({
     name: req.body.name,
-    status: req.body.status
+    status: req.body.status,
+    email: req.body.email,
+    contact: req.body.contact
   })
 
   Company.create(company, (err, data) => {

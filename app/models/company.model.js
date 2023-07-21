@@ -81,8 +81,8 @@ Company.getAll = (pagination, result) => {
 
 Company.updateById = (id, company, result) => {
   sql.query(
-    'UPDATE company SET name = ?, status = ? WHERE id = ?',
-    [company.name, company.status, id],
+    'UPDATE company SET name = ?, status = ?, email = ?, contact = ? WHERE id = ?',
+    [company.name, company.status, company.email, company.contact, id],
     (err, res) => {
       if (err) {
         log.error(err)

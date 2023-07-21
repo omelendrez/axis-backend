@@ -41,9 +41,19 @@ Approval.approve = (id, status, payload, user, result) => {
   }
 
   if (payload?.approved === 0) {
-    query +=
-      'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
-    params.push(id, TRAINING_STATUS.CANCELLED, user.data.id)
+    if (payload?.reason.length > 0) {
+      const { reason } = payload
+      query +=
+        'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+      params.push(id, TRAINING_STATUS.REJECTED, user.data.id)
+      query +=
+        'INSERT INTO tracking_reason (tracking, reason) SELECT id, ? FROM training_tracking WHERE training = ? AND status = ? ORDER BY id DESC LIMIT 1;'
+      params.push(reason, id, TRAINING_STATUS.REJECTED)
+    } else {
+      query +=
+        'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+      params.push(id, TRAINING_STATUS.CANCELLED, user.data.id)
+    }
   }
 
   sql.query(query, params, (err, res) => {

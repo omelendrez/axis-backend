@@ -1,9 +1,8 @@
 const sql = require('./db')
 
 const findByIdView = require('./queries/findByIdView')
-const findAll = require('./queries/findAll')
 
-const { TRAINING_STATUS } = require('../helpers/utils')
+const { TRAINING_STATUS, getPaginationFilters } = require('../helpers/utils')
 const { toWeb, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
 // constructor
@@ -132,22 +131,93 @@ Training.findAll = (id, result) => {
   })
 }
 
-Training.findByDate = (date, statuses, result) => {
-  const query = findAll.replace(
-    '{{status_filter}}',
-    statuses ? `AND t.status IN (${statuses.split('-').join(',')})` : null
+Training.findByDate = (date, statuses, pagination, result) => {
+  const fields = [
+    'l.badge',
+    'CONCAT(l.first_name, " ", l.middle_name, " ", l.last_name)',
+    'CONCAT(l.first_name, " ", l.last_name, " ", l.middle_name)',
+    'CONCAT(l.middle_name, " ", l.first_name, " ", l.last_name)',
+    'CONCAT(l.middle_name, " ", l.last_name, " ", l.first_name)',
+    'CONCAT(l.last_name, " ", l.first_name, " ", l.middle_name)',
+    'CONCAT(l.last_name, " ", l.middle_name, " ", l.first_name)',
+    'c.name'
+  ]
+
+  const { filter, limits } = getPaginationFilters(
+    pagination,
+    fields,
+    ` DATE_FORMAT(t.start, "%Y-%m-%d") = '${date}'  ${
+      statuses ? `AND t.status IN (${statuses.split('-').join(',')})` : null
+    }`
   )
 
-  sql.query(query, [date], (err, res) => {
+  const queryData = `SELECT
+      t.id,
+      l.badge,
+      CONCAT(l.first_name, ' ' , l.middle_name, ' ' , l.last_name) full_name,
+      co.name company_name,
+      c.name course_name,
+      t.status,
+      s.status status_name,
+      s.state state_name
+    FROM
+      training t
+    INNER JOIN
+      course c
+    ON
+      t.course = c.id
+    INNER JOIN
+      learner l
+    ON
+      t.learner = l.id
+    INNER JOIN
+      company co
+    ON
+      l.company = co.id
+    INNER JOIN
+      status s
+    ON
+      t.status = s.id
+    ${filter}
+    ORDER BY 3
+    ${limits};
+  `
+
+  const queryCount = `SELECT COUNT(1) records
+    FROM
+      training t
+    INNER JOIN
+      course c
+    ON
+      t.course = c.id
+    INNER JOIN
+      learner l
+    ON
+      t.learner = l.id
+    INNER JOIN
+      company co
+    ON
+      l.company = co.id
+    INNER JOIN
+      status s
+    ON
+      t.status = s.id
+    ${filter};`
+
+  const query = `${queryData}${queryCount}`
+
+  sql.query(query, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
       return
     }
+    const records = res[0]
+    const count = res[1][0].records
 
-    const data = res.map((data) => toWeb(data))
+    const rows = records.map((data) => toWeb(data))
 
-    result(null, { rows: data, count: data.length })
+    result(null, { rows, count })
   })
 }
 

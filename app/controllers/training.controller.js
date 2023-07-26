@@ -105,19 +105,24 @@ exports.getOneView = (req, res) => {
 }
 
 exports.getAllByDate = (req, res) => {
-  Training.findByDate(req.params.date, req.params.statuses, (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: 'Not records found for the given date.'
-        })
-      } else {
-        res.status(500).send({
-          message: 'Internal database error'
-        })
-      }
-    } else res.send(data)
-  })
+  Training.findByDate(
+    req.params.date,
+    req.params.statuses,
+    req.query,
+    (err, data) => {
+      if (err) {
+        if (err.kind === 'not_found') {
+          res.status(404).send({
+            message: 'Not records found for the given date.'
+          })
+        } else {
+          res.status(500).send({
+            message: 'Internal database error'
+          })
+        }
+      } else res.send(data)
+    }
+  )
 }
 
 exports.update = (req, res) => {

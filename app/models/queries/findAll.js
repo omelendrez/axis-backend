@@ -6,7 +6,8 @@ SELECT
   co.name company_name,
   c.name course_name,
   t.status,
-  s.status status_name
+  s.status status_name,
+  s.state state_name
 FROM
   training t
 INNER JOIN

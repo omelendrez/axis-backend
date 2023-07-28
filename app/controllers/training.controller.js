@@ -59,8 +59,8 @@ exports.create = (req, res) => {
   })
 }
 
-exports.getAll = (req, res) => {
-  Training.findAll(req.params.id, (err, data) => {
+exports.getAllById = (req, res) => {
+  Training.findAllById(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message:
@@ -123,6 +123,22 @@ exports.getAllByDate = (req, res) => {
       } else res.send(data)
     }
   )
+}
+
+exports.getAll = (req, res) => {
+  Training.findAll(req.query, (err, data) => {
+    if (err) {
+      if (err.kind === 'not_found') {
+        res.status(404).send({
+          message: 'Not records found for the given date.'
+        })
+      } else {
+        res.status(500).send({
+          message: 'Internal database error'
+        })
+      }
+    } else res.send(data)
+  })
 }
 
 exports.update = (req, res) => {

@@ -12,7 +12,9 @@ module.exports = (app) => {
     .post('/', secure, training.create) // Create training in learner view
 
     // GET
-    .get('/:id/all', secure, training.getAll) // List all training records by a given learner
+    .get('/', secure, training.getAll) // List all training records by a given learner
+
+    .get('/:id/all', secure, training.getAllById) // List all training records by a given learner
 
     .get('/:id/view', secure, training.getOneView) // Gets the data needed for the Training View component and subcomponents
 

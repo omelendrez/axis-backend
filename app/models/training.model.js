@@ -231,7 +231,7 @@ Training.findByDate = (date, statuses, pagination, result) => {
   const { filter, limits } = getPaginationFilters(
     pagination,
     fields,
-    ` DATE_FORMAT(t.start, "%Y-%m-%d") = '${date}'  ${
+    ` t.start = '${date}'  ${
       statuses ? `AND t.status IN (${statuses.split('-').join(',')})` : null
     }`
   )
@@ -265,7 +265,7 @@ Training.findByDate = (date, statuses, pagination, result) => {
     ON
       t.status = s.id
     ${filter}
-    ORDER BY 3
+    ORDER BY l.first_name, l.middle_name, l.last_name
     ${limits};
   `
 
@@ -291,6 +291,8 @@ Training.findByDate = (date, statuses, pagination, result) => {
     ${filter};`
 
   const query = `${queryData}${queryCount}`
+
+  console.log(queryData)
 
   sql.query(query, (err, res) => {
     if (err) {

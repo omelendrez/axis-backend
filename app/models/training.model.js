@@ -292,8 +292,6 @@ Training.findByDate = (date, statuses, pagination, result) => {
 
   const query = `${queryData}${queryCount}`
 
-  console.log(queryData)
-
   sql.query(query, (err, res) => {
     if (err) {
       log.error(err)

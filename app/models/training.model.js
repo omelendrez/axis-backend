@@ -245,13 +245,18 @@ Training.findByDate = (date, statuses, pagination, result) => {
       t.status,
       s.status status_name,
       s.state state_name,
-      DATE_FORMAT(t.start, '%d/%m/%Y') start
+      DATE_FORMAT(t.start, '%d/%m/%Y') start,
+      i.name instructor
     FROM
       training t
     INNER JOIN
       course c
     ON
       t.course = c.id
+    LEFT OUTER JOIN
+      user i
+    ON
+      t.instructor = i.id
     INNER JOIN
       learner l
     ON

@@ -27,6 +27,7 @@ end,
 DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry,
 DATE_FORMAT(t.issued, '%d/%m/%Y') issued,
 DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
+i.full_name instructor,
 t.status status_id,
 st.name state,
 s.state course_state,
@@ -34,6 +35,7 @@ s.status status
 FROM
 	learner l
 	INNER JOIN training t ON l.id = t.learner
+	LEFT OUTER JOIN user i ON t.instructor = i.id
 	INNER JOIN company c ON c.id = l.company
 	INNER JOIN nationality n ON l.nationality = n.id
 	INNER JOIN state st ON l.state = st.id

@@ -23,12 +23,12 @@ exports.create = (req, res) => {
         case 'already_exists':
           res.status(400).send({
             message:
-              'A Training with the same info already exists for this Learner in database.'
+              'A training with the same info already exists for this Learner in database.'
           })
           break
         case 'missing_prev_expiry':
           res.status(400).send({
-            message: 'Previous Expire Date is required for this course.'
+            message: 'Previous Expire Date is required for FOET courses.'
           })
           break
         case 'training_dates':
@@ -159,7 +159,7 @@ exports.update = (req, res) => {
           break
         case 'missing_prev_expiry':
           res.status(400).send({
-            message: 'Previous Expire Date is required for this course.'
+            message: 'Previous Expire Date is required for FOET courses.'
           })
           break
         case 'training_dates':

@@ -13,7 +13,7 @@ Approval.approve = (id, status, payload, user, result) => {
   const params = [id, status, user.data.id]
 
   switch (status) {
-    case TRAINING_STATUS.MEDICAL:
+    case TRAINING_STATUS.MEDICAL_DONE:
       query +=
         'INSERT INTO training_medical (training, systolic, diastolic) VALUES (?,?,?);'
       params.push(
@@ -23,16 +23,16 @@ Approval.approve = (id, status, payload, user, result) => {
       )
       break
 
-    case TRAINING_STATUS.ASSESSMENT:
-      query +=
-        'INSERT INTO training_assessment (training, assessment, status) VALUES (?,?,?);'
-      payload.assessments.forEach((a) => {
-        params.push([id, parseInt(a.assessment, 10), parseInt(a.status, 10)])
-      })
+    // case TRAINING_STATUS.ASSESSMENT:
+    //   query +=
+    //     'INSERT INTO training_assessment (training, assessment, status) VALUES (?,?,?);'
+    //   payload.assessments.forEach((a) => {
+    //     params.push([id, parseInt(a.assessment, 10), parseInt(a.status, 10)])
+    //   })
 
-      break
+    //   break
 
-    case TRAINING_STATUS.FINANCE:
+    case TRAINING_STATUS.ACCOUNTS_DONE:
       query += 'UPDATE training SET finance_status = ? WHERE id = ?;'
       params.push(payload.approved, id)
 

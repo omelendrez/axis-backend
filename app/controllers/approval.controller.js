@@ -12,7 +12,8 @@ exports.approve = (req, res) => {
     systolic: req.body.systolic,
     diastolic: req.body.diastolic,
     assessments: req.body.assessments,
-    reason: req.body.reason
+    reason: req.body.reason,
+    hasId: req.body.hasId
   })
 
   Approval.approve(

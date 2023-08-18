@@ -37,6 +37,15 @@ Approval.approve = (id, status, payload, user, result) => {
       params.push(payload.approved, id)
 
       break
+
+    case TRAINING_STATUS.CERT_PRINT_DONE:
+      if (parseInt(payload.hasId, 10) === 0) {
+        query +=
+          'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+        params.push(id, TRAINING_STATUS.COMPLETED, user.data.id)
+      }
+
+      break
     default:
   }
 

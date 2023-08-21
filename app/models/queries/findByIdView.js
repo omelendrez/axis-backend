@@ -30,8 +30,7 @@ DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
 i.full_name instructor,
 t.status status_id,
 st.name state,
-s.state course_state,
-s.status status
+s.status
 FROM
 	learner l
 	INNER JOIN training t ON l.id = t.learner

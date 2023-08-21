@@ -36,11 +36,11 @@ Status.findById = (id, result) => {
 }
 
 Status.getAll = (pagination, result) => {
-  const fields = ['status', 'state']
+  const fields = ['status']
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT id, status, state, continue_flow FROM status ${filter} ORDER BY id ${limits};`
+  const queryData = `SELECT id, status, continue_flow FROM status ${filter} ORDER BY id ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM status ${filter};`
 
   const query = `${queryData}${queryCount}`
@@ -63,8 +63,8 @@ Status.getAll = (pagination, result) => {
 
 Status.updateById = (id, status, result) => {
   sql.query(
-    'UPDATE status SET status = ?, state = ?, continue_flow = ? WHERE id = ?',
-    [status.status, status.state, status.continue_flow, id],
+    'UPDATE status SET status = ?, continue_flow = ? WHERE id = ?',
+    [status.status, status.continue_flow, id],
     (err, res) => {
       if (err) {
         log.error(err)

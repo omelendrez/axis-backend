@@ -137,7 +137,6 @@ Training.findAll = (pagination, result) => {
       c.name course_name,
       t.status,
       s.status status_name,
-      s.state state_name,
       DATE_FORMAT(t.start, '%d/%m/%Y') start
     FROM
       training t
@@ -201,7 +200,7 @@ Training.findAll = (pagination, result) => {
 }
 
 Training.findAllById = (id, result) => {
-  const query = `SELECT t.id, c.name course, u.full_name instructor, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.end, '%d/%m/%Y') end, DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry, DATE_FORMAT(t.issued, '%d/%m/%Y') issued, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate, s.state FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id LEFT OUTER JOIN user u ON t.instructor = u.id WHERE learner = ${id}`
+  const query = `SELECT t.id, c.name course, u.full_name instructor, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.end, '%d/%m/%Y') end, DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry, DATE_FORMAT(t.issued, '%d/%m/%Y') issued, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id LEFT OUTER JOIN user u ON t.instructor = u.id WHERE learner = ${id}`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -244,7 +243,6 @@ Training.findByDate = (date, statuses, pagination, result) => {
       c.name course_name,
       t.status,
       s.status status_name,
-      s.state state_name,
       DATE_FORMAT(t.start, '%d/%m/%Y') start,
       i.full_name instructor
     FROM

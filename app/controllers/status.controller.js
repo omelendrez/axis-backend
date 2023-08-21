@@ -9,7 +9,6 @@ exports.create = (req, res) => {
 
   const status = new Status({
     status: req.body.status,
-    state: req.body.state,
     continue_flow: req.body.continue_flow
   })
 

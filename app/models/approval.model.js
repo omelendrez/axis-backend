@@ -113,10 +113,6 @@ Approval.undo = (id, result) => {
 
       statuses.push(status)
 
-      if (status === TRAINING_STATUS.CANCELLED) {
-        statuses.push(res[1].status)
-      }
-
       const params = [id, statuses]
 
       sql.query(query, params, (err) => {

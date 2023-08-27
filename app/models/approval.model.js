@@ -12,6 +12,9 @@ Approval.approve = (id, status, payload, user, result) => {
     'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
   const params = [id, status, user.data.id]
 
+  query += 'DELETE FROM reject_reason WHERE training=?;'
+  params.push(id)
+
   switch (status) {
     case TRAINING_STATUS.MEDICAL_DONE:
       query +=
@@ -22,15 +25,6 @@ Approval.approve = (id, status, payload, user, result) => {
         parseInt(payload.diastolic, 10)
       )
       break
-
-    // case TRAINING_STATUS.ASSESSMENT:
-    //   query +=
-    //     'INSERT INTO training_assessment (training, assessment, status) VALUES (?,?,?);'
-    //   payload.assessments.forEach((a) => {
-    //     params.push([id, parseInt(a.assessment, 10), parseInt(a.status, 10)])
-    //   })
-
-    //   break
 
     case TRAINING_STATUS.ACCOUNTS_DONE:
       query += 'UPDATE training SET finance_status = ? WHERE id = ?;'
@@ -47,22 +41,6 @@ Approval.approve = (id, status, payload, user, result) => {
 
       break
     default:
-  }
-
-  if (payload?.approved === 0) {
-    if (payload?.reason.length > 0) {
-      const { reason } = payload
-      query +=
-        'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
-      params.push(id, TRAINING_STATUS.REJECTED, user.data.id)
-      query +=
-        'INSERT INTO tracking_reason (tracking, reason) SELECT id, ? FROM training_tracking WHERE training = ? AND status = ? ORDER BY id DESC LIMIT 1;'
-      params.push(reason, id, TRAINING_STATUS.REJECTED)
-    } else {
-      query +=
-        'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
-      params.push(id, TRAINING_STATUS.CANCELLED, user.data.id)
-    }
   }
 
   sql.query(query, params, (err, res) => {
@@ -89,48 +67,73 @@ Approval.approve = (id, status, payload, user, result) => {
 Approval.undo = (id, result) => {
   socketIO.notify('data', id)
 
-  sql.query(
-    'SELECT status FROM training_tracking WHERE training = ? ORDER BY id DESC LIMIT 2;',
-    id,
-    (err, res) => {
+  let query =
+    'SELECT status FROM training_tracking WHERE training = ? ORDER BY id DESC LIMIT 2;'
+  const params = [id]
+
+  sql.query(query, params, (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    if (res.length === 0) {
+      result({ kind: 'cannot_undo' }, null)
+      return
+    }
+
+    const { status } = res[0]
+
+    const statuses = []
+
+    let query =
+      'DELETE FROM training_tracking WHERE training = ? AND status IN (?);'
+
+    statuses.push(status)
+
+    const params = [id, statuses]
+
+    query += 'DELETE FROM reject_reason WHERE training=?;'
+    params.push(id)
+
+    sql.query(query, params, (err) => {
       if (err) {
         log.error(err)
-        result(err, null)
-        return
       }
 
-      if (res.length === 0) {
-        result({ kind: 'cannot_undo' }, null)
-        return
-      }
-
-      const { status } = res[0]
-
-      const statuses = []
-
-      const query =
-        'DELETE FROM training_tracking WHERE training = ? AND status IN (?);'
-
-      statuses.push(status)
-
-      const params = [id, statuses]
-
-      sql.query(query, params, (err) => {
-        if (err) {
-          log.error(err)
-          // result(err, null)
-          // return
-        }
-
-        result(null, {
-          id,
-          message: 'Status undone successfully!'
-        })
-
-        socketIO.notify('training-status-changed', { id, status })
+      result(null, {
+        id,
+        message: 'Status undone successfully!'
       })
+
+      socketIO.notify('training-status-changed', { id, status })
+    })
+  })
+}
+
+Approval.saveReason = (id, payload, result) => {
+  const { reason } = payload
+
+  let query = 'DELETE FROM reject_reason WHERE training=?;'
+  const params = [id]
+
+  query += 'INSERT INTO reject_reason (training, reason) VALUES (?, ?);'
+
+  params.pusn(id, reason)
+
+  sql.query(query, params, (err) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
     }
-  )
+
+    result(null, {
+      id,
+      message: 'Reason saved  successfully!'
+    })
+  })
 }
 
 module.exports = Approval

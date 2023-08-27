@@ -12,7 +12,7 @@ Approval.approve = (id, status, payload, user, result) => {
     'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
   const params = [id, status, user.data.id]
 
-  query += 'DELETE FROM reject_reason WHERE training=?;'
+  query += 'UPDATE training SET reject_reason = "" WHERE id=?;'
   params.push(id)
 
   switch (status) {
@@ -94,7 +94,7 @@ Approval.undo = (id, result) => {
 
     const params = [id, statuses]
 
-    query += 'DELETE FROM reject_reason WHERE training=?;'
+    query += 'UPDATE training SET reject_reason = "" WHERE id=?;'
     params.push(id)
 
     sql.query(query, params, (err) => {
@@ -115,12 +115,8 @@ Approval.undo = (id, result) => {
 Approval.saveReason = (id, payload, result) => {
   const { reason } = payload
 
-  let query = 'DELETE FROM reject_reason WHERE training=?;'
-  const params = [id]
-
-  query += 'INSERT INTO reject_reason (training, reason) VALUES (?, ?);'
-
-  params.pusn(id, reason)
+  let query = 'UPDATE training SET reject_reason = ? WHERE id = ?;'
+  const params = [reason, id]
 
   sql.query(query, params, (err) => {
     if (err) {

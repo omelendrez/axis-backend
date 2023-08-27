@@ -7,9 +7,9 @@ module.exports = (app) => {
 
   const router = require('express').Router()
 
-  router.post('/:id/:status', secure, approval.approve)
-
   router.post('/:id/reason', secure, approval.saveReason)
+
+  router.post('/:id/:status', secure, approval.approve)
 
   router.delete('/:id', secure, approval.undo)
 

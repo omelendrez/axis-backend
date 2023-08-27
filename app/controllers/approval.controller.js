@@ -65,7 +65,7 @@ exports.undo = (req, res) => {
 }
 
 exports.saveReason = (req, res) => {
-  Approval.saveReason(parseInt(req.params.id, 10), (err, data) => {
+  Approval.saveReason(parseInt(req.params.id, 10), req.body, (err, data) => {
     if (err) {
       res.status(500).send({
         message: `Error undoing Saving reason for training with id ${req.params.id}`

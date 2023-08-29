@@ -4,8 +4,6 @@ module.exports = (app) => {
   require('./company.routes')(app)
   require('./contact-info.routes')(app)
   require('./contact-type.routes')(app)
-  require('./course-assessment-rel.routes')(app)
-  require('./course-assessment.routes')(app)
   require('./course-item-rel.routes')(app)
   require('./course-item.routes')(app)
   require('./course.routes')(app)

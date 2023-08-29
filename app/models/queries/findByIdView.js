@@ -8,8 +8,6 @@ module.exports = `SELECT
 	CONCAT(
 		l.first_name,
 		' ',
-		l.middle_name,
-		' ',
 		l.last_name
 	) full_name,
 	DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date,

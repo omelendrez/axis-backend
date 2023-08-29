@@ -118,12 +118,8 @@ Training.findByIdView = (id, result) => {
 Training.findAll = (pagination, result) => {
   const fields = [
     'l.badge',
-    'CONCAT(l.first_name, " ", l.middle_name, " ", l.last_name)',
-    'CONCAT(l.first_name, " ", l.last_name, " ", l.middle_name)',
-    'CONCAT(l.middle_name, " ", l.first_name, " ", l.last_name)',
-    'CONCAT(l.middle_name, " ", l.last_name, " ", l.first_name)',
-    'CONCAT(l.last_name, " ", l.first_name, " ", l.middle_name)',
-    'CONCAT(l.last_name, " ", l.middle_name, " ", l.first_name)',
+    'CONCAT(l.first_name, " ", l.last_name)',
+    'CONCAT(l.last_name, " ", l.first_name)',
     'c.name'
   ]
 
@@ -132,7 +128,7 @@ Training.findAll = (pagination, result) => {
   const queryData = `SELECT
       t.id,
       l.badge,
-      CONCAT(l.first_name, ' ' , l.middle_name, ' ' , l.last_name) full_name,
+      CONCAT(l.first_name, ' ' , l.last_name) full_name,
       co.name company_name,
       c.name course_name,
       t.status,
@@ -218,12 +214,8 @@ Training.findAllById = (id, result) => {
 Training.findByDate = (date, statuses, pagination, result) => {
   const fields = [
     'l.badge',
-    'CONCAT(l.first_name, " ", l.middle_name, " ", l.last_name)',
-    'CONCAT(l.first_name, " ", l.last_name, " ", l.middle_name)',
-    'CONCAT(l.middle_name, " ", l.first_name, " ", l.last_name)',
-    'CONCAT(l.middle_name, " ", l.last_name, " ", l.first_name)',
-    'CONCAT(l.last_name, " ", l.first_name, " ", l.middle_name)',
-    'CONCAT(l.last_name, " ", l.middle_name, " ", l.first_name)',
+    'CONCAT(l.first_name, " ", l.last_name)',
+    'CONCAT(l.last_name, " ", l.first_name)',
     'c.name'
   ]
 
@@ -238,7 +230,7 @@ Training.findByDate = (date, statuses, pagination, result) => {
   const queryData = `SELECT
       t.id,
       l.badge,
-      CONCAT(l.first_name, ' ' , l.middle_name, ' ' , l.last_name) full_name,
+      CONCAT(l.first_name, ' ' , l.last_name) full_name,
       co.name company_name,
       c.name course_name,
       t.status,
@@ -268,7 +260,7 @@ Training.findByDate = (date, statuses, pagination, result) => {
     ON
       t.status = s.id
     ${filter}
-    ORDER BY l.first_name, l.middle_name, l.last_name
+    ORDER BY l.first_name, l.last_name
     ${limits};
   `
 

@@ -11,13 +11,8 @@ Learner.create = (learner, result) => {
   const newLearner = { ...learner, status: 1 }
 
   sql.query(
-    'SELECT COUNT(1) records FROM learner WHERE first_name = ? AND middle_name = ? AND last_name = ? AND DATE_FORMAT(birth_date, "%Y-%m-%d") = ?',
-    [
-      newLearner.first_name,
-      newLearner.middle_name,
-      newLearner.last_name,
-      newLearner.birth_date
-    ],
+    'SELECT COUNT(1) records FROM learner WHERE first_name = ? AND last_name = ? AND DATE_FORMAT(birth_date, "%Y-%m-%d") = ?',
+    [newLearner.first_name, newLearner.last_name, newLearner.birth_date],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -45,7 +40,7 @@ Learner.create = (learner, result) => {
 
 Learner.findById = (id, result) => {
   sql.query(
-    `SELECT id, type, badge, first_name, middle_name, last_name, sex, state, nationality, DATE_FORMAT(birth_date, '%Y-%m-%d') birth_date, company, status FROM learner WHERE id = ${id}`,
+    `SELECT id, type, badge, first_name, last_name, sex, state, nationality, DATE_FORMAT(birth_date, '%Y-%m-%d') birth_date, company, status FROM learner WHERE id = ${id}`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -65,7 +60,7 @@ Learner.findById = (id, result) => {
 
 Learner.findByIdView = (id, result) => {
   sql.query(
-    `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, ' ', t.middle_name, ' ' , t.last_name) full_name,CASE WHEN t.sex = 'F' THEN 'Female' ELSE 'Male' END sex, s.name state, n.nationality, DATE_FORMAT(birth_date, '%d/%m/%Y') birth_date, c.name company, CASE WHEN t.status = 1 THEN 'Active' ELSE 'Inactive' END status FROM learner t INNER JOIN company c ON t.company = c.id INNER JOIN state s ON t.state = s.id INNER JOIN nationality n ON t.nationality = n.id WHERE t.id = ${id}`,
+    `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, ' ', t.last_name) full_name,CASE WHEN t.sex = 'F' THEN 'Female' ELSE 'Male' END sex, s.name state, n.nationality, DATE_FORMAT(birth_date, '%d/%m/%Y') birth_date, c.name company, CASE WHEN t.status = 1 THEN 'Active' ELSE 'Inactive' END status FROM learner t INNER JOIN company c ON t.company = c.id INNER JOIN state s ON t.state = s.id INNER JOIN nationality n ON t.nationality = n.id WHERE t.id = ${id}`,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -86,12 +81,8 @@ Learner.findByIdView = (id, result) => {
 Learner.getAll = (pagination, result) => {
   const fields = [
     't.badge',
-    'CONCAT(t.first_name, " ", t.middle_name, " ", t.last_name)',
-    'CONCAT(t.first_name, " ", t.last_name, " ", t.middle_name)',
-    'CONCAT(t.middle_name, " ", t.first_name, " ", t.last_name)',
-    'CONCAT(t.middle_name, " ", t.last_name, " ", t.first_name)',
-    'CONCAT(t.last_name, " ", t.first_name, " ", t.middle_name)',
-    'CONCAT(t.last_name, " ", t.middle_name, " ", t.first_name)',
+    'CONCAT(t.first_name, " ", t.last_name)',
+    'CONCAT(t.last_name, " ", t.first_name)',
     'c.name'
   ]
 
@@ -101,7 +92,7 @@ Learner.getAll = (pagination, result) => {
     't.status=1'
   )
 
-  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, " ", t.middle_name, " ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
+  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, " ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM learner t INNER JOIN company c ON t.company=c.id ${filter};`
 
   const query = `${queryData}${queryCount}`
@@ -124,12 +115,11 @@ Learner.getAll = (pagination, result) => {
 
 Learner.updateById = (id, learner, result) => {
   sql.query(
-    'UPDATE learner SET type = ?, badge = ?, first_name = ?, middle_name = ?, last_name = ?, sex = ?, state = ?, nationality = ?, birth_date = ?, company = ?, status = ? WHERE id = ?',
+    'UPDATE learner SET type = ?, badge = ?, first_name = ?, last_name = ?, sex = ?, state = ?, nationality = ?, birth_date = ?, company = ?, status = ? WHERE id = ?',
     [
       learner.type,
       learner.badge,
       learner.first_name,
-      learner.middle_name,
       learner.last_name,
       learner.sex,
       learner.state,

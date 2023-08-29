@@ -10,7 +10,6 @@ exports.create = (req, res) => {
   const learner = new Learner({
     type: req.body.type,
     first_name: req.body.first_name,
-    middle_name: req.body.middle_name,
     last_name: req.body.last_name,
     sex: req.body.sex,
     state: req.body.state,

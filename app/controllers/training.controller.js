@@ -33,7 +33,7 @@ exports.create = (req, res) => {
           break
         case 'training_dates':
           res.status(400).send({
-            message: 'Start and End course dates are required.'
+            message: 'Start course date is required.'
           })
           break
         default:
@@ -164,7 +164,7 @@ exports.update = (req, res) => {
           break
         case 'training_dates':
           res.status(400).send({
-            message: 'Start and End course dates are required.'
+            message: 'Start course date id required.'
           })
           break
         default:

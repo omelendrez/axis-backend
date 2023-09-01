@@ -13,6 +13,7 @@ const Training = function (payload) {
 Training.create = (training, result) => {
   const newTraining = {
     ...training,
+    end: null,
     issued: null,
     expiry: null,
     prev_expiry: training.prev_expiry ? training.prev_expiry : null,
@@ -20,7 +21,7 @@ Training.create = (training, result) => {
     status: TRAINING_STATUS.NEW
   }
 
-  if (!newTraining.start || !newTraining.end) {
+  if (!newTraining.start) {
     result({ kind: 'training_dates' }, null)
     return
   }

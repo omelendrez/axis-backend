@@ -72,7 +72,7 @@ Training.create = (training, result) => {
 
 Training.findById = (id, result) => {
   sql.query(
-    'SELECT id, course, DATE_FORMAT(start, "%Y-%m-%d") start, DATE_FORMAT(end, "%Y-%m-%d") end, DATE_FORMAT(issued, "%Y-%m-%d") issued, DATE_FORMAT(prev_expiry, "%Y-%m-%d") prev_expiry, instructor  FROM training WHERE id = ?',
+    'SELECT id, course, DATE_FORMAT(start, "%Y-%m-%d") start, DATE_FORMAT(end, "%Y-%m-%d") end, DATE_FORMAT(issued, "%Y-%m-%d") issued, DATE_FORMAT(expiry, "%Y-%m-%d") expiry, DATE_FORMAT(prev_expiry, "%Y-%m-%d") prev_expiry, instructor  FROM training WHERE id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -319,12 +319,13 @@ Training.updateById = (id, training, result) => {
       }
 
       sql.query(
-        'UPDATE training SET course = ?, start = ?, end = ?, issued = ?, prev_expiry = ?, instructor = ? WHERE id = ?',
+        'UPDATE training SET course = ?, start = ?, end = ?, issued = ?, expiry = ?, prev_expiry = ?, instructor = ? WHERE id = ?',
         [
           training.course,
           training.start,
           training.end,
           training.issued,
+          training.expiry,
           res[0].expiry_type === 2 ? training.prev_expiry : null,
           training.instructor,
           id

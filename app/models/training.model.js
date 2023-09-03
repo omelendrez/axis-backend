@@ -220,12 +220,15 @@ Training.findByDate = (date, statuses, pagination, result) => {
     'c.name'
   ]
 
+  const dateFilter = date === 'no-date' ? '' : `t.start = '${date}'`
+  const statusesFilter = statuses
+    ? `t.status IN (${statuses.split('-').join(',')})`
+    : null
+
   const { filter, limits } = getPaginationFilters(
     pagination,
     fields,
-    ` t.start = '${date}'  ${
-      statuses ? `AND t.status IN (${statuses.split('-').join(',')})` : null
-    }`
+    dateFilter ? `${dateFilter} AND ${statusesFilter}` : statusesFilter
   )
 
   const queryData = `SELECT
@@ -261,7 +264,7 @@ Training.findByDate = (date, statuses, pagination, result) => {
     ON
       t.status = s.id
     ${filter}
-    ORDER BY l.first_name, l.last_name
+    ORDER BY t.id DESC
     ${limits};
   `
 

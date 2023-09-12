@@ -26,12 +26,6 @@ Approval.approve = (id, status, payload, user, result) => {
       )
       break
 
-    case TRAINING_STATUS.ACCOUNTS_DONE:
-      query += 'UPDATE training SET finance_status = ? WHERE id = ?;'
-      params.push(payload.approved, id)
-
-      break
-
     case TRAINING_STATUS.CERT_PRINT_DONE:
       if (parseInt(payload.hasId, 10) === 0) {
         query +=
@@ -129,6 +123,34 @@ Approval.saveReason = (id, payload, result) => {
       id,
       message: 'Reason saved  successfully!'
     })
+  })
+}
+
+Approval.approveMultiple = (payload, result) => {
+  const { records } = payload
+
+  let query =
+    'INSERT INTO training_tracking (training, status, user) VALUES (?);'
+  const params = records
+
+  sql.query(query, params, (err) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    result(null, {
+      message: 'Approvals processed  successfully!'
+    })
+  })
+}
+
+Approval.rejectMultiple = (payload, result) => {
+  console.log(payload)
+
+  result(null, {
+    message: 'Rejection processed successfully!'
   })
 }
 

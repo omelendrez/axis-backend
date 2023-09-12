@@ -38,6 +38,42 @@ exports.approve = (req, res) => {
   )
 }
 
+exports.approveMultiple = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: 'Content can not be empty!'
+    })
+  }
+
+  Approval.approveMultiple(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message: 'Error processing approval Training records'
+      })
+    } else {
+      res.send(data)
+    }
+  })
+}
+
+exports.rejectMultiple = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: 'Content can not be empty!'
+    })
+  }
+
+  Approval.rejectMultiple(req.body, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message: 'Error processing approval Training records'
+      })
+    } else {
+      res.send(data)
+    }
+  })
+}
+
 exports.undo = (req, res) => {
   Approval.undo(parseInt(req.params.id, 10), (err, data) => {
     if (err) {

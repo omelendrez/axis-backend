@@ -3,7 +3,6 @@ module.exports = `SELECT
 	l.badge,
 	l.type,
 	t.certificate,
-	t.finance_status,
 	l.id learner_id,
 	CONCAT(
 		l.first_name,

@@ -7,9 +7,13 @@ module.exports = (app) => {
 
   const router = require('express').Router()
 
+  router.post('/', secure, approval.approveMultiple)
+
   router.post('/:id/reason', secure, approval.saveReason)
 
   router.post('/:id/:status', secure, approval.approve)
+
+  router.put('/', secure, approval.rejectMultiple)
 
   router.delete('/:id', secure, approval.undo)
 

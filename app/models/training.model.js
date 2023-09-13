@@ -221,9 +221,10 @@ Training.findByDate = (date, statuses, pagination, result) => {
   ]
 
   const dateFilter = date === 'no-date' ? '' : `t.start = '${date}'`
-  const statusesFilter = statuses
-    ? `t.status IN (${statuses.split('-').join(',')})`
-    : null
+  const statusesFilter =
+    statuses === 'no-statuses'
+      ? ''
+      : `t.status IN (${statuses.split('-').join(',')})`
 
   const { filter, limits } = getPaginationFilters(
     pagination,

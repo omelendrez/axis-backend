@@ -88,7 +88,8 @@ Approval.undo = (id, result) => {
 
     const params = [id, statuses]
 
-    query += 'UPDATE training SET reject_reason = "" WHERE id=?;'
+    // eslint-disable-next-line quotes
+    query += "UPDATE training SET reject_reason = '' WHERE id=?;"
     params.push(id)
 
     sql.query(query, params, (err) => {

@@ -9,5 +9,7 @@ module.exports = (app) => {
 
   router.get('/', secure, opito.findAll)
 
+  router.get('/file', secure, opito.opitoFileList)
+
   app.use('/api/opito', router)
 }

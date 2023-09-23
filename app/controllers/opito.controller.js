@@ -12,3 +12,19 @@ exports.findAll = (req, res) => {
     }
   })
 }
+
+exports.opitoFileList = (req, res) => {
+  const pagination = req.query
+
+  Opito.getOpitoFileList(pagination, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message:
+          err.message ||
+          'Some error occurred while retrieving Opito file list records.'
+      })
+    } else {
+      res.send(data)
+    }
+  })
+}

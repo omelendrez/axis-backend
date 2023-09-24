@@ -56,8 +56,6 @@ Opito.getOpitoFileList = (pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  console.log(filter)
-
   const queryData = `
   SELECT
     CONCAT(DATE_FORMAT(t.start, '%Y-%m-%d'), ' ', t.course) id,

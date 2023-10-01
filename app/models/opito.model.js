@@ -2,6 +2,7 @@ const sql = require('./db')
 
 const { log } = require('../helpers/log')
 const { getPaginationFilters, toWeb } = require('../helpers/utils')
+
 // constructor
 const Opito = function () {}
 
@@ -51,7 +52,7 @@ ORDER BY t.id DESC;
   })
 }
 
-Opito.getOpitoFileList = (pagination, result) => {
+Opito.getFileList = (pagination, result) => {
   const fields = ['c.name', 'c.opito_reg_code']
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
@@ -60,6 +61,7 @@ Opito.getOpitoFileList = (pagination, result) => {
   SELECT
     CONCAT(DATE_FORMAT(t.start, '%Y-%m-%d'), ' ', t.course) id,
     DATE_FORMAT(t.start, '%d/%m/%Y') start,
+    DATE_FORMAT(t.end, '%d/%m/%Y') end,
     c.name,
     c.opito_reg_code product_code,
     COUNT(*) learners
@@ -71,7 +73,7 @@ Opito.getOpitoFileList = (pagination, result) => {
     ${filter ? ' AND ' : ' WHERE '}
     c.cert_type = 4 AND t.status = 8
   GROUP BY
-    start, t.course, c.name
+    start, end, t.course, c.name
   ORDER BY
     t.start DESC
   ${limits};`
@@ -99,6 +101,35 @@ Opito.getOpitoFileList = (pagination, result) => {
     const count = res[1][0].records
 
     const rows = records.map((data) => toWeb(data))
+
+    result(null, { rows, count })
+  })
+}
+
+Opito.getFileContent = ({ date, course }, result) => {
+  const query = `
+  SELECT
+    l.first_name,
+    l.last_name,
+    DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date
+  FROM
+    training t
+  INNER JOIN
+    learner l ON l.id = t.learner
+  WHERE t.status = 8
+  AND t.start = ?
+  AND t.course = ?;`
+
+  sql.query(query, [date, course], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    const rows = res.map((data) => toWeb(data))
+
+    const count = res.length
 
     result(null, { rows, count })
   })

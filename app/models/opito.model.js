@@ -60,8 +60,8 @@ Opito.getFileList = (pagination, result) => {
   const queryData = `
   SELECT
     CONCAT(DATE_FORMAT(t.start, '%Y-%m-%d'), ' ', t.course) id,
-    DATE_FORMAT(t.start, '%d/%m/%Y') start,
-    DATE_FORMAT(t.end, '%d/%m/%Y') end,
+    DATE_FORMAT(t.start, '%d-%b-%Y') start,
+    DATE_FORMAT(t.end, '%d-%b-%Y') end,
     c.name,
     c.opito_reg_code product_code,
     COUNT(*) learners
@@ -111,14 +111,15 @@ Opito.getFileContent = ({ date, course }, result) => {
   SELECT
     l.first_name,
     l.last_name,
-    DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date
+    DATE_FORMAT(l.birth_date, '%d-%b-%Y') birth_date
   FROM
     training t
   INNER JOIN
     learner l ON l.id = t.learner
   WHERE t.status = 8
   AND t.start = ?
-  AND t.course = ?;`
+  AND t.course = ?
+  ORDER BY l.last_name, l.first_name;`
 
   sql.query(query, [date, course], (err, res) => {
     if (err) {

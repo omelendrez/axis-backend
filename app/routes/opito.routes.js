@@ -7,6 +7,8 @@ module.exports = (app) => {
 
   const router = require('express').Router()
 
+  router.put('/:id', secure, opito.saveFieldValues)
+
   router.get('/', secure, opito.findAll)
 
   router.get('/file', secure, opito.fileList)

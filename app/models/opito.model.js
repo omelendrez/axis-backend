@@ -136,4 +136,19 @@ Opito.getFileContent = ({ date, course }, result) => {
   })
 }
 
+Opito.saveFields = ({ id }, { learnerId, certificateNo }, result) => {
+  const query =
+    'UPDATE training SET opito_learner = ?, certificate = ? WHERE id = ?'
+
+  sql.query(query, [learnerId, certificateNo, id], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    result(null, res.affectedRows)
+  })
+}
+
 module.exports = Opito

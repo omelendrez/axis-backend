@@ -42,3 +42,16 @@ exports.fileContent = (req, res) => {
     }
   })
 }
+
+exports.saveFieldValues = (req, res) => {
+  Opito.saveFields(req.params, req.body, (err) => {
+    if (err) {
+      res.status(500).send({
+        message:
+          err.message || 'Some error occurred while saving Opito field values.'
+      })
+    } else {
+      res.send({ message: 'Fields updated successfully!' })
+    }
+  })
+}

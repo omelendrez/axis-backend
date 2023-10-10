@@ -121,10 +121,7 @@ User.findByIdView = (id, result) => {
     u.name,
     u.full_name,
     u.email,
-    CASE ur.user
-        WHEN NULL THEN '[]'
-        ELSE JSON_ARRAYAGG(JSON_OBJECT('id', r.id, 'name', r.name))
-    END roles,
+    IF(COUNT(r.id)=0,'[]',JSON_ARRAYAGG(JSON_OBJECT('id', r.id, 'name', r.name))) roles,
     CASE u.status
         WHEN 1 THEN 'Active'
         ELSE 'Inactive'
@@ -138,6 +135,8 @@ User.findByIdView = (id, result) => {
   WHERE
     u.id = ?;
   `
+
+  console.log(query)
 
   sql.query(query, id, (err, res) => {
     if (err) {
@@ -232,7 +231,7 @@ User.chgPwd = async (id, user, result) => {
 
 User.remove = (id, result) => {
   sql.query(
-    'SELECT COUNT(1) records FROM training_tracking WHERE user = ?',
+    'SELECT COUNT(1) records FROM training_tracking WHERE user = ?;',
     id,
     (err, res) => {
       if (err) {
@@ -246,19 +245,27 @@ User.remove = (id, result) => {
         return
       }
 
-      sql.query('DELETE FROM user WHERE id = ?', id, (err, res) => {
+      sql.query('DELETE FROM user_role WHERE user = ?;', id, (err) => {
         if (err) {
           log.error(err)
           result(err, null)
           return
         }
 
-        if (res.affectedRows === 0) {
-          result({ kind: 'not_found' }, null)
-          return
-        }
+        sql.query('DELETE FROM user WHERE id = ?;', id, (err, res) => {
+          if (err) {
+            log.error(err)
+            result(err, null)
+            return
+          }
 
-        result(null, id)
+          if (res.affectedRows === 0) {
+            result({ kind: 'not_found' }, null)
+            return
+          }
+
+          result(null, id)
+        })
       })
     }
   )

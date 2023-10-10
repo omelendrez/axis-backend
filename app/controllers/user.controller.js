@@ -12,7 +12,6 @@ exports.create = (req, res) => {
     full_name: req.body.full_name,
     name: req.body.name,
     password: req.body.password,
-    role: req.body.role,
     status: req.body.status
   })
 

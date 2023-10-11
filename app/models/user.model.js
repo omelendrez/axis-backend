@@ -136,8 +136,6 @@ User.findByIdView = (id, result) => {
     u.id = ?;
   `
 
-  console.log(query)
-
   sql.query(query, id, (err, res) => {
     if (err) {
       log.error(err)

@@ -13,7 +13,7 @@ module.exports = (app) => {
 
   router.post('/:id/:status', secure, approval.approve)
 
-  router.put('/', secure, approval.rejectMultiple)
+  router.put('/', secure, approval.approveMultiple)
 
   router.delete('/:id', secure, approval.undo)
 

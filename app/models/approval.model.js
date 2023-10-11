@@ -8,6 +8,7 @@ const Approval = function (payload) {
 }
 
 Approval.approve = (id, status, payload, user, result) => {
+  // It also does rejections
   let query =
     'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
   const params = [id, status, user.data.id]
@@ -128,6 +129,7 @@ Approval.saveReason = (id, payload, result) => {
 }
 
 Approval.approveMultiple = (payload, result) => {
+  // It also does rejections
   const { records } = payload
 
   let query =
@@ -144,14 +146,6 @@ Approval.approveMultiple = (payload, result) => {
     result(null, {
       message: 'Approvals processed  successfully!'
     })
-  })
-}
-
-Approval.rejectMultiple = (payload, result) => {
-  console.log(payload)
-
-  result(null, {
-    message: 'Rejection processed successfully!'
   })
 }
 

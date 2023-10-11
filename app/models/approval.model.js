@@ -17,7 +17,7 @@ Approval.approve = (id, status, payload, user, result) => {
   params.push(id)
 
   switch (status) {
-    case TRAINING_STATUS.MEDICAL_DONE:
+    case TRAINING_STATUS.MEDIC_DONE:
       query +=
         'INSERT INTO training_medical (training, systolic, diastolic) VALUES (?,?,?);'
       params.push(

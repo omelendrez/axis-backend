@@ -10,6 +10,7 @@ module.exports = `SELECT
 		' ',
 		l.last_name
 	) full_name,
+	l.last_name surname,
 	DATE_FORMAT(l.birth_date, '%d/%m/%Y') birth_date,
 	CASE
 		WHEN l.sex = 'F' THEN 'Female'
@@ -25,6 +26,7 @@ end,
 DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry,
 DATE_FORMAT(t.issued, '%d/%m/%Y') issued,
 DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
+DATE_FORMAT(t.expiry, '%Y-%c-%e') opito_expiry,
 i.full_name instructor,
 t.status status_id,
 st.name state,

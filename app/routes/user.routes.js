@@ -19,6 +19,8 @@ module.exports = (app) => {
 
   router.put('/:id/chgpwd', secure, user.chgPwd)
 
+  router.post('/:id/reset', secure, user.reset)
+
   router.delete('/:id', secure, user.delete)
 
   router.delete('/', secure, user.deleteAll)

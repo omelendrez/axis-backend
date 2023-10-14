@@ -54,7 +54,7 @@ app.use(
 )
 
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to Axis.' })
+  res.json({ message: 'Welcome to Axis V2.0.' })
 })
 
 app.use(function (req, res, next) {

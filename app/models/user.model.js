@@ -1,5 +1,10 @@
 const sql = require('./db')
-const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
+const {
+  toWeb,
+  getPaginationFilters,
+  loadModel,
+  DEFAULT_USER_PASSWORD
+} = require('../helpers/utils')
 const { log } = require('../helpers/log')
 const { createToken, comparePassword, passwordHash } = require('../secure')
 // constructor
@@ -8,7 +13,7 @@ const User = function (payload) {
 }
 
 User.create = async (user, result) => {
-  const password = await passwordHash('axis')
+  const password = await passwordHash(DEFAULT_USER_PASSWORD)
   const newUser = { ...user, password, status: 1 }
 
   sql.query(
@@ -225,6 +230,24 @@ User.chgPwd = async (id, user, result) => {
       }
     )
   })
+}
+
+User.reset = async (id, result) => {
+  const password = await passwordHash(DEFAULT_USER_PASSWORD)
+
+  sql.query(
+    'UPDATE user SET password = ? WHERE id = ?',
+    [password, id],
+    (err) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      result(null, { id })
+    }
+  )
 }
 
 User.remove = (id, result) => {

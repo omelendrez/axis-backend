@@ -41,6 +41,8 @@ const TRAINING_STATUS = {
   REJECTED: 13
 }
 
+const DEFAULT_USER_PASSWORD = 'axis'
+
 const getPaginationFilters = (pagination, fields, filterField = '') => {
   const { search, limit, offset } = pagination
   let filter = ''
@@ -131,5 +133,6 @@ module.exports = {
   loadModel,
   listEndpoints,
   USER_TYPES,
-  TRAINING_STATUS
+  TRAINING_STATUS,
+  DEFAULT_USER_PASSWORD
 }

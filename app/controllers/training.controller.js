@@ -1,3 +1,4 @@
+const { USER_TYPES } = require('../helpers/utils')
 const Training = require('../models/training.model')
 
 exports.create = (req, res) => {
@@ -177,6 +178,26 @@ exports.update = (req, res) => {
 }
 
 exports.delete = (req, res) => {
+  const roles = JSON.parse(req.decoded?.data?.roles)
+
+  if (roles.find((r) => r.id === USER_TYPES.SYS_ADMIN)) {
+    return Training.removeForce(req.params.id, (err) => {
+      if (err) {
+        switch (err.kind) {
+          case 'not_found':
+            res.status(404).send({
+              message: `Not found Training with id ${req.params.id}.`
+            })
+            break
+          default:
+            res.status(500).send({
+              message: 'Could not delete Training with id ' + req.params.id
+            })
+        }
+      } else res.send({ message: 'Training was deleted successfully!' })
+    })
+  }
+
   Training.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {

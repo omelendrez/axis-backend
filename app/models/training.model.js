@@ -390,8 +390,33 @@ Training.remove = (id, result) => {
   )
 }
 
+Training.removeForce = (id, result) => {
+  sql.query('DELETE FROM training_tracking WHERE training = ?;', id, (err) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    sql.query('DELETE FROM training WHERE id = ?;', id, (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      if (res.affectedRows === 0) {
+        result({ kind: 'not_found' }, null)
+        return
+      }
+
+      result(null, id)
+    })
+  })
+}
+
 Training.removeAll = (result) => {
-  sql.query('DELETE FROM training', (err, res) => {
+  sql.query('DELETE FROM training;', (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -404,7 +429,7 @@ Training.removeAll = (result) => {
 
 Training.addTracking = (trainingId, userId, status, result) => {
   sql.query(
-    'INSERT INTO training_tracking (training, user, status) VALUES (?,?,?)',
+    'INSERT INTO training_tracking (training, user, status) VALUES (?,?,?);',
     [trainingId, userId, status],
     (err, res) => {
       if (err) {

@@ -132,12 +132,13 @@ Approval.approveMultiple = (payload, result) => {
   // It also does rejections
   const { records } = payload
 
-  let query =
-    'INSERT INTO training_tracking (training, status, user) VALUES (?);'
-  const params = records
+  let ids = records.map((l) => `(${l.join(',')})`).join(',')
 
-  sql.query(query, params, (err) => {
+  const query = `INSERT INTO training_tracking (training, status, user) VALUES ${ids};`
+
+  sql.query(query, (err) => {
     if (err) {
+      console.log(err)
       log.error(err)
       result(err, null)
       return

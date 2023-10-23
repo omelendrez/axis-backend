@@ -59,7 +59,7 @@ Course.findById = (id, result) => {
 
 Course.findByIdView = (id, result) => {
   sql.query(
-    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, c.front_id_text, c.back_id_text, c.duration, c.validity, c.expiry_type, CASE c.expiry_type WHEN 0 THEN "Certificate has no expiring date" WHEN 1 THEN "Expiring date calculated automatically" ELSE "Expiring date entered manually" END expiry_type_name, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
+    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, c.front_id_text, c.back_id_text, c.duration, c.validity, c.expiry_type, CASE c.expiry_type WHEN 0 THEN "Certificate has no expiring date" WHEN 1 THEN "Expiring date calculated automatically" ELSE "FOET expiration date calculation" END expiry_type_name, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
     id,
     (err, res) => {
       if (err) {

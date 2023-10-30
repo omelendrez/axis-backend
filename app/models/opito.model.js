@@ -11,8 +11,8 @@ Opito.getAll = (result) => {
   SELECT
     c.front_id_text,
     c.opito_reg_code,
-    DATE_FORMAT(t.issued, '%d/%m/%Y') start,
-    DATE_FORMAT(t.expiry, '%d/%m/%Y') end,
+    DATE_FORMAT(t.issued, '%d/%m/%y') start,
+    DATE_FORMAT(t.expiry, '%d/%m/%y') end,
     ti.name title,
     l.first_name,
     l.last_name,
@@ -60,8 +60,8 @@ Opito.getFileList = (pagination, result) => {
   const queryData = `
   SELECT
     CONCAT(DATE_FORMAT(t.start, '%Y-%m-%d'), ' ', t.course) id,
-    DATE_FORMAT(t.start, '%d-%b-%Y') start,
-    DATE_FORMAT(t.end, '%d-%b-%Y') end,
+    DATE_FORMAT(t.start, '%e-%b-%y') start,
+    DATE_FORMAT(t.end, '%e-%b-%y') end,
     c.name,
     c.opito_reg_code product_code,
     COUNT(*) learners
@@ -111,8 +111,8 @@ Opito.getFileContent = ({ date, course }, result) => {
   SELECT
     l.first_name,
     l.last_name,
-    DATE_FORMAT(l.birth_date, '%d-%b-%Y') birth_date,
-    DATE_FORMAT(t.prev_expiry, '%d-%b-%Y') prev_expiry
+    DATE_FORMAT(l.birth_date, '%e-%b-%Y') birth_date,
+    DATE_FORMAT(t.prev_expiry, '%e-%b-%Y') prev_expiry
   FROM
     training t
   INNER JOIN

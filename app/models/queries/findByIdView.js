@@ -126,4 +126,11 @@ WHERE
 	t.training = ?
 ORDER BY
 	t.updated;
+
+SELECT ct.name type, ci.value
+	FROM contact_info ci
+	INNER JOIN contact_type ct ON ct.id = ci.type
+	WHERE ci.learner = (SELECT learner FROM training WHERE id = ?)
+	AND ci.type = 3
+	LIMIT 1;
 `

@@ -111,8 +111,8 @@ Opito.getFileContent = ({ date, course }, result) => {
   SELECT
     l.first_name,
     l.last_name,
-    DATE_FORMAT(l.birth_date, '%e-%b-%Y') birth_date,
-    DATE_FORMAT(t.prev_expiry, '%e-%b-%Y') prev_expiry
+    DATE_FORMAT(l.birth_date, '%e-%b-%y') birth_date,
+    DATE_FORMAT(t.prev_expiry, '%e-%b-%y') prev_expiry
   FROM
     training t
   INNER JOIN

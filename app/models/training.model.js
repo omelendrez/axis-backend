@@ -93,7 +93,7 @@ Training.findById = (id, result) => {
 }
 
 Training.findByIdView = (id, result) => {
-  sql.query(findByIdView, [id, id, id, id, id], (err, res) => {
+  sql.query(findByIdView, [id, id, id, id, id, id], (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -106,7 +106,8 @@ Training.findByIdView = (id, result) => {
         medical: res[1],
         course: res[2][0],
         items: res[3],
-        tracking: res[4]
+        tracking: res[4],
+        contact_info: res[5]
       }
       result(null, results)
       return

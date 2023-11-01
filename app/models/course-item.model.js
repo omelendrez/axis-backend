@@ -35,7 +35,7 @@ CourseItem.create = (courseItem, result) => {
 }
 
 CourseItem.findById = (id, result) => {
-  sql.query(`SELECT * FROM course_item WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM course_item WHERE id = ?', id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

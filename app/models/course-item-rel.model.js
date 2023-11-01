@@ -23,9 +23,10 @@ CourseItemRel.create = (payload, result) => {
 }
 
 CourseItemRel.getAll = (id, result) => {
-  const query = `SELECT cir.id, ci.name FROM course_item ci INNER JOIN course_item_rel cir ON cir.item = ci.id WHERE cir.course = ${id} ORDER BY ci.name;`
+  const query =
+    'SELECT cir.id, ci.name FROM course_item ci INNER JOIN course_item_rel cir ON cir.item = ci.id WHERE cir.course = ? ORDER BY ci.name;'
 
-  sql.query(query, (err, res) => {
+  sql.query(query, id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -39,9 +40,10 @@ CourseItemRel.getAll = (id, result) => {
 }
 
 CourseItemRel.getAllAvailable = (id, result) => {
-  const query = `SELECT i.id, i.name FROM course_item i WHERE i.id NOT IN (SELECT item FROM course_item_rel WHERE course = ${id}) ORDER BY i.name;`
+  const query =
+    'SELECT i.id, i.name FROM course_item i WHERE i.id NOT IN (SELECT item FROM course_item_rel WHERE course = ?) ORDER BY i.name;'
 
-  sql.query(query, (err, res) => {
+  sql.query(query, id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

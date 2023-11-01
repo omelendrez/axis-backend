@@ -20,7 +20,7 @@ Nationality.create = (nationality, result) => {
 }
 
 Nationality.findById = (id, result) => {
-  sql.query(`SELECT * FROM nationality WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM nationality WHERE id = ?', id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

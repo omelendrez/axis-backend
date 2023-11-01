@@ -15,7 +15,8 @@ Course.create = (course, result) => {
   }
 
   sql.query(
-    `SELECT COUNT(1) records FROM course WHERE name='${course.name}'`,
+    'SELECT COUNT(1) records FROM course WHERE name = ?',
+    [course.name],
     (err, res) => {
       if (err) {
         log.error(err)
@@ -41,7 +42,7 @@ Course.create = (course, result) => {
 }
 
 Course.findById = (id, result) => {
-  sql.query(`SELECT * FROM course WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM course WHERE id = ?', id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

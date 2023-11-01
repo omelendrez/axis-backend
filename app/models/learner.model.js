@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
@@ -40,7 +41,8 @@ Learner.create = (learner, result) => {
 
 Learner.findById = (id, result) => {
   sql.query(
-    `SELECT id, type, badge, first_name, last_name, sex, state, nationality, DATE_FORMAT(birth_date, '%Y-%m-%d') birth_date, company, status FROM learner WHERE id = ${id}`,
+    "SELECT id, type, badge, first_name, last_name, sex, state, nationality, DATE_FORMAT(birth_date, '%Y-%m-%d') birth_date, company, status FROM learner WHERE id = ?",
+    id,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -60,7 +62,8 @@ Learner.findById = (id, result) => {
 
 Learner.findByIdView = (id, result) => {
   sql.query(
-    `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, ' ', t.last_name) full_name,CASE WHEN t.sex = 'F' THEN 'Female' ELSE 'Male' END sex, s.name state, n.nationality, DATE_FORMAT(birth_date, '%d/%m/%Y') birth_date, c.name company, CASE WHEN t.status = 1 THEN 'Active' ELSE 'Inactive' END status FROM learner t INNER JOIN company c ON t.company = c.id INNER JOIN state s ON t.state = s.id INNER JOIN nationality n ON t.nationality = n.id WHERE t.id = ${id}`,
+    "SELECT t.id, t.type, t.badge, CONCAT(t.first_name, ' ', t.last_name) full_name,CASE WHEN t.sex = 'F' THEN 'Female' ELSE 'Male' END sex, s.name state, n.nationality, DATE_FORMAT(birth_date, '%d/%m/%Y') birth_date, c.name company, CASE WHEN t.status = 1 THEN 'Active' ELSE 'Inactive' END status FROM learner t INNER JOIN company c ON t.company = c.id INNER JOIN state s ON t.state = s.id INNER JOIN nationality n ON t.nationality = n.id WHERE t.id = ?",
+    id,
     (err, res) => {
       if (err) {
         log.error(err)

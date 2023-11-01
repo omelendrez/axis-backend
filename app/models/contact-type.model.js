@@ -20,7 +20,7 @@ ContactType.create = (contactType, result) => {
 }
 
 ContactType.findById = (id, result) => {
-  sql.query(`SELECT * FROM contact_type WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM contact_type WHERE id = ?', id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

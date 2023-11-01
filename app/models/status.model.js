@@ -19,7 +19,7 @@ Status.create = (status, result) => {
 }
 
 Status.findById = (id, result) => {
-  sql.query(`SELECT * FROM status WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM status WHERE id = ?', id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

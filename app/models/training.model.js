@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 const sql = require('./db')
 
 const findByIdView = require('./queries/findByIdView')
@@ -198,9 +199,10 @@ Training.findAll = (pagination, result) => {
 }
 
 Training.findAllById = (id, result) => {
-  const query = `SELECT t.id, c.name course, s.status, u.full_name instructor, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.end, '%d/%m/%Y') end, DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry, DATE_FORMAT(t.issued, '%d/%m/%Y') issued, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id LEFT OUTER JOIN user u ON t.instructor = u.id WHERE learner = ${id}`
+  const query =
+    "SELECT t.id, c.name course, s.status, u.full_name instructor, DATE_FORMAT(t.start, '%d/%m/%Y') start, DATE_FORMAT(t.end, '%d/%m/%Y') end, DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry, DATE_FORMAT(t.issued, '%d/%m/%Y') issued, DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry, t.certificate FROM training t INNER JOIN course c ON t.course = c.id INNER JOIN status s ON t.status = s.id LEFT OUTER JOIN user u ON t.instructor = u.id WHERE learner = ?"
 
-  sql.query(query, (err, res) => {
+  sql.query(query, id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

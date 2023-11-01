@@ -44,7 +44,7 @@ User.create = async (user, result) => {
 }
 
 User.findById = (id, result) => {
-  sql.query(`SELECT * FROM user WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM user WHERE id = ?', id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -63,6 +63,8 @@ User.findById = (id, result) => {
 User.login = (params, result) => {
   const query =
     'SELECT u.id, u.name, u.full_name, u.email, u.password, case when ur.user is null then "[]" else json_arrayagg(json_object("id", r.id, "name", r.name)) end roles, u.status FROM user u left outer join user_role ur on ur.user = u.id left outer join role r on r.id = ur.role WHERE u.name = ? GROUP BY u.id, u.name, u.full_name, u.password, u.status'
+
+  // I use async here because of password methods that need to be awaited
 
   sql.query(query, params.name.trim(), async (err, res) => {
     if (err) {
@@ -190,7 +192,9 @@ User.chgPwd = async (id, user, result) => {
     return
   }
 
-  sql.query(`SELECT * FROM user WHERE id = '${id}'`, async (err, res) => {
+  // I use async here because of password methods that need to be awaited
+
+  sql.query('SELECT * FROM user WHERE id = ?;', id, async (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

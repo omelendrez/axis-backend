@@ -13,7 +13,7 @@ Approval.approve = (id, status, payload, user, result) => {
     'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
   const params = [id, status, user.data.id]
 
-  query += 'UPDATE training SET reject_reason = "" WHERE id=?;'
+  query += 'UPDATE training SET reject_reason = "" WHERE id = ?;'
   params.push(id)
 
   switch (status) {
@@ -64,9 +64,8 @@ Approval.undo = (id, result) => {
 
   let query =
     'SELECT status FROM training_tracking WHERE training = ? ORDER BY id DESC LIMIT 2;'
-  const params = [id]
 
-  sql.query(query, params, (err, res) => {
+  sql.query(query, id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
@@ -90,7 +89,7 @@ Approval.undo = (id, result) => {
     const params = [id, statuses]
 
     // eslint-disable-next-line quotes
-    query += "UPDATE training SET reject_reason = '' WHERE id=?;"
+    query += "UPDATE training SET reject_reason = '' WHERE id = ?;"
     params.push(id)
 
     sql.query(query, params, (err) => {

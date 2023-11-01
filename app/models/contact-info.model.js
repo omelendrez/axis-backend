@@ -43,7 +43,8 @@ ContactInfo.create = (info, result) => {
 
 ContactInfo.findById = (id, result) => {
   sql.query(
-    `SELECT id, learner, type, value FROM contact_info WHERE id = ${id}`,
+    'SELECT id, learner, type, value FROM contact_info WHERE id = ?',
+    id,
     (err, res) => {
       if (err) {
         log.error(err)
@@ -62,8 +63,9 @@ ContactInfo.findById = (id, result) => {
 }
 
 ContactInfo.getAll = (id, result) => {
-  const query = `SELECT i.id, t.name type, i.value FROM contact_info i INNER JOIN contact_type t ON i.type = t.id WHERE i.learner = ${id}`
-  sql.query(query, (err, res) => {
+  const query =
+    'SELECT i.id, t.name type, i.value FROM contact_info i INNER JOIN contact_type t ON i.type = t.id WHERE i.learner = ?'
+  sql.query(query, id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

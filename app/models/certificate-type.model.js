@@ -24,7 +24,7 @@ CertificateType.create = (certificatetype, result) => {
 }
 
 CertificateType.findById = (id, result) => {
-  sql.query(`SELECT * FROM certificate_type WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM certificate_type WHERE id = ?', id, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

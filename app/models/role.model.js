@@ -20,7 +20,7 @@ Role.create = (role, result) => {
 }
 
 Role.findById = (id, result) => {
-  sql.query(`SELECT * FROM role WHERE id = ${id}`, (err, res) => {
+  sql.query('SELECT * FROM role WHERE id = ?', [id], (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

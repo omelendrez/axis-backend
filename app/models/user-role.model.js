@@ -39,9 +39,10 @@ UserRole.getAll = (id, result) => {
 }
 
 UserRole.getAllAvailable = (id, result) => {
-  const query = `SELECT r.id, r.name FROM role r WHERE r.id NOT IN (SELECT role FROM user_role WHERE user = ${id}) ORDER BY r.name;`
+  const query =
+    'SELECT r.id, r.name FROM role r WHERE r.id NOT IN (SELECT role FROM user_role WHERE user = ?) ORDER BY r.id;'
 
-  sql.query(query, (err, res) => {
+  sql.query(query, [id], (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)

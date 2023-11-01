@@ -14,6 +14,10 @@ module.exports = (app) => {
     // GET
     .get('/', secure, training.getAll) // List all training records by a given learner
 
+    .get('/course-years', secure, training.getCourseYears) // List all start years used in all training courses
+
+    .get('/course-month-by-year/:year', secure, training.getCourseMonthByYear) // List all training records count grouped by course and mont for a given year
+
     .get('/:id/all', secure, training.getAllById) // List all training records by a given learner
 
     .get('/:id/view', secure, training.getOneView) // Gets the data needed for the Training View component and subcomponents

@@ -230,3 +230,23 @@ exports.deleteAll = (req, res) => {
     } else res.send({ message: 'All Trainings were deleted successfully!' })
   })
 }
+
+exports.getCourseYears = (req, res) => {
+  Training.findCourseYears((err, data) => {
+    if (err) {
+      res.status(500).send({
+        message: 'Internal database error'
+      })
+    } else res.send(data)
+  })
+}
+
+exports.getCourseMonthByYear = (req, res) => {
+  Training.findCourseMonthByYear(req.params.year, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message: 'Internal database error'
+      })
+    } else res.send(data)
+  })
+}

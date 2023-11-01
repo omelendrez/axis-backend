@@ -11,8 +11,8 @@ Opito.getAll = (result) => {
   SELECT
     c.front_id_text,
     c.opito_reg_code,
-    DATE_FORMAT(t.issued, '%d/%m/%Y') start,
-    DATE_FORMAT(t.expiry, '%d/%m/%Y') end,
+    DATE_FORMAT(t.issued, '%d/%m/%y') start,
+    DATE_FORMAT(t.expiry, '%d/%m/%y') end,
     ti.name title,
     l.first_name,
     l.last_name,

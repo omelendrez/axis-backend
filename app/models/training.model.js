@@ -444,4 +444,53 @@ Training.addTracking = (trainingId, userId, status, result) => {
   )
 }
 
+Training.findCourseYears = (result) => {
+  const query = `SELECT
+                  MIN(YEAR(start)) min,
+                  MAX(YEAR(start)) max
+                FROM
+                  training
+                WHERE
+                  status = 11;
+                `
+  sql.query(query, (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    result(null, res[0])
+  })
+}
+
+Training.findCourseMonthByYear = (year, result) => {
+  const query = `SELECT
+                  c.name course,
+                  MONTH(t.start) m,
+                  MONTHNAME(t.start) month,
+                  COUNT(*) value
+                FROM
+                  training t
+                      INNER JOIN
+                  course c ON c.id = t.course
+                WHERE
+                  YEAR(t.start) = ? AND t.status = 11
+
+                GROUP BY c.name , MONTH(t.start) , MONTHNAME(t.start)
+                ORDER BY 1, 2;`
+
+  sql.query(query, [year, year], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    const data = res.map((data) => toWeb(data))
+
+    result(null, data)
+  })
+}
+
 module.exports = Training

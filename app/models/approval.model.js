@@ -35,6 +35,13 @@ Approval.approve = (id, status, payload, user, result) => {
       }
 
       break
+
+    case TRAINING_STATUS.ID_CARD_PRINT_DONE:
+      query +=
+        'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+      params.push(id, TRAINING_STATUS.COMPLETED, user.data.id)
+
+      break
     default:
   }
 

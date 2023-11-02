@@ -143,7 +143,8 @@ Training.findByDate = (date, statuses, pagination, result) => {
     'c.name'
   ]
 
-  const dateFilter = date === 'no-date' ? '' : `t.start = '${date}'`
+  const dateFilter =
+    date === 'no-date' ? '' : `'${date}' BETWEEN t.start AND t.end `
   const statusesFilter =
     statuses === 'no-statuses'
       ? ''

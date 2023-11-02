@@ -244,6 +244,7 @@ Training.findByDate = (date, statuses, pagination, result) => {
       t.status,
       s.status status_name,
       DATE_FORMAT(t.start, '%d/%m/%Y') start,
+      DATE_FORMAT(t.end, '%d/%m/%Y') end,
       i.full_name instructor,
       t.reject_reason
     FROM

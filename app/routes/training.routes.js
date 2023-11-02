@@ -12,7 +12,6 @@ module.exports = (app) => {
     .post('/', secure, training.create) // Create training in learner view
 
     // GET
-    .get('/', secure, training.getAll) // List all training records by a given learner
 
     .get('/course-years', secure, training.getCourseYears) // List all start years used in all training courses
 

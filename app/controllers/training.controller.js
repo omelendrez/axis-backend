@@ -126,22 +126,6 @@ exports.getAllByDate = (req, res) => {
   )
 }
 
-exports.getAll = (req, res) => {
-  Training.findAll(req.query, (err, data) => {
-    if (err) {
-      if (err.kind === 'not_found') {
-        res.status(404).send({
-          message: 'Not records found for the given date.'
-        })
-      } else {
-        res.status(500).send({
-          message: 'Internal database error'
-        })
-      }
-    } else res.send(data)
-  })
-}
-
 exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({

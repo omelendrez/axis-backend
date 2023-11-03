@@ -389,20 +389,30 @@ Training.findCourseYears = (result) => {
 }
 
 Training.findCourseMonthByYear = (year, result) => {
-  const query = `SELECT
-                  c.name course,
-                  MONTH(t.start) m,
-                  MONTHNAME(t.start) month,
-                  COUNT(*) value
-                FROM
-                  training t
-                      INNER JOIN
-                  course c ON c.id = t.course
-                WHERE
-                  YEAR(t.start) = ? AND t.status = 11
+  const query = `DROP TABLE IF EXISTS course_summary;
 
-                GROUP BY c.name , MONTH(t.start) , MONTHNAME(t.start)
-                ORDER BY 1, 2;`
+  CREATE TABLE course_summary SELECT course FROM
+      training
+  WHERE
+      YEAR(start) = ?
+  GROUP BY course
+  ORDER BY COUNT(1) DESC
+  LIMIT 11;
+
+  SELECT
+    c.name course,
+    MONTH(t.start) m,
+    MONTHNAME(t.start) month,
+    COUNT(*) value
+  FROM
+    training t
+        INNER JOIN
+    course c ON c.id = t.course
+  WHERE
+    YEAR(t.start) = ? AND t.status = 11
+    AND t.course IN (SELECT course FROM course_summary)
+  GROUP BY c.name , MONTH(t.start) , MONTHNAME(t.start)
+  ORDER BY 1, 2;`
 
   sql.query(query, [year, year], (err, res) => {
     if (err) {
@@ -411,7 +421,7 @@ Training.findCourseMonthByYear = (year, result) => {
       return
     }
 
-    const data = res.map((data) => toWeb(data))
+    const data = res[2].map((data) => toWeb(data))
 
     result(null, data)
   })

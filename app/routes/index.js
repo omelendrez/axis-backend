@@ -6,6 +6,8 @@ module.exports = (app) => {
   require('./contact-type.routes')(app)
   require('./course-item-rel.routes')(app)
   require('./course-item.routes')(app)
+  require('./course-module-rel.routes')(app)
+  require('./course-module.routes')(app)
   require('./course.routes')(app)
   require('./learner.routes')(app)
   require('./nationality.routes')(app)

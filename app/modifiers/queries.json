@@ -1,0 +1,14 @@
+[
+  {
+    "label": "course_module",
+    "query": "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='course_module';",
+    "modify": "DROP TABLE IF EXISTS course_module;CREATE TABLE course_module (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));DROP TABLE IF EXISTS course_module_rel;CREATE TABLE course_module_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, module SMALLINT, PRIMARY KEY (id));ALTER TABLE course_module_rel ADD FOREIGN KEY(course) REFERENCES course(id),ADD FOREIGN KEY(module) REFERENCES course_module(id);",
+    "rollback": "DROP TABLE IF EXISTS course_module_rel;DROP TABLE IF EXISTS course_module;"
+  },
+  {
+    "label": "training_medical",
+    "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='training_medical' AND COLUMN_NAME = 'date';",
+    "modify": "ALTER TABLE training_medical ADD COLUMN date DATE NULL AFTER training,ADD INDEX training_medical_training_date_idx (training ASC, date ASC) VISIBLE,DROP PRIMARY KEY;",
+    "rollback": "ALTER TABLE training_medical ADD PRIMARY KEY (training), DROP INDEX training_medical_training_date_idx,DROP COLUMN date;"
+  }
+]

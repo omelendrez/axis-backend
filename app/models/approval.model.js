@@ -9,22 +9,37 @@ const Approval = function (payload) {
 
 Approval.approve = (id, status, payload, user, result) => {
   // It also does rejections
-  let query =
-    'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
-  const params = [id, status, user.data.id]
+
+  let query = ''
+  const params = []
+
+  if (payload?.status === status) {
+    query +=
+      'UPDATE training_tracking SET user=?, updated=NOW() WHERE training=? AND status=?;'
+    params.push(user.data.id, id, status)
+  } else {
+    query +=
+      'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+    params.push(id, status, user.data.id)
+  }
 
   query += 'UPDATE training SET reject_reason = "" WHERE id = ?;'
   params.push(id)
 
   switch (status) {
     case TRAINING_STATUS.MEDIC_DONE:
-      query +=
-        'INSERT INTO training_medical (training, systolic, diastolic) VALUES (?,?,?);'
-      params.push(
-        id,
-        parseInt(payload.systolic, 10),
-        parseInt(payload.diastolic, 10)
-      )
+      payload.updates
+        .filter((e) => !e.existing)
+        .map((d) => {
+          query +=
+            'INSERT INTO training_medical (training, date, systolic, diastolic) VALUES (?,?,?,?);'
+          params.push(
+            id,
+            d.date,
+            parseInt(d.systolic, 10),
+            parseInt(d.diastolic, 10)
+          )
+        })
       break
 
     case TRAINING_STATUS.CERT_PRINT_DONE:

@@ -44,27 +44,15 @@ WHERE
 	t.id = ?;
 
 SELECT
-	t.status,
-	CASE
-		WHEN tm.training IS NULL THEN NULL
-		ELSE JSON_ARRAYAGG(
-			JSON_OBJECT(
-				'systolic',
-				tm.systolic,
-				'diastolic',
-				tm.diastolic
-			)
-		)
-	END bp
+	DATE_FORMAT(tm.date, '%Y-%m-%d') date,
+	tm.systolic,
+	tm.diastolic
 FROM
-	training_tracking t
-	LEFT OUTER JOIN training_medical tm ON tm.training = t.training
-	AND t.status = 4
+	training_medical tm
 WHERE
-	t.training = ?
-	AND t.status IN (4, 13)
-GROUP BY
-	t.status;
+	tm.training = ?
+ORDER BY
+	tm.date;
 
 SELECT
 	id,

@@ -4,6 +4,10 @@ const logger = require('morgan')
 const { log } = require('./helpers/log')
 const errorHandler = require('./errors/error-handler')
 const { listEndpoints } = require('./helpers/utils')
+
+// Databse Modifiers
+const Modifier = require('./modifiers')
+
 require('dotenv').config()
 
 const socketIO = require('./socket.io')
@@ -90,3 +94,5 @@ io.on('connection', (socket) => {
 if (process.env.NODE_ENV !== 'production') {
   listEndpoints(app, '')
 }
+
+Modifier.execute()

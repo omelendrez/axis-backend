@@ -9,10 +9,10 @@ exports.approve = (req, res) => {
 
   const data = new Approval({
     approved: req.body.approved,
-    systolic: req.body.systolic,
-    diastolic: req.body.diastolic,
+    updates: req.body.updates,
     reason: req.body.reason,
-    hasId: req.body.hasId
+    hasId: req.body.hasId,
+    status: req.body.status
   })
 
   Approval.approve(

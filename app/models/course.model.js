@@ -84,7 +84,23 @@ Course.getAll = (pagination, result) => {
 
   const { filter, limits } = getPaginationFilters(pagination, fields)
 
-  const queryData = `SELECT c.id, c.name, ct.name cert_type_name, c.opito_reg_code, c.expiry_type FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter} ORDER BY c.name ${limits};`
+  const queryData = `SELECT
+                        c.id,
+                        c.name,
+                        ct.name cert_type_name,
+                        c.opito_reg_code,
+                        CASE c.expiry_type WHEN 0 THEN "Certificate has no expiring date" WHEN 1 THEN "Expiring date calculated automatically" ELSE "FOET expiration date calculation" END expiry_type_name,
+                        c.duration,
+                        c.validity,
+                        CASE c.id_card WHEN '0' THEN 'No' ELSE 'Yes' END id_card
+                      FROM
+                        course c
+                      INNER JOIN
+                        certificate_type ct ON c.cert_type = ct.id
+                        ${filter}
+                        ORDER BY c.name
+                        ${limits};`
+
   const queryCount = `SELECT COUNT(1) records FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id ${filter};`
 
   const query = `${queryData}${queryCount}`

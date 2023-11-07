@@ -27,7 +27,6 @@ DATE_FORMAT(t.prev_expiry, '%d/%m/%Y') prev_expiry,
 DATE_FORMAT(t.issued, '%d/%m/%Y') issued,
 DATE_FORMAT(t.expiry, '%d/%m/%Y') expiry,
 DATE_FORMAT(t.expiry, '%Y-%c-%e') opito_expiry,
-i.full_name instructor,
 t.status status_id,
 st.name state,
 s.status,
@@ -35,7 +34,6 @@ t.reject_reason
 FROM
 	learner l
 	INNER JOIN training t ON l.id = t.learner
-	LEFT OUTER JOIN user i ON t.instructor = i.id
 	INNER JOIN company c ON c.id = l.company
 	INNER JOIN nationality n ON l.nationality = n.id
 	INNER JOIN state st ON l.state = st.id
@@ -121,4 +119,17 @@ SELECT ct.name type, ci.value
 	WHERE ci.learner = (SELECT learner FROM training WHERE id = ?)
 	AND ci.type = 3
 	LIMIT 1;
+
+SELECT
+	ti.id,
+	DATE_FORMAT(ti.date, '%d-%m-%Y') date,
+	cm.name module,
+	u.full_name instructor
+FROM
+	training_instructor ti
+			INNER JOIN
+	course_module cm ON cm.id = ti.module
+			INNER JOIN
+	user u ON u.id = ti.instructor
+WHERE ti.training = ?;
 `

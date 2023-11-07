@@ -10,5 +10,11 @@
     "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='training_medical' AND COLUMN_NAME = 'date';",
     "modify": "ALTER TABLE training_medical ADD COLUMN date DATE NULL AFTER training,ADD INDEX training_medical_training_date_idx (training ASC, date ASC) VISIBLE,DROP PRIMARY KEY;",
     "rollback": "ALTER TABLE training_medical ADD PRIMARY KEY (training), DROP INDEX training_medical_training_date_idx,DROP COLUMN date;"
+  },
+  {
+    "label": "training_instructor",
+    "query": "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='training_instructor';",
+    "modify": "DROP TABLE IF EXISTS training_instructor;CREATE TABLE training_instructor (id INT NOT NULL AUTO_INCREMENT, training INT NOT NULL, date DATE NOT NULL, module SMALLINT NOT NULL, instructor SMALLINT NOT NULL, PRIMARY KEY (id));ALTER TABLE training_instructor ADD FOREIGN KEY(training) REFERENCES training(id),ADD FOREIGN KEY(module) REFERENCES course_module(id), ADD FOREIGN KEY(instructor) REFERENCES user(id), ADD INDEX training_instructor_training_date_module_idx (training,date,module,instructor) VISIBLE; ",
+    "rollback": "DROP TABLE IF EXISTS training_instructor;"
   }
 ]

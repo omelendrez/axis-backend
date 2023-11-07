@@ -51,6 +51,27 @@ CourseModule.findById = (id, result) => {
   })
 }
 
+CourseModule.findByCourse = (id, result) => {
+  sql.query(
+    'SELECT cm.id, cm.name FROM course_module cm INNER JOIN course_module_rel cmr ON cmr.module = cm.id WHERE cmr.course = ? ORDER BY 2;',
+    [id],
+    (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      if (res.length) {
+        result(null, toWeb(res[0]))
+        return
+      }
+
+      result({ kind: 'not_found' }, null)
+    }
+  )
+}
+
 CourseModule.getAll = (pagination, result) => {
   const fields = ['c.name']
 

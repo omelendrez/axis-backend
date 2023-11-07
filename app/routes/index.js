@@ -9,6 +9,7 @@ module.exports = (app) => {
   require('./course-module-rel.routes')(app)
   require('./course-module.routes')(app)
   require('./course.routes')(app)
+  require('./instructor.routes')(app)
   require('./learner.routes')(app)
   require('./nationality.routes')(app)
   require('./opito.routes')(app)

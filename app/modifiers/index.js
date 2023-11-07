@@ -10,6 +10,7 @@ const modifiers = require('./queries.json')
 const Modifier = {}
 
 Modifier.execute = () => {
+  // modifiers.forEach((q) => {
   modifiers.forEach((q) => {
     sql.query(q.query, (err, res) => {
       if (err) {
@@ -24,7 +25,7 @@ Modifier.execute = () => {
             return
           }
 
-          console.log(`${q.label} modified`, res.affectedRows || '')
+          console.log(`${q.label} created/modified`, res.affectedRows || '')
         })
       }
     })

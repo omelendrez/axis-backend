@@ -13,6 +13,8 @@ module.exports = (app) => {
 
   router.get('/:id', secure, courseModule.findOne)
 
+  router.get('/:id/course', secure, courseModule.findByCourse)
+
   router.put('/:id', secure, courseModule.update)
 
   router.delete('/:id', secure, courseModule.delete)

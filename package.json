@@ -8,7 +8,7 @@
     "url": "https://github.com/omelendrez/axis-backend.git"
   },
   "scripts": {
-    "start": "set NODE_ENV=production && nodemon app/",
+    "start": "nodemon app/",
     "lint": "eslint ./app --ext .js",
     "lint:fix": "eslint --fix ./app --ext .js",
     "update": "rm -rf node_modules && git pull && npm ci"

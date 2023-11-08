@@ -89,6 +89,7 @@ Course.getAll = (pagination, result) => {
                         c.name,
                         ct.name cert_type_name,
                         c.opito_reg_code,
+                        c.expiry_type,
                         CASE c.expiry_type WHEN 0 THEN "Certificate has no expiring date" WHEN 1 THEN "Expiring date calculated automatically" ELSE "FOET expiration date calculation" END expiry_type_name,
                         c.duration,
                         c.validity,

@@ -42,32 +42,15 @@ Training.create = (training, result) => {
         return
       }
 
-      sql.query(
-        'SELECT expiry_type FROM course WHERE id = ? ',
-        [newTraining.course],
-        (err, res) => {
-          if (err) {
-            log.error(err)
-            result(err, null)
-            return
-          }
-
-          if (res[0].expiry_type === 2 && !newTraining.prev_expiry) {
-            result({ kind: 'missing_prev_expiry' }, null)
-            return
-          }
-
-          sql.query('INSERT INTO training SET ?', newTraining, (err, res) => {
-            if (err) {
-              log.error(err)
-              result(err, null)
-              return
-            }
-
-            result(null, { id: res.insertId, ...newTraining })
-          })
+      sql.query('INSERT INTO training SET ?', newTraining, (err, res) => {
+        if (err) {
+          log.error(err)
+          result(err, null)
+          return
         }
-      )
+
+        result(null, { id: res.insertId, ...newTraining })
+      })
     }
   )
 }

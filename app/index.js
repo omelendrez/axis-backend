@@ -10,7 +10,12 @@ const Modifier = require('./modifiers')
 
 require('dotenv').config()
 
-const socketIO = require('./socket.io')
+const socketIO = require('./socket.io')(httpServer, {
+  cors: {
+    origin: 'https://axis-tolmann.vercel.app',
+    methods: ['GET', 'POST']
+  }
+})
 
 const app = express()
 

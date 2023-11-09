@@ -10,6 +10,8 @@ const Modifier = require('./modifiers')
 
 require('dotenv').config()
 
+const httpServer = require('http').createServer(app)
+
 const socketIO = require('./socket.io')(httpServer, {
   cors: {
     origin: 'https://axis-tolmann.vercel.app',
@@ -18,8 +20,6 @@ const socketIO = require('./socket.io')(httpServer, {
 })
 
 const app = express()
-
-const httpServer = require('http').createServer(app)
 
 const whitelist = [
   'http://localhost:5173',

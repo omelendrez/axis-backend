@@ -10,6 +10,8 @@ const Modifier = require('./modifiers')
 
 require('dotenv').config()
 
+const app = express()
+
 const httpServer = require('http').createServer(app)
 
 const socketIO = require('./socket.io')(httpServer, {
@@ -18,8 +20,6 @@ const socketIO = require('./socket.io')(httpServer, {
     methods: ['GET', 'POST']
   }
 })
-
-const app = express()
 
 const whitelist = [
   'http://localhost:5173',

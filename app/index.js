@@ -14,12 +14,14 @@ const app = express()
 
 const httpServer = require('http').createServer(app)
 
-const socketIO = require('./socket.io')(httpServer, {
-  cors: {
-    origin: 'https://axis-tolmann.vercel.app',
-    methods: ['GET', 'POST']
+const socketIO = require('./socket.io')
+httpServer,
+  {
+    cors: {
+      origin: 'https://axis-tolmann.vercel.app',
+      methods: ['GET', 'POST']
+    }
   }
-})
 
 const whitelist = [
   'http://localhost:5173',

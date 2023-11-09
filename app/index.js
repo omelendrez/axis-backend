@@ -26,7 +26,8 @@ const whitelist = [
   'http://192.168.0.139:4173',
   'http://192.168.1.88',
   'http://192.168.0.96',
-  'http://axis2'
+  'http://axis2',
+  'https://axis-tolmann.vercel.app'
 ]
 
 const corsOptions = {

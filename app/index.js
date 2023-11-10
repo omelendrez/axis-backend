@@ -64,7 +64,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use(
   logger('dev', {
-    skip: (req, res) => res.statusCode < 400
+    skip: () => process.env.NODE_ENV === 'production'
   })
 )
 

@@ -1,2 +1,3 @@
 @echo off
-"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" -h 127.0.0.1  -u root --routines --column-statistics=0 --password=M1a4$1t4E8r0  axis > axis.sql
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe" -h roundhouse.proxy.rlwy.net --port 49881 --password=21c16gef3Gcba4cF6fDB25ggeDc6gEC5 -u root --routines --column-statistics=0 --compact --log-error=upload_error.log railway < axis.sql
+pause

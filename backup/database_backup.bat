@@ -4,4 +4,9 @@
 tar -cvzf axis-defs.tar.gz axis-defs.sql
 tar -cvzf axis-data.tar.gz axis-data.sql
 del *.sql
+
+git add .
+git commit -m "Add backup files"
+git push
+
 pause

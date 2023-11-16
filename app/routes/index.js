@@ -1,5 +1,6 @@
 module.exports = (app) => {
   require('./approval.routes')(app)
+  require('./backup.routes')(app)
   require('./certificate-type.routes')(app)
   require('./company.routes')(app)
   require('./contact-info.routes')(app)

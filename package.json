@@ -7,13 +7,18 @@
     "type": "git",
     "url": "https://github.com/omelendrez/axis-backend.git"
   },
+  "engines": {
+    "node": ">=14.21.3 <=20.9.0",
+    "npm": ">=6.14.18 <=10.1.0"
+  },
   "scripts": {
-    "start": "nodemon app/",
+    "start": "node app/",
+    "dev": "nodemon app/",
     "lint": "eslint ./app --ext .js",
     "lint:fix": "eslint --fix ./app --ext .js",
     "update": "rm -rf node_modules && git pull && npm ci"
   },
-  "author": "Omar Melendrez",
+  "author": "Omar Melendrez <omar.melendrez@gmail.com> (https://github.com/omelendrez/)",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -23,7 +28,6 @@
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "mysql2": "^3.2.0",
-    "nodemon": "^2.0.22",
     "socket.io": "^4.7.1"
   },
   "devDependencies": {
@@ -31,6 +35,7 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.1.1"
+    "eslint-plugin-promise": "^6.1.1",
+    "nodemon": "^2.0.22"
   }
 }

@@ -108,3 +108,9 @@ If everything concludes without errors, you should see the last message as follo
 ![Screenshot 2023-04-18 084321](https://user-images.githubusercontent.com/7883563/232766843-60cb917d-1687-4b7b-8269-c5921740be8d.png)
 
 If this is the case, the new version of axis database has already running in the MySQL server.
+
+## Node version
+
+We use `v20.9.0` and we will not upgrade yet due to a warning caused by the issue below which shows up starting with `v21.0.0`.
+
+https://github.com/forcedotcom/cli/issues/2535

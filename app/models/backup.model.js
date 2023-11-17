@@ -7,7 +7,7 @@ const limit = 2000
 
 const Backup = {}
 
-Backup.backup = async (result) =>
+Backup.backup = (result) =>
   new Promise((resolve, reject) => {
     const sql = require('./db')
     sql.query(
@@ -17,6 +17,13 @@ Backup.backup = async (result) =>
           log.error(err)
 
           return reject(err)
+        }
+
+        const files = fs.readdirSync('./backup')
+        for (const file of files) {
+          if (file.includes('.sql')) {
+            await fs.unlinkSync(`./backup/${file}`)
+          }
         }
 
         const tables = data.map((t) => t.table) //.filter((t) => t === 'user')
@@ -44,10 +51,6 @@ const getValues = (row) =>
 const processTable = (table) =>
   new Promise((resolve, reject) => {
     const fileName = `./backup/${table}.sql`
-
-    if (fs.existsSync(fileName)) {
-      fs.unlinkSync(fileName)
-    }
 
     const sql = require('./db')
 

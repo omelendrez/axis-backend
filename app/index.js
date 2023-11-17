@@ -102,6 +102,7 @@ io.on('connection', (socket) => {
 
 if (process.env.NODE_ENV !== 'production') {
   listEndpoints(app, '')
+  console.log(process.env.NODE_ENV)
 }
 
 Modifier.execute()

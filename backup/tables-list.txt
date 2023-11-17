@@ -8,17 +8,4 @@ status
 title
 user_role
 user
-learner
-contact_info
 company
-course
-course_item
-course_module
-course_item_rel
-course_module_rel
-course_summary
-training
-certificate
-training_instructor
-training_medical
-training_tracking

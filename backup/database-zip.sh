@@ -1,3 +1,5 @@
+rm *.gz
+
 while read p; do
   echo " - $p"
 

@@ -5,9 +5,13 @@ module.exports = (app) => {
 
   router.get('/backup', backup.createBackup)
 
+  router.get('/zip', backup.zipBackup)
+
+  router.get('/push', backup.pushBackup)
+
   router.get('/unzip', backup.unzipBackup)
 
   router.get('/restore', backup.restoreBackup)
 
-  app.use('/api/backup', router)
+  app.use('/api', router)
 }

@@ -3,25 +3,47 @@ const fs = require('fs')
 const Backup = require('../models/backup.model')
 
 const createBackup = async (req, res) => {
-  Backup.backup((err, data) => {
-    if (err) {
-      return res.status(500).send({
-        message: err.message || 'Some error occurred when backing up data.'
-      })
-    }
-    res.status(200).send({ data })
-  })
+  try {
+    const resp = await Backup.backup()
+    res.status(200).send(resp)
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message || 'Some error occurred when backing up data.'
+    })
+  }
+}
+
+const zipBackup = async (req, res) => {
+  try {
+    const resp = await Backup.zipFiles()
+    res.status(200).send(resp)
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message || 'Some error occurred when ziping files.'
+    })
+  }
 }
 
 const unzipBackup = async (req, res) => {
-  Backup.unzipFiles((err) => {
-    if (err) {
-      return res.status(500).send({
-        message: err.message || 'Some error occurred when unziping files.'
-      })
-    }
-    res.status(200).send({ message: 'Unzip files  successfuly!' })
-  })
+  try {
+    const resp = await Backup.unzipFiles()
+    res.status(200).send(resp)
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message || 'Some error occurred when unziping files.'
+    })
+  }
+}
+
+const pushBackup = async (req, res) => {
+  try {
+    const resp = await Backup.pushFiles()
+    res.status(200).send(resp)
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message || 'Some error occurred when pushing files.'
+    })
+  }
 }
 
 const restoreBackup = async (req, res) => {
@@ -32,29 +54,40 @@ const restoreBackup = async (req, res) => {
     .filter((n) => n.length)
     .filter((n) => !n.includes('-'))
 
-  let counter = 0
-  let errors = 0
+  let success = []
+  let errors = []
 
-  await tables.forEach(async (tableName) => {
+  for (const tableName of tables) {
     const sqlFile = `./backup/${tableName}.sql`
 
-    if (fs.existsSync(sqlFile)) {
-      const [err, data] = await Backup.processFile(sqlFile, tableName)
-
-      if (err) {
-        errors++
-      } else {
-        counter++
-        console.log(data)
+    if (await fs.existsSync(sqlFile)) {
+      try {
+        const resp = await Backup.processSQLFile(sqlFile, tableName)
+        success.push(resp)
+        console.log(resp)
+      } catch (error) {
+        const errMsg = `File: ${sqlFile} failed. ${error.sqlMessage}`
+        console.log(errMsg)
+        console.log(error)
+        errors.push({ file: sqlFile, error: error.sqlMessage })
       }
     } else {
       console.log(`File: ${sqlFile} does not exist`)
     }
-  })
+  }
 
   res.status(200).send({
-    message: `${counter} tables restored successfuly!\n${errors} table errors found`
+    success,
+    errors
   })
+
+  await fs.writeFileSync('./backup/errors.json', JSON.stringify(errors))
 }
 
-module.exports = { createBackup, unzipBackup, restoreBackup }
+module.exports = {
+  createBackup,
+  zipBackup,
+  pushBackup,
+  unzipBackup,
+  restoreBackup
+}

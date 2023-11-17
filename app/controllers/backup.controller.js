@@ -66,10 +66,10 @@ const restoreBackup = async (req, res) => {
         success.push(resp)
         console.log(resp)
       } catch (error) {
-        const errMsg = `File: ${sqlFile} failed. ${error.sqlMessage}`
+        const errMsg = `File: ${sqlFile} failed. ${error}`
         console.log(errMsg)
         console.log(error)
-        errors.push({ file: sqlFile, error: error.sqlMessage })
+        errors.push({ file: sqlFile, error: error })
       }
     } else {
       console.log(`File: ${sqlFile} does not exist`)

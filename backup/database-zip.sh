@@ -7,4 +7,4 @@ while read p; do
 
 done <tables-list.txt
 
-# rm *.sql
+rm *.sql

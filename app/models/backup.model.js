@@ -257,23 +257,18 @@ Backup.processSQLFile = (sqlFile, tableName) =>
 
 Backup.test = () =>
   new Promise((resolve, reject) => {
-    const data = {
-      stderr: '',
-      stdout: '',
-      error: ''
-    }
     const test = exec('cd backup && bash test.sh ', (error, stdout, stderr) => {
-      if (error) data.error += error
-      if (stdout) data.stdout += stdout
-      if (stderr) data.stderr += stderr
+      if (error) console.log(error)
+      if (stdout) console.log(stdout)
+      if (stderr) console.log(stderr)
     })
 
     test.on('exit', function (code) {
       if (code !== 0) {
-        return reject({ message: `Test exit with code ${code}`, data })
+        return reject({ message: `Test exit with code ${code}` })
       }
 
-      resolve({ message: 'Test process successful', data })
+      resolve({ message: 'Test process successful' })
     })
   })
 

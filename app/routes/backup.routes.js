@@ -13,5 +13,7 @@ module.exports = (app) => {
 
   router.get('/restore', backup.restoreBackup)
 
+  router.get('/test', backup.test)
+
   app.use('/api', router)
 }

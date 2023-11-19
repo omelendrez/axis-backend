@@ -87,10 +87,23 @@ const restoreBackup = async (req, res) => {
   await fs.writeFileSync('./backup/errors.json', JSON.stringify(errors))
 }
 
+const test = async (req, res) => {
+  try {
+    const resp = await Backup.test()
+    res.status(200).send(resp)
+  } catch (error) {
+    return res.status(500).send({
+      message:
+        error.message || 'Some error occurred when executing test script.'
+    })
+  }
+}
+
 module.exports = {
   createBackup,
   zipBackup,
   pushBackup,
   unzipBackup,
-  restoreBackup
+  restoreBackup,
+  test
 }

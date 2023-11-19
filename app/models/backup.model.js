@@ -259,6 +259,7 @@ Backup.test = () =>
   new Promise((resolve, reject) => {
     const test = exec('cd backup && bash test.sh ', (error, stdout, stderr) => {
       if (error) {
+        console.error(error)
         return reject({ error })
       }
       if (stdout) console.log(stdout)

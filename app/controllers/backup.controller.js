@@ -92,6 +92,7 @@ const test = async (req, res) => {
     const resp = await Backup.test()
     res.status(200).send(resp)
   } catch (error) {
+    console.log(error)
     return res.status(500).send({
       message:
         error.message || 'Some error occurred when executing test script.'

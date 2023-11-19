@@ -4,4 +4,4 @@ cd ..
 
 echo $(pwd)
 
-echo $(ls -e)
+echo $(ls -1)

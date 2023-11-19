@@ -13,8 +13,7 @@ lib-cov
 # Coverage directory used by tools like istanbul
 coverage
 
-backup/*.sql
-
+backup/sql-files/
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
@@ -26,9 +25,6 @@ node_modules
 # Debug log from npm
 npm-debug.log
 
-
-
-
 .DS_Store
 
 .env
@@ -37,4 +33,3 @@ npm-debug.log
 .env.test.local
 .env.production.local
 .env.production
-

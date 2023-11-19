@@ -1,10 +1,12 @@
+#!/bin/bash
+
 rm *.gz
 
 while read p; do
   echo " - $p"
 
-  tar -Pczf "$p.tar.gz" "$p.sql"
+  tar -Pczf "backup/zip-files/$p.tar.gz" "backup/sql-files/$p.sql"
 
-done <tables-list.txt
+done <backup/tables-list.txt
 
-rm *.sql
+rm backup/sql-files/*.sql

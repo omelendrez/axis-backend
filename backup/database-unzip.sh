@@ -1,8 +1,8 @@
 while read p; do
   echo " - $p"
 
-  tar -Pxzf "$p.tar.gz"
+  tar -Pxzf "backup/zip-files/$p.tar.gz" "backup/sql-files/"
 
-done <tables-list.txt
+done <backup/tables-list.txt
 
 # rm *.gz

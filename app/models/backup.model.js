@@ -1,31 +1,23 @@
 const exec = require('child_process').exec
 const fs = require('fs')
 const { escape } = require('mysql2')
-const mysql = require('mysql2/promise')
-
-const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DB,
-  port: process.env.MYSQL_PORT,
-  multipleStatements: true,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
-})
-
-const limit = 500
+const pool = require('../models/db-promise')
+const { TABLE_LIST_FILE, HEADER, FOOTER, LIMIT } = require('../helpers/backup')
 
 const Backup = {}
+let primary = []
+let indexes = []
+let foreignKeys = []
+let triggers = []
+let processed = 0
 
 Backup.backup = () =>
   new Promise((resolve) => {
-    const files = fs.readdirSync('./backup')
+    const files = fs.readdirSync('./backup/sql-files')
     ;(async () => {
       for (const file of files) {
         if (file.includes('.sql')) {
-          await fs.unlinkSync(`./backup/${file}`)
+          await fs.unlinkSync(`./backup/sql-files/${file}`)
         }
       }
     })()
@@ -33,7 +25,7 @@ Backup.backup = () =>
     let tables = ''
     ;(async () => {
       tables = await fs
-        .readFileSync('./backup/tables-list.txt')
+        .readFileSync(TABLE_LIST_FILE)
         .toString()
         .split('\n')
         .filter((f) => !f.includes('-') && f.length > 0)
@@ -45,7 +37,7 @@ Backup.backup = () =>
 
       resolve({
         message: tables.length
-          ? `Backup files generated successfully ${new Date()}`
+          ? `Backup files (${processed}) generated successfully ${new Date()}`
           : 'No files to process'
       })
     })()
@@ -59,56 +51,198 @@ const getValues = (row) =>
     resolve(result)
   })
 
+// const getPrimary = (table, fileName) =>
+//   new Promise((resolve) =>
+//     (async () => {
+//       const [primaryIndexes] = await pool.query(
+//         'SELECT COLUMN_NAME, COLLATION FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND INDEX_NAME="PRIMARY" AND TABLE_NAME=? ORDER BY COLUMN_NAME',
+//         table
+//       )
+
+//       const fields = []
+//       for (const primary of primaryIndexes) {
+//         const { COLUMN_NAME } = primary
+//         fields.push(COLUMN_NAME)
+//       }
+
+//       const primaryIndex = fields.length
+//         ? `ALTER TABLE \`${table}\` ADD PRIMARY KEY(${fields.join(',')});\n`
+//         : null
+
+//       if (primaryIndex) {
+//         primary.push(primaryIndex)
+
+//         await fs.writeFileSync(
+//           fileName,
+//           `ALTER TABLE \`${table}\` DROP PRIMARY KEY;\n`,
+//           {
+//             flag: 'a'
+//           }
+//         )
+//       }
+
+//       resolve(primary)
+//     })()
+//   )
+
+// const getIndexes = (table, fileName) =>
+//   new Promise((resolve) =>
+//     (async () => {
+//       const [otherIndexes] = await pool.query(
+//         'SELECT INDEX_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND INDEX_NAME<>"PRIMARY" AND TABLE_NAME=? ORDER BY INDEX_NAME, SEQ_IN_INDEX;',
+//         table
+//       )
+
+//       const indexes = []
+//       const fields = []
+//       let indexName = ''
+
+//       for (const index of otherIndexes) {
+//         const { INDEX_NAME, COLUMN_NAME } = index
+//         if (indexName && indexName !== INDEX_NAME) {
+//           const otherIndex = `CREATE INDEX \`${indexName}\` ON ${table}(${fields.join(
+//             ','
+//           )});\n`
+//           indexes.push(otherIndex)
+
+//           await fs.writeFileSync(
+//             fileName,
+//             `DROP INDEX \`${indexName}\` ON \`${table}\`;\n`,
+//             {
+//               flag: 'a'
+//             }
+//           )
+
+//           fields.length = 0
+//         }
+//         fields.push(COLUMN_NAME)
+//         indexName = INDEX_NAME
+//       }
+
+//       resolve(indexes)
+//     })()
+//   )
+
+const getForeignKeys = (table, fileName) =>
+  new Promise((resolve) =>
+    (async () => {
+      const [foreignKeys] = await pool.query(
+        'SELECT CONSTRAINT_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA=DATABASE() AND CONSTRAINT_NAME<>"PRIMARY" AND TABLE_NAME=? ORDER BY CONSTRAINT_NAME;',
+        table
+      )
+
+      const keys = []
+
+      for (const foreignKey of foreignKeys) {
+        const {
+          CONSTRAINT_NAME,
+          COLUMN_NAME,
+          REFERENCED_TABLE_NAME,
+          REFERENCED_COLUMN_NAME
+        } = foreignKey
+
+        keys.push(
+          `ALTER TABLE \`${table}\` ADD CONSTRAINT \`${CONSTRAINT_NAME}\` FOREIGN KEY(${COLUMN_NAME}) REFERENCES ${REFERENCED_TABLE_NAME}(${REFERENCED_COLUMN_NAME});\n`
+        )
+
+        await fs.writeFileSync(
+          fileName,
+          `ALTER TABLE \`${table}\` DROP CONSTRAINT \`${CONSTRAINT_NAME}\` ;\n`,
+          {
+            flag: 'a'
+          }
+        )
+      }
+
+      resolve(keys)
+    })()
+  )
+
+const getTriggers = (table, fileName) =>
+  new Promise((resolve) =>
+    (async () => {
+      const [tableTriggers] = await pool.query(
+        'SELECT TRIGGER_NAME, ACTION_TIMING, EVENT_MANIPULATION, ACTION_STATEMENT FROM INFORMATION_SCHEMA.TRIGGERS WHERE EVENT_OBJECT_SCHEMA=DATABASE() AND EVENT_OBJECT_TABLE=? ORDER BY TRIGGER_NAME;',
+        table
+      )
+
+      const triggers = []
+
+      for (const trigger of tableTriggers) {
+        const {
+          TRIGGER_NAME,
+          ACTION_TIMING,
+          EVENT_MANIPULATION,
+          ACTION_STATEMENT
+        } = trigger
+
+        triggers.push(
+          `DELIMITER ;;\nCREATE TRIGGER \`${TRIGGER_NAME}\` ${ACTION_TIMING} ${EVENT_MANIPULATION} ON \`${table}\` FOR EACH ROW ${ACTION_STATEMENT};;\nDELIMITER ;\n`
+        )
+        await fs.writeFileSync(
+          fileName,
+          `DROP TRIGGER IF EXISTS \`${TRIGGER_NAME}\` ;\n`,
+          {
+            flag: 'a'
+          }
+        )
+      }
+
+      resolve(triggers)
+    })()
+  )
+
 const setHeaders = (table, fileName) =>
   new Promise((resolve) =>
     (async () => {
-      await fs.writeFileSync(
-        fileName,
-        `/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;\n
-LOCK TABLES \`${table}\` WRITE;
-SET FOREIGN_KEY_CHECKS = 0;
-SET UNIQUE_CHECKS = 0;
-TRUNCATE TABLE \`${table}\`;
-UNLOCK TABLES;
-LOCK TABLES \`${table}\` WRITE;
-SET FOREIGN_KEY_CHECKS = 0;\n`,
-        {
-          flag: 'a'
-        }
-      )
+      await fs.writeFileSync(fileName, HEADER.replace(/{table}/g, table), {
+        flag: 'a'
+      })
+
+      primary.length = 0
+      indexes.length = 0
+      foreignKeys.length = 0
+      triggers.length = 0
+
+      // primary = await getPrimary(table, fileName)
+      // indexes = await getIndexes(table, fileName)
+      foreignKeys = await getForeignKeys(table, fileName)
+      triggers = await getTriggers(table, fileName)
+
       resolve()
     })()
   )
 
-const setFooters = (table, fileName) =>
+const setFooters = (fileName) =>
   new Promise((resolve) =>
     (async () => {
-      await fs.writeFileSync(
-        fileName,
-        `
-SET FOREIGN_KEY_CHECKS = 1;
-SET UNIQUE_CHECKS = 1;
-UNLOCK TABLES;\n
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;\n`,
-        {
+      for (const p of primary) {
+        await fs.writeFileSync(fileName, p, {
           flag: 'a'
-        }
-      )
+        })
+      }
+
+      for (const f of foreignKeys) {
+        await fs.writeFileSync(fileName, f, {
+          flag: 'a'
+        })
+      }
+
+      for (const i of indexes) {
+        await fs.writeFileSync(fileName, i, {
+          flag: 'a'
+        })
+      }
+
+      for (const t of triggers) {
+        await fs.writeFileSync(fileName, t, {
+          flag: 'a'
+        })
+      }
+
+      await fs.writeFileSync(fileName, FOOTER, {
+        flag: 'a'
+      })
       resolve()
     })()
   )
@@ -116,7 +250,11 @@ UNLOCK TABLES;\n
 const processTable = (table) =>
   new Promise((resolve) =>
     (async () => {
-      const fileName = `./backup/${table}.sql`
+      const fileName = `./backup/sql-files/${table}.sql`
+
+      if (fs.existsSync(fileName)) {
+        fs.unlinkSync(fileName)
+      }
 
       try {
         const resp = await pool.query(`SELECT COUNT(1) records FROM ${table};`)
@@ -128,9 +266,16 @@ const processTable = (table) =>
 
           const limits = []
 
-          for (let records = 0; records < totalRecords; records += limit) {
-            limits.push({ limit, records })
+          processed++
+
+          for (let records = 0; records < totalRecords; records += LIMIT) {
+            limits.push({ limit: LIMIT, records })
           }
+
+          await fs.writeFileSync(fileName, '\n', {
+            flag: 'a'
+          })
+
           for (const param of limits) {
             const sqlQuery = `SELECT * FROM ${table} LIMIT ${param.limit} OFFSET ${param.records};`
 
@@ -156,7 +301,11 @@ const processTable = (table) =>
             }
           }
 
-          await setFooters(table, fileName)
+          await fs.writeFileSync(fileName, '\n', {
+            flag: 'a'
+          })
+
+          await setFooters(fileName)
 
           resolve(
             `File ${fileName} has been created with ${totalRecords} records`
@@ -239,10 +388,10 @@ Backup.pushFiles = () =>
 Backup.processSQLFile = (sqlFile, tableName) =>
   new Promise((resolve, reject) =>
     (async () => {
-      const sqlQuery = await fs.readFileSync(sqlFile).toString()
+      const query = await fs.readFileSync(sqlFile).toString()
 
       try {
-        const query = await sqlQuery.replace(/;;/g, '//')
+        // const query = await sqlQuery.replace(/;;/g, '//')
         await pool.query(query)
         resolve(`Table [${tableName}] processed`)
       } catch (error) {

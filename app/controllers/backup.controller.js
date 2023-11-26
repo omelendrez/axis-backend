@@ -3,17 +3,17 @@ const fs = require('fs')
 const Backup = require('../models/backup.model')
 
 const createBackup = async (req, res) => {
-  res.status(400).send({
-    message: 'Generation of database table backup has been removed.'
-  })
-  // try {
-  //   const resp = await Backup.backup()
-  //   res.status(200).send(resp)
-  // } catch (error) {
-  //   return res.status(500).send({
-  //     message: error.message || 'Some error occurred when backing up data.'
-  //   })
-  // }
+  // res.status(400).send({
+  //   message: 'Generation of database table backup has been removed.'
+  // })
+  try {
+    const resp = await Backup.backup()
+    res.status(200).send(resp)
+  } catch (error) {
+    return res.status(500).send({
+      message: error.message || 'Some error occurred when backing up data.'
+    })
+  }
 }
 
 const zipBackup = async (req, res) => {
@@ -61,7 +61,7 @@ const restoreBackup = async (req, res) => {
   let errors = []
 
   for (const tableName of tables) {
-    const sqlFile = `./backup/${tableName}.sql`
+    const sqlFile = `./backup/sql-files/${tableName}.sql`
 
     if (await fs.existsSync(sqlFile)) {
       try {

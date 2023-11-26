@@ -1,19 +1,23 @@
+const auth = require('../middleware/auth')
+
+const secure = auth.validateToken
+
 module.exports = (app) => {
   const backup = require('../controllers/backup.controller')
 
   const router = require('express').Router()
 
-  router.get('/backup', backup.createBackup)
+  router.post('/backup', secure, backup.createBackup)
 
-  router.get('/zip', backup.zipBackup)
+  router.post('/zip', secure, backup.zipBackup)
 
-  router.get('/push', backup.pushBackup)
+  router.post('/push', secure, backup.pushBackup)
 
-  router.get('/unzip', backup.unzipBackup)
+  router.post('/unzip', secure, backup.unzipBackup)
 
-  router.get('/restore', backup.restoreBackup)
+  router.post('/restore', secure, backup.restoreBackup)
 
-  router.get('/test', backup.test)
+  router.post('/test', secure, backup.test)
 
-  app.use('/api', router)
+  app.use('/api/backup', router)
 }

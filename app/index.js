@@ -36,7 +36,8 @@ const whitelist = [
   'http://axis2',
   'https://axis-tolmann.vercel.app',
   'https://tolmann.vercel.app',
-  'https://axis-stable.vercel.app'
+  'https://axis-stable.vercel.app',
+  'https://axis-tolmann.up.railway.app'
 ]
 
 const corsOptions = {

@@ -1,11 +1,14 @@
+const assert = require('assert').strict
 const fs = require('fs')
 
 const Backup = require('../models/backup.model')
 
+assert.ok(
+  process.env.DOCUMENTS_URL,
+  'The "DOCUMENTS_URL" environment variable is required'
+)
+
 const createBackup = async (req, res) => {
-  // res.status(400).send({
-  //   message: 'Generation of database table backup has been removed.'
-  // })
   try {
     const resp = await Backup.backup()
     res.status(200).send(resp)

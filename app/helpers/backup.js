@@ -1,5 +1,8 @@
-const LIMIT = 5000
+const fs = require('fs')
+const FormData = require('form-data')
+const { api } = require('../services/documentsClient')
 
+const LIMIT = 5000
 const TABLE_LIST_FILE = './backup/tables-list.txt'
 
 const HEADER = `/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -31,9 +34,27 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;\n`
 
+const uploadSqlFile = async (filePath, destinationPath) => {
+  try {
+    const file = fs.createReadStream(filePath)
+    const name = filePath.split('/').pop().replace('.sql', '')
+
+    const form = new FormData()
+    form.append('name', name)
+    form.append('file', file)
+
+    await api.post(destinationPath, form)
+
+    fs.unlinkSync(filePath)
+  } catch (err) {
+    console.log(err.message)
+  }
+}
+
 module.exports = {
   LIMIT,
   TABLE_LIST_FILE,
   HEADER,
-  FOOTER
+  FOOTER,
+  uploadSqlFile
 }

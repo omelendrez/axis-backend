@@ -2,7 +2,15 @@ const exec = require('child_process').exec
 const fs = require('fs')
 const { escape } = require('mysql2')
 const pool = require('../models/db-promise')
-const { TABLE_LIST_FILE, HEADER, FOOTER, LIMIT } = require('../helpers/backup')
+const {
+  TABLE_LIST_FILE,
+  HEADER,
+  FOOTER,
+  LIMIT,
+  uploadSqlFile
+} = require('../helpers/backup')
+
+const path = require('path')
 
 const Backup = {}
 let primary = []
@@ -12,27 +20,31 @@ let triggers = []
 let processed = 0
 
 Backup.backup = () =>
-  new Promise((resolve) => {
-    const files = fs.readdirSync('./backup/sql-files')
-    ;(async () => {
+  new Promise((resolve) =>
+    (async () => {
+      const dirPath = path.join(__dirname, '..', '..', 'backup', 'sql-files')
+
+      if (await !fs.existsSync(dirPath)) {
+        await fs.mkdirSync(dirPath)
+      }
+
+      const files = await fs.readdirSync(dirPath)
       for (const file of files) {
         if (file.includes('.sql')) {
-          await fs.unlinkSync(`./backup/sql-files/${file}`)
+          await fs.unlinkSync(`${dirPath}/${file}`)
         }
       }
-    })()
 
-    let tables = ''
-    ;(async () => {
-      tables = await fs
+      const tables = await fs
         .readFileSync(TABLE_LIST_FILE)
         .toString()
         .split('\n')
         .filter((f) => !f.includes('-') && f.length > 0)
 
       for (const table of tables) {
-        const data = await processTable(table)
-        console.log(data)
+        const resp = await processTable(table)
+
+        await uploadSqlFile(resp.fileName, 'database')
       }
 
       resolve({
@@ -41,7 +53,7 @@ Backup.backup = () =>
           : 'No files to process'
       })
     })()
-  })
+  )
 
 const getValues = (row) =>
   new Promise((resolve) => {
@@ -250,7 +262,15 @@ const setFooters = (fileName) =>
 const processTable = (table) =>
   new Promise((resolve) =>
     (async () => {
-      const fileName = `./backup/sql-files/${table}.sql`
+      const fileName = path.join(
+        __dirname,
+        '..',
+        '..',
+        'backup',
+        'sql-files',
+
+        `${table}.sql`
+      )
 
       if (fs.existsSync(fileName)) {
         fs.unlinkSync(fileName)
@@ -307,9 +327,7 @@ const processTable = (table) =>
 
           await setFooters(fileName)
 
-          resolve(
-            `File ${fileName} has been created with ${totalRecords} records`
-          )
+          resolve({ fileName, records: processed })
         } else {
           resolve(`No records found for table ${table}`)
         }

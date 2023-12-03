@@ -127,6 +127,24 @@ function listEndpoints(app, filter = '') {
     .forEach((r) => console.log(r))
 }
 
+function getTodayYMD() {
+  const today = new Date()
+
+  const day = today.getDate().toString()
+  const month = (today.getMonth() + 1).toString()
+  const year = today.getFullYear().toString()
+
+  const paddedDay =
+    parseInt(day, 10) < 10 ? day.padStart(2, '0') : day.toString()
+
+  const paddedMonth =
+    parseInt(month, 10) < 10 ? month.padStart(2, '0') : month.toString()
+
+  const paddedYear = year.toString()
+
+  return `${paddedYear}-${paddedMonth}-${paddedDay}`
+}
+
 module.exports = {
   toWeb,
   getPaginationFilters,
@@ -134,5 +152,6 @@ module.exports = {
   listEndpoints,
   USER_TYPES,
   TRAINING_STATUS,
-  DEFAULT_USER_PASSWORD
+  DEFAULT_USER_PASSWORD,
+  getTodayYMD
 }

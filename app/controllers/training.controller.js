@@ -234,3 +234,23 @@ exports.getCourseMonthByYear = (req, res) => {
     } else res.send(data)
   })
 }
+
+exports.getMonthByYear = (req, res) => {
+  Training.findMonthByYear(req.params.year, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message: 'Internal database error'
+      })
+    } else res.send(data)
+  })
+}
+
+exports.getCourseByYear = (req, res) => {
+  Training.findCourseByYear(req.params.year, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message: 'Internal database error'
+      })
+    } else res.send(data)
+  })
+}

@@ -411,4 +411,45 @@ Training.findCourseMonthByYear = (year, result) => {
   })
 }
 
+Training.findMonthByYear = (year, result) => {
+  const query = `SELECT MONTH(start) m, MONTHNAME(start) month, COUNT(distinct learner) value
+  FROM training
+  WHERE YEAR(start)=?
+  GROUP BY MONTH(start), MONTHNAME(start)
+  ORDER BY 1;`
+
+  sql.query(query, [year], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    const data = res.map((data) => toWeb(data))
+
+    result(null, data)
+  })
+}
+
+Training.findCourseByYear = (year, result) => {
+  const query = `SELECT c.name course, COUNT(*) value
+  FROM training t
+  INNER JOIN course c ON t.course=c.id
+  WHERE YEAR(start)=?
+  GROUP BY c.name
+  ORDER BY 2 desc;`
+
+  sql.query(query, [year], (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    const data = res.map((data) => toWeb(data))
+
+    result(null, data)
+  })
+}
+
 module.exports = Training

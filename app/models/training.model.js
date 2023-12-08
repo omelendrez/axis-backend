@@ -381,7 +381,7 @@ Training.findCourseMonthByYear = (year, result) => {
       YEAR(start) = ?
   GROUP BY course
   ORDER BY COUNT(1) DESC
-  LIMIT 11;
+  LIMIT 10;
 
   SELECT
     c.name course,

@@ -474,4 +474,83 @@ Training.findCourseTypeByYear = (year, result) => {
   })
 }
 
+Training.findTrainingRecords = (params, result) => {
+  const filters = params.search
+    .replace('?', '')
+    .split('&')
+    .map((s) => {
+      const searches = s.split('=')
+      return { field: searches[0], value: searches[1] }
+    })
+
+  const conditions = ['WHERE t.status=11']
+
+  filters
+    .filter(({ field }) => !!field)
+    .forEach(({ field, value }) => {
+      let alias = ''
+      let condition = ''
+      switch (field) {
+        case 'start':
+        case 'end':
+          condition = `AND DATE_FORMAT(t.${field}, '%Y-%m-%d')='${value}'`
+          break
+        case 'expiry':
+          if (value > -1) {
+            condition = `AND DATEDIFF(t.${field}, NOW())<=${value} AND DATEDIFF(t.${field}, NOW())>=0`
+          } else {
+            condition = `AND DATEDIFF(t.${field}, NOW())<0`
+          }
+          break
+        case 'company':
+          alias = 'l'
+          condition = `AND ${alias}.${field}='${value}'`
+          break
+        default:
+          alias = 't'
+          condition = `AND ${alias}.${field}='${value}'`
+      }
+      conditions.push(condition)
+    })
+
+  const query = `SELECT
+  ROW_NUMBER() OVER(ORDER BY t.id) AS row_num,
+  l.first_name,
+  l.last_name,
+  DATE_FORMAT(l.birth_date, '%Y-%m-%d') birth_date,
+  c.name company,
+  co.name course,
+  DATE_FORMAT(t.start, '%Y-%m-%d') start,
+  DATE_FORMAT(t.end, '%Y-%m-%d') end,
+  DATE_FORMAT(t.expiry, '%Y-%m-%d') expiry,
+  DATEDIFF(t.expiry, NOW()) days,
+  t.certificate
+FROM
+  training t
+      INNER JOIN
+  learner l ON t.learner = l.id
+      INNER JOIN
+  course co ON t.course = co.id
+      INNER JOIN
+  company c ON l.company = c.id
+${conditions.join(' ')};`
+
+  sql.query(query, (err, res) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    if (res.length > 5000) {
+      result({ kind: 'too_many', data: res.length }, null)
+      return
+    }
+
+    const data = res.map((data) => toWeb(data))
+
+    result(null, { data, message: `${data.length || 'No'} records found` })
+  })
+}
+
 module.exports = Training

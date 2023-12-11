@@ -264,3 +264,22 @@ exports.getCourseTypeByYear = (req, res) => {
     } else res.send(data)
   })
 }
+
+exports.getTrainingRecords = (req, res) => {
+  Training.findTrainingRecords(
+    new URL(req.url, `http://${req.headers.host}`),
+    (err, data) => {
+      if (err) {
+        if (err.kind === 'too_many') {
+          res.status(400).send({
+            message: `Too many records found (${err.data}). Not enough filters were applied.`
+          })
+        } else {
+          res.status(500).send({
+            message: 'Internal database error'
+          })
+        }
+      } else res.send(data)
+    }
+  )
+}

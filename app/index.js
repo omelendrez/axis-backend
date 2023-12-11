@@ -6,7 +6,7 @@ const errorHandler = require('./errors/error-handler')
 const { listEndpoints } = require('./helpers/utils')
 
 // Databse Modifiers
-const Modifier = require('./modifiers')
+// const Modifier = require('./modifiers')
 
 require('dotenv').config()
 
@@ -34,10 +34,7 @@ const whitelist = [
   'http://192.168.1.88',
   'http://192.168.0.96',
   'http://axis2',
-  'https://axis-tolmann.vercel.app',
-  'https://tolmann.vercel.app',
-  'https://axis-stable.vercel.app',
-  'https://axis-tolmann.up.railway.app'
+  'https://axis-tolmann.vercel.app'
 ]
 
 const corsOptions = {
@@ -107,4 +104,4 @@ if (process.env.NODE_ENV !== 'production') {
   console.log(process.env.NODE_ENV)
 }
 
-Modifier.execute()
+// Modifier.execute()

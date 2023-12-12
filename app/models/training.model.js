@@ -513,19 +513,7 @@ Training.findTrainingRecords = (params, result) => {
       conditions.push(condition)
     })
 
-  const query = `SELECT
-  ROW_NUMBER() OVER(ORDER BY t.id) AS row_num,
-  l.first_name,
-  l.last_name,
-  DATE_FORMAT(l.birth_date, '%Y-%m-%d') birth_date,
-  c.name company,
-  co.name course,
-  DATE_FORMAT(t.start, '%Y-%m-%d') start,
-  DATE_FORMAT(t.end, '%Y-%m-%d') end,
-  DATE_FORMAT(t.expiry, '%Y-%m-%d') expiry,
-  DATEDIFF(t.expiry, NOW()) days,
-  t.certificate
-FROM
+  const count = `SELECT COUNT(*) as records FROM
   training t
       INNER JOIN
   learner l ON t.learner = l.id
@@ -535,21 +523,53 @@ FROM
   company c ON l.company = c.id
 ${conditions.join(' ')};`
 
-  sql.query(query, (err, res) => {
+  sql.query(count, (err, res) => {
     if (err) {
       log.error(err)
       result(err, null)
       return
     }
 
-    if (res.length > 5000) {
-      result({ kind: 'too_many', data: res.length }, null)
+    const { records } = res[0]
+
+    if (records > 5000) {
+      result({ kind: 'too_many', data: records }, null)
       return
     }
 
-    const data = res.map((data) => toWeb(data))
+    const query = `SELECT
+    ROW_NUMBER() OVER(ORDER BY t.id) AS row_num,
+    l.first_name,
+    l.last_name,
+    DATE_FORMAT(l.birth_date, '%Y-%m-%d') birth_date,
+    c.name company,
+    co.name course,
+    DATE_FORMAT(t.start, '%Y-%m-%d') start,
+    DATE_FORMAT(t.end, '%Y-%m-%d') end,
+    DATE_FORMAT(t.expiry, '%Y-%m-%d') expiry,
+    DATEDIFF(t.expiry, NOW()) days,
+    t.certificate
+  FROM
+    training t
+        INNER JOIN
+    learner l ON t.learner = l.id
+        INNER JOIN
+    course co ON t.course = co.id
+        INNER JOIN
+    company c ON l.company = c.id
+  ${conditions.join(' ')};`
 
-    result(null, { data, message: `${data.length || 'No'} records found` })
+    sql.query(query, (err, res) => {
+      if (err) {
+        log.error(err)
+        result(err, null)
+        return
+      }
+
+      const data = res.map((data) => toWeb(data))
+
+      result(null, { data, message: `${data.length || 'No'} records found` })
+    })
   })
 }
 

@@ -491,16 +491,9 @@ Training.findTrainingRecords = (params, result) => {
       let alias = ''
       let condition = ''
       switch (field) {
-        case 'start':
-        case 'end':
-          condition = `AND DATE_FORMAT(t.${field}, '%Y-%m-%d')='${value}'`
-          break
-        case 'expiry':
-          if (value > -1) {
-            condition = `AND DATEDIFF(t.${field}, NOW())<=${value} AND DATEDIFF(t.${field}, NOW())>=0`
-          } else {
-            condition = `AND DATEDIFF(t.${field}, NOW())<0`
-          }
+        case 'from':
+        case 'to':
+          // condition = `AND DATE_FORMAT(t.${field}, '%Y-%m-%d')='${value}'`
           break
         case 'company':
           alias = 'l'
@@ -513,6 +506,15 @@ Training.findTrainingRecords = (params, result) => {
       conditions.push(condition)
     })
 
+  const from = filters.find((f) => f.field === 'from')
+  const to = filters.find((f) => f.field === 'to')
+
+  if (from && to) {
+    conditions.push(
+      `AND t.end BETWEEN DATE_FORMAT('${from.value}', '%Y-%m-%d') AND DATE_FORMAT('${to.value}', '%Y-%m-%d') `
+    )
+  }
+
   const count = `SELECT COUNT(*) as records FROM
   training t
       INNER JOIN
@@ -522,6 +524,8 @@ Training.findTrainingRecords = (params, result) => {
       INNER JOIN
   company c ON l.company = c.id
 ${conditions.join(' ')};`
+
+  console.log(count)
 
   sql.query(count, (err, res) => {
     if (err) {

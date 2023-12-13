@@ -525,8 +525,6 @@ Training.findTrainingRecords = (params, result) => {
   company c ON l.company = c.id
 ${conditions.join(' ')};`
 
-  console.log(count)
-
   sql.query(count, (err, res) => {
     if (err) {
       log.error(err)

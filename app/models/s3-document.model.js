@@ -101,7 +101,9 @@ S3Document.getAll = (url, result) => {
       conditions.push(condition)
     })
 
-  let query = `SELECT file, status FROM s3_document ${conditions.join(' ')};`
+  let query = `SELECT file, status, created, updated FROM s3_document ${conditions.join(
+    ' '
+  )};`
 
   sql.query(query, (err, res) => {
     if (err) {

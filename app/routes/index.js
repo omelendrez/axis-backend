@@ -15,6 +15,7 @@ module.exports = (app) => {
   require('./nationality.routes')(app)
   require('./opito.routes')(app)
   require('./role.routes')(app)
+  require('./s3-document.routes')(app)
   require('./state.routes')(app)
   require('./status.routes')(app)
   require('./training.routes')(app)

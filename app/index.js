@@ -1,12 +1,12 @@
 const express = require('express')
 const cors = require('cors')
 const logger = require('morgan')
-const { log } = require('./helpers/log')
+
 const errorHandler = require('./errors/error-handler')
 const { listEndpoints } = require('./helpers/utils')
 
 // Databse Modifiers
-// const Modifier = require('./modifiers')
+const Modifier = require('./modifiers')
 
 require('dotenv').config()
 
@@ -92,7 +92,7 @@ app.use(errorHandler.middleware)
 const PORT = process.env.PORT || 3000
 
 httpServer.listen(PORT, () => {
-  log.info(`Server is running on port ${PORT}.`)
+  console.log(`Server is running on port ${PORT}.`)
 })
 
 io.on('connection', (socket) => {
@@ -104,4 +104,4 @@ if (process.env.NODE_ENV !== 'production') {
   console.log(process.env.NODE_ENV)
 }
 
-// Modifier.execute()
+Modifier.execute()

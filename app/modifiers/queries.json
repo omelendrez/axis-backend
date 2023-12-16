@@ -3,18 +3,27 @@
     "label": "course_module",
     "query": "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='course_module';",
     "modify": "DROP TABLE IF EXISTS course_module;CREATE TABLE course_module (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));DROP TABLE IF EXISTS course_module_rel;CREATE TABLE course_module_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, module SMALLINT, PRIMARY KEY (id));ALTER TABLE course_module_rel ADD FOREIGN KEY(course) REFERENCES course(id),ADD FOREIGN KEY(module) REFERENCES course_module(id);",
-    "rollback": "DROP TABLE IF EXISTS course_module_rel;DROP TABLE IF EXISTS course_module;"
+    "rollback": "DROP TABLE IF EXISTS course_module_rel;DROP TABLE IF EXISTS course_module;",
+    "done": true
   },
   {
     "label": "training_medical",
     "query": "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='training_medical' AND COLUMN_NAME = 'date';",
     "modify": "ALTER TABLE training_medical ADD COLUMN date DATE NULL AFTER training,ADD INDEX training_medical_training_date_idx (training ASC, date ASC) VISIBLE,DROP PRIMARY KEY;",
-    "rollback": "ALTER TABLE training_medical ADD PRIMARY KEY (training), DROP INDEX training_medical_training_date_idx,DROP COLUMN date;"
+    "rollback": "ALTER TABLE training_medical ADD PRIMARY KEY (training), DROP INDEX training_medical_training_date_idx,DROP COLUMN date;",
+    "done": true
   },
   {
     "label": "training_instructor",
     "query": "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='training_instructor';",
     "modify": "DROP TABLE IF EXISTS training_instructor;CREATE TABLE training_instructor (id INT NOT NULL AUTO_INCREMENT, training INT NOT NULL, date DATE NOT NULL, module SMALLINT NOT NULL, instructor SMALLINT NOT NULL, PRIMARY KEY (id));ALTER TABLE training_instructor ADD FOREIGN KEY(training) REFERENCES training(id),ADD FOREIGN KEY(module) REFERENCES course_module(id), ADD FOREIGN KEY(instructor) REFERENCES user(id), ADD INDEX training_instructor_training_date_module_idx (training,date,module,instructor) VISIBLE; ",
-    "rollback": "DROP TABLE IF EXISTS training_instructor;"
+    "rollback": "DROP TABLE IF EXISTS training_instructor;",
+    "done": true
+  },
+  {
+    "label": "s3_document",
+    "query": "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='s3_document';",
+    "modify": "DROP TABLE IF EXISTS s3_document;CREATE TABLE s3_document (file VARCHAR(40) NOT NULL, status TINYINT DEFAULT 0, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, pdated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (file));",
+    "rollback": "DROP TABLE IF EXISTS s3_document;"
   }
 ]

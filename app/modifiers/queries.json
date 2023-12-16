@@ -23,7 +23,7 @@
   {
     "label": "s3_document",
     "query": "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME='s3_document';",
-    "modify": "DROP TABLE IF EXISTS s3_document;CREATE TABLE s3_document (file VARCHAR(40) NOT NULL, status TINYINT DEFAULT 0, PRIMARY KEY (file));",
+    "modify": "DROP TABLE IF EXISTS s3_document;CREATE TABLE s3_document (file VARCHAR(40) NOT NULL, status TINYINT DEFAULT 0, created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, pdated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (file));",
     "rollback": "DROP TABLE IF EXISTS s3_document;"
   }
 ]

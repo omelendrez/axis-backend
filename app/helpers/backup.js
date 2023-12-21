@@ -2,7 +2,7 @@ const fs = require('fs')
 const FormData = require('form-data')
 const { api } = require('../services/documentsClient')
 
-const FILE_NAME = 'axis.sql'
+const FILE_NAME = 'axis_{date}.sql'
 
 const LIMIT = 5000
 const TABLE_LIST_FILE = './backup/tables-list.txt'

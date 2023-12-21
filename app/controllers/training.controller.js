@@ -215,8 +215,8 @@ exports.deleteAll = (req, res) => {
   })
 }
 
-exports.getCourseYears = (req, res) => {
-  Training.findCourseYears((err, data) => {
+exports.getActivePeriod = (req, res) => {
+  Training.findActivePeriod((err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'

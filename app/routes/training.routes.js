@@ -13,7 +13,7 @@ module.exports = (app) => {
 
     // GET
 
-    .get('/course-years', secure, training.getCourseYears) // List all start years used in all training courses
+    .get('/active-period', secure, training.getActivePeriod) // List all start years used in all training courses
 
     .get('/month-by-year/:year', secure, training.getLearnerByYear) // List all trained learners grouped month for a given year
 

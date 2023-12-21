@@ -352,7 +352,7 @@ Training.addTracking = (trainingId, userId, status, result) => {
   )
 }
 
-Training.findCourseYears = (result) => {
+Training.findActivePeriod = (result) => {
   const query = `SELECT
                   MIN(YEAR(start)) min,
                   MAX(YEAR(start)) max
@@ -373,17 +373,9 @@ Training.findCourseYears = (result) => {
 }
 
 Training.findCourseMonthByYear = (year, result) => {
-  const query = `DROP TABLE IF EXISTS course_summary;
-
-  CREATE TABLE course_summary SELECT course FROM
-      training
-  WHERE
-      YEAR(start) = ?
-  GROUP BY course
-  ORDER BY COUNT(1) DESC
-  LIMIT 10;
-
+  const query = `
   SELECT
+    c.id c,
     c.name course,
     MONTH(t.start) m,
     MONTHNAME(t.start) month,
@@ -394,9 +386,8 @@ Training.findCourseMonthByYear = (year, result) => {
     course c ON c.id = t.course
   WHERE
     YEAR(t.start) = ? AND t.status = 11
-    AND t.course IN (SELECT course FROM course_summary)
-  GROUP BY c.name , MONTH(t.start) , MONTHNAME(t.start)
-  ORDER BY 1, 2;`
+  GROUP BY c.id, c.name , MONTH(t.start) , MONTHNAME(t.start)
+  ORDER BY 1, 3;`
 
   sql.query(query, [year, year], (err, res) => {
     if (err) {
@@ -405,7 +396,7 @@ Training.findCourseMonthByYear = (year, result) => {
       return
     }
 
-    const data = res[2].map((data) => toWeb(data))
+    const data = res.map((data) => toWeb(data))
 
     result(null, data)
   })

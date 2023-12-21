@@ -119,4 +119,22 @@ S3Document.getAll = (url, result) => {
   })
 }
 
+S3Document.delete = (id, result) => {
+  let query = 'DELETE s3_document WHERE file = ?;'
+  const params = [id]
+
+  sql.query(query, params, (err) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    result(null, {
+      id,
+      message: 'S3 document deleted successfully!'
+    })
+  })
+}
+
 module.exports = S3Document

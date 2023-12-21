@@ -11,5 +11,7 @@ module.exports = (app) => {
 
   router.put('/', controller.update)
 
+  router.delete('/:id', controller.delete)
+
   app.use('/api/s3-document', router)
 }

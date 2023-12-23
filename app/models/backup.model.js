@@ -12,23 +12,27 @@ const {
 } = require('../helpers/backup')
 
 const path = require('path')
+const { getTodayYMD } = require('../helpers/utils')
 
 const backupFolderDirPath = path.join(
   __dirname,
   '..',
   '..',
-  'backup',
-  'sql-files'
+  'backup'
+  // 'sql-files'
 )
 
-const backupFileName = path.join(backupFolderDirPath, FILE_NAME)
+const backupFileName = path.join(
+  backupFolderDirPath,
+  FILE_NAME.replace('{date}', getTodayYMD())
+)
 
 const Backup = {}
+
 let primary = []
 let indexes = []
 let foreignKeys = []
 let triggers = []
-let processed = 0
 
 Backup.backup = () =>
   new Promise((resolve) =>
@@ -50,6 +54,8 @@ Backup.backup = () =>
         .toString()
         .split('\n')
         .filter((f) => !f.includes('-') && f.length > 0)
+
+      let processed = 0
 
       for (const table of tables) {
         await processTable(table)

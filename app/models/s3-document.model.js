@@ -65,7 +65,7 @@ S3Document.exists = (url, result) => {
       return { field: searches[0], value: searches[1] }
     })
 
-  let query = 'SELECT file FROM  s3_document WHERE file = ?;'
+  let query = 'SELECT file FROM s3_document WHERE file = ?;'
 
   const params = filters.map((f) => f.value)
 
@@ -101,9 +101,9 @@ S3Document.getAll = (url, result) => {
       conditions.push(condition)
     })
 
-  let query = `SELECT file, status, created, updated FROM s3_document ${conditions.join(
+  const query = `SELECT file, status, created, updated FROM s3_document ${conditions.join(
     ' '
-  )};`
+  )} limit 50;`
 
   sql.query(query, (err, res) => {
     if (err) {
@@ -116,6 +116,24 @@ S3Document.getAll = (url, result) => {
       null,
       res.map((r) => toWeb(r))
     )
+  })
+}
+
+S3Document.delete = (id, result) => {
+  let query = 'DELETE s3_document WHERE file = ?;'
+  const params = [id]
+
+  sql.query(query, params, (err) => {
+    if (err) {
+      log.error(err)
+      result(err, null)
+      return
+    }
+
+    result(null, {
+      id,
+      message: 'S3 document deleted successfully!'
+    })
   })
 }
 

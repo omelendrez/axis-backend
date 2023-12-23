@@ -61,3 +61,15 @@ exports.getAll = (req, res) => {
     }
   })
 }
+
+exports.delete = (req, res) => {
+  S3Document.delete(req.params.id, (err, data) => {
+    if (err) {
+      res.status(500).send({
+        message: `Error deleting s3 records with id ${req.params.id}`
+      })
+    } else {
+      res.send(data)
+    }
+  })
+}

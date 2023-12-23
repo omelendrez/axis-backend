@@ -2,9 +2,9 @@ const fs = require('fs')
 const FormData = require('form-data')
 const { api } = require('../services/documentsClient')
 
-const FILE_NAME = 'axis.sql'
+const FILE_NAME = 'axis_{date}.sql'
 
-const LIMIT = 5000
+const LIMIT = 10000
 const TABLE_LIST_FILE = './backup/tables-list.txt'
 
 const HEADER = `/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;

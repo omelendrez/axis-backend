@@ -1,6 +1,6 @@
 const CourseModuleRel = require('../models/course-module-rel.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -20,35 +20,38 @@ exports.create = (req, res) => {
       }
     } else {
       res.send(data)
+      next()
     }
   })
 }
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   CourseModuleRel.getAll(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving modules.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.findAllAvailable = (req, res) => {
+exports.findAllAvailable = (req, res, next) => {
   CourseModuleRel.getAllAvailable(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving modules.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   CourseModuleRel.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -68,17 +71,23 @@ exports.delete = (req, res) => {
             message: 'Could not delete module with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Module was deleted successfully!' })
+    } else {
+      res.send({ message: 'Module was deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   CourseModuleRel.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:
           err.message || 'Some error occurred while removing all modules.'
       })
-    } else res.send({ message: 'All modules were deleted successfully!' })
+    } else {
+      res.send({ message: 'All modules were deleted successfully!' })
+      next()
+    }
   })
 }

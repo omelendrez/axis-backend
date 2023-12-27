@@ -1,6 +1,6 @@
 const UserRole = require('../models/user-role.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -21,11 +21,12 @@ exports.create = (req, res) => {
       }
     } else {
       res.send(data)
+      next()
     }
   })
 }
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   UserRole.getAll(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -33,12 +34,13 @@ exports.findAll = (req, res) => {
           err.message || 'Some error occurred while retrieving user-roles.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.findAllAvailable = (req, res) => {
+exports.findAllAvailable = (req, res, next) => {
   UserRole.getAllAvailable(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -46,12 +48,13 @@ exports.findAllAvailable = (req, res) => {
           err.message || 'Some error occurred while retrieving user-roles.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   UserRole.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -71,17 +74,23 @@ exports.delete = (req, res) => {
             message: 'Could not delete user-role with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'User-Role was deleted successfully!' })
+    } else {
+      res.send({ message: 'User-Role was deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   UserRole.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:
           err.message || 'Some error occurred while removing all user-roles.'
       })
-    } else res.send({ message: 'All user-roles were deleted successfully!' })
+    } else {
+      res.send({ message: 'All user-roles were deleted successfully!' })
+      next()
+    }
   })
 }

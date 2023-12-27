@@ -1,6 +1,6 @@
 const Company = require('../models/company.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -28,10 +28,11 @@ exports.create = (req, res) => {
     }
 
     res.send(data)
+    next()
   })
 }
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   const pagination = req.query
 
   Company.getAll(pagination, (err, data) => {
@@ -39,11 +40,14 @@ exports.findAll = (req, res) => {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Companys.'
       })
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   Company.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -55,11 +59,14 @@ exports.findOne = (req, res) => {
           message: 'Error retrieving Company with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -77,11 +84,14 @@ exports.update = (req, res) => {
           message: 'Error updating Company with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   Company.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -101,17 +111,23 @@ exports.delete = (req, res) => {
             message: 'Could not delete Company with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Company was deleted successfully!' })
+    } else {
+      res.send({ message: 'Company was deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   Company.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:
           err.message || 'Some error occurred while removing all Companys.'
       })
-    } else res.send({ message: 'All Companys were deleted successfully!' })
+    } else {
+      res.send({ message: 'All Companys were deleted successfully!' })
+      next()
+    }
   })
 }

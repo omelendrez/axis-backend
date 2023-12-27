@@ -1,7 +1,7 @@
 const { USER_TYPES } = require('../helpers/utils')
 const Training = require('../models/training.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -54,13 +54,14 @@ exports.create = (req, res) => {
           })
         } else {
           res.status(201).send(data)
+          next()
         }
       })
     }
   })
 }
 
-exports.getAllById = (req, res) => {
+exports.getAllById = (req, res, next) => {
   Training.findAllById(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -68,12 +69,13 @@ exports.getAllById = (req, res) => {
           err.message || 'Some error occurred while retrieving Trainings.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.getOne = (req, res) => {
+exports.getOne = (req, res, next) => {
   Training.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -85,11 +87,14 @@ exports.getOne = (req, res) => {
           message: 'Error retrieving Training with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.getOneView = (req, res) => {
+exports.getOneView = (req, res, next) => {
   Training.findByIdView(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -101,11 +106,14 @@ exports.getOneView = (req, res) => {
           message: 'Error retrieving Training with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.getAllByDate = (req, res) => {
+exports.getAllByDate = (req, res, next) => {
   Training.findByDate(
     req.params.date,
     req.params.statuses,
@@ -121,12 +129,15 @@ exports.getAllByDate = (req, res) => {
             message: 'Internal database error'
           })
         }
-      } else res.send(data)
+      } else {
+        res.locals.data = data
+        next()
+      }
     }
   )
 }
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -157,11 +168,14 @@ exports.update = (req, res) => {
             message: 'Error updating Training with id ' + req.params.id
           })
       }
-    } else res.send(data)
+    } else {
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   const roles = JSON.parse(req.decoded?.data?.roles)
 
   if (roles.find((r) => r.id === USER_TYPES.SYS_ADMIN)) {
@@ -178,7 +192,10 @@ exports.delete = (req, res) => {
               message: 'Could not delete Training with id ' + req.params.id
             })
         }
-      } else res.send({ message: 'Training was deleted successfully!' })
+      } else {
+        res.send({ message: 'Training was deleted successfully!' })
+        next()
+      }
     })
   }
 
@@ -200,72 +217,98 @@ exports.delete = (req, res) => {
             message: 'Could not delete Training with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Training was deleted successfully!' })
+    } else {
+      res.send({ message: 'Training was deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   Training.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:
           err.message || 'Some error occurred while removing all Trainings.'
       })
-    } else res.send({ message: 'All Trainings were deleted successfully!' })
+    } else {
+      res.send({ message: 'All Trainings were deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.getActivePeriod = (req, res) => {
+exports.getActivePeriod = (req, res, next) => {
   Training.findActivePeriod((err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.getCourseMonthByYear = (req, res) => {
+exports.getCourseMonthByYear = (req, res, next) => {
   Training.findCourseMonthByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.getLearnerByYear = (req, res) => {
+exports.getLearnerByYear = (req, res, next) => {
   Training.findLearnerByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.getCourseByYear = (req, res) => {
+exports.getCourseByYear = (req, res, next) => {
   Training.findCourseByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.getCourseTypeByYear = (req, res) => {
+exports.getCourseTypeByYear = (req, res, next) => {
   Training.findCourseTypeByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.getTrainingRecords = (req, res) => {
+exports.getTrainingRecords = (req, res, next) => {
   Training.findTrainingRecords(
     new URL(req.url, `http://${req.headers.host}`),
     (err, data) => {
@@ -279,7 +322,11 @@ exports.getTrainingRecords = (req, res) => {
             message: 'Internal database error'
           })
         }
-      } else res.send(data)
+      } else {
+        res.locals.data = data
+        res.send(data)
+        next()
+      }
     }
   )
 }

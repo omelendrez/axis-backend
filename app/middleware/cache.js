@@ -1,6 +1,6 @@
 const NodeCache = require('node-cache')
 
-const cache = new NodeCache({ stdTTL: 100, checkperiod: 120 })
+const cache = new NodeCache()
 
 function getUrlFromRequest(req) {
   // const url = req.protocol + '://' + req.headers.host + req.originalUrl
@@ -38,19 +38,12 @@ function set(req, res, next) {
 async function del(req, res, next) {
   // cache.keys() => ["api/company?limit=100&search=spdc", "api/company/1234"]
   const model = getModelFromUrl(req)
-  console.log({ model })
-  console.log(cache.keys())
-  try {
-    for (const key of cache.keys()) {
-      if (key.includes(model)) {
-        console.log(key)
-        await cache.del(key)
-      }
+
+  for (const key of cache.keys()) {
+    if (key.includes(model)) {
+      await cache.del(key)
     }
-  } catch (error) {
-    console.log(error)
   }
-  console.log(cache.keys())
 
   return next()
 }

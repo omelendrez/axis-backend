@@ -1,6 +1,6 @@
 const CourseItemRel = require('../models/course-item-rel.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -20,35 +20,38 @@ exports.create = (req, res) => {
       }
     } else {
       res.send(data)
+      next()
     }
   })
 }
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   CourseItemRel.getAll(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving items.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.findAllAvailable = (req, res) => {
+exports.findAllAvailable = (req, res, next) => {
   CourseItemRel.getAllAvailable(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving items.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   CourseItemRel.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -68,16 +71,22 @@ exports.delete = (req, res) => {
             message: 'Could not delete item with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Item was deleted successfully!' })
+    } else {
+      res.send({ message: 'Item was deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   CourseItemRel.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while removing all items.'
       })
-    } else res.send({ message: 'All items were deleted successfully!' })
+    } else {
+      res.send({ message: 'All items were deleted successfully!' })
+      next()
+    }
   })
 }

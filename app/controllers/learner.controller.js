@@ -1,6 +1,6 @@
 const Learner = require('../models/learner.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -32,11 +32,14 @@ exports.create = (req, res) => {
             err.message || 'Some error occurred while creating the Learner.'
         })
       }
-    } else res.send(data)
+    } else {
+      res.send(data)
+      next
+    }
   })
 }
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   const pagination = req.query
 
   Learner.getAll(pagination, (err, data) => {
@@ -45,12 +48,13 @@ exports.findAll = (req, res) => {
         message: err.message || 'Some error occurred while retrieving Learners.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   Learner.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -62,11 +66,14 @@ exports.findOne = (req, res) => {
           message: 'Error retrieving Learner with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.findOneView = (req, res) => {
+exports.findOneView = (req, res, next) => {
   Learner.findByIdView(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -78,11 +85,14 @@ exports.findOneView = (req, res) => {
           message: 'Error retrieving Learner with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -100,11 +110,14 @@ exports.update = (req, res) => {
           message: 'Error updating Learner with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   Learner.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -124,17 +137,23 @@ exports.delete = (req, res) => {
             message: 'Could not delete Learner with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Learner was deleted successfully!' })
+    } else {
+      res.send({ message: 'Learner was deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   Learner.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message:
           err.message || 'Some error occurred while removing all Learners.'
       })
-    } else res.send({ message: 'All Learners were deleted successfully!' })
+    } else {
+      res.send({ message: 'All Learners were deleted successfully!' })
+      next()
+    }
   })
 }

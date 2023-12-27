@@ -1,6 +1,6 @@
 const CertificateType = require('../models/certificate-type.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -22,11 +22,12 @@ exports.create = (req, res) => {
       })
     } else {
       res.send(data)
+      next()
     }
   })
 }
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   const pagination = req.query
 
   CertificateType.getAll(pagination, (err, data) => {
@@ -37,12 +38,13 @@ exports.findAll = (req, res) => {
           'Some error occurred while retrieving Certificate Types.'
       })
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   CertificateType.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -55,12 +57,13 @@ exports.findOne = (req, res) => {
         })
       }
     } else {
-      res.send(data)
+      res.locals.data = data
+      next()
     }
   })
 }
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -83,12 +86,13 @@ exports.update = (req, res) => {
         }
       } else {
         res.send(data)
+        next()
       }
     }
   )
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   CertificateType.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -111,11 +115,12 @@ exports.delete = (req, res) => {
       }
     } else {
       res.send({ message: 'Certificate Type was deleted successfully!' })
+      next()
     }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   CertificateType.removeAll((err) => {
     if (err) {
       res.status(500).send({
@@ -125,6 +130,7 @@ exports.deleteAll = (req, res) => {
       })
     } else {
       res.send({ message: 'All Certificate Types were deleted successfully!' })
+      next()
     }
   })
 }

@@ -1,6 +1,6 @@
 const Status = require('../models/status.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -17,11 +17,14 @@ exports.create = (req, res) => {
       res.status(500).send({
         message: err.message || 'Some error occurred while creating the Status.'
       })
-    } else res.send(data)
+    } else {
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
   const pagination = req.query
 
   Status.getAll(pagination, (err, data) => {
@@ -29,11 +32,14 @@ exports.findAll = (req, res) => {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving Status.'
       })
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
   Status.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -45,11 +51,14 @@ exports.findOne = (req, res) => {
           message: 'Error retrieving Status with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.locals.data = data
+      next()
+    }
   })
 }
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -67,11 +76,14 @@ exports.update = (req, res) => {
           message: 'Error updating Status with id ' + req.params.id
         })
       }
-    } else res.send(data)
+    } else {
+      res.send(data)
+      next()
+    }
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   Status.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -91,16 +103,22 @@ exports.delete = (req, res) => {
             message: 'Could not delete Status with id ' + req.params.id
           })
       }
-    } else res.send({ message: 'Status was deleted successfully!' })
+    } else {
+      res.send({ message: 'Status was deleted successfully!' })
+      next()
+    }
   })
 }
 
-exports.deleteAll = (req, res) => {
+exports.deleteAll = (req, res, next) => {
   Status.removeAll((err) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while removing all Status.'
       })
-    } else res.send({ message: 'All Status were deleted successfully!' })
+    } else {
+      res.send({ message: 'All Status were deleted successfully!' })
+      next()
+    }
   })
 }

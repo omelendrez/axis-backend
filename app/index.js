@@ -4,6 +4,7 @@ const logger = require('morgan')
 
 const errorHandler = require('./errors/error-handler')
 const { listEndpoints } = require('./helpers/utils')
+const { log } = require('./helpers/log')
 
 // Databse Modifiers
 const Modifier = require('./modifiers')
@@ -101,7 +102,7 @@ io.on('connection', (socket) => {
 
 if (process.env.NODE_ENV !== 'production') {
   listEndpoints(app, '')
-  console.log(process.env.NODE_ENV)
+  log.success(process.env.NODE_ENV || 'development')
 }
 
 Modifier.execute()

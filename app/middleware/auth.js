@@ -3,7 +3,7 @@ const { verifyToken } = require('../secure')
 require('dotenv').config()
 
 module.exports = {
-  async validateToken (req, res, next) {
+  async validateToken(req, res, next) {
     const authorizationHeaader = req.headers.authorization
     let result
     if (authorizationHeaader) {

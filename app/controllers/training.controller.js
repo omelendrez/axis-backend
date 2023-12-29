@@ -1,7 +1,7 @@
 const { USER_TYPES } = require('../helpers/utils')
 const Training = require('../models/training.model')
 
-exports.create = (req, res, next) => {
+exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -54,14 +54,13 @@ exports.create = (req, res, next) => {
           })
         } else {
           res.status(201).send(data)
-          next()
         }
       })
     }
   })
 }
 
-exports.getAllById = (req, res, next) => {
+exports.getAllById = (req, res) => {
   Training.findAllById(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -69,13 +68,12 @@ exports.getAllById = (req, res, next) => {
           err.message || 'Some error occurred while retrieving Trainings.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getOne = (req, res, next) => {
+exports.getOne = (req, res) => {
   Training.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -88,13 +86,12 @@ exports.getOne = (req, res, next) => {
         })
       }
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getOneView = (req, res, next) => {
+exports.getOneView = (req, res) => {
   Training.findByIdView(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -107,13 +104,12 @@ exports.getOneView = (req, res, next) => {
         })
       }
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getAllByDate = (req, res, next) => {
+exports.getAllByDate = (req, res) => {
   Training.findByDate(
     req.params.date,
     req.params.statuses,
@@ -130,14 +126,13 @@ exports.getAllByDate = (req, res, next) => {
           })
         }
       } else {
-        res.locals.data = data
-        next()
+        res.send(data)
       }
     }
   )
 }
 
-exports.update = (req, res, next) => {
+exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -170,12 +165,11 @@ exports.update = (req, res, next) => {
       }
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = (req, res) => {
   const roles = JSON.parse(req.decoded?.data?.roles)
 
   if (roles.find((r) => r.id === USER_TYPES.SYS_ADMIN)) {
@@ -194,7 +188,6 @@ exports.delete = (req, res, next) => {
         }
       } else {
         res.send({ message: 'Training was deleted successfully!' })
-        next()
       }
     })
   }
@@ -219,12 +212,11 @@ exports.delete = (req, res, next) => {
       }
     } else {
       res.send({ message: 'Training was deleted successfully!' })
-      next()
     }
   })
 }
 
-exports.deleteAll = (req, res, next) => {
+exports.deleteAll = (req, res) => {
   Training.removeAll((err) => {
     if (err) {
       res.status(500).send({
@@ -233,82 +225,76 @@ exports.deleteAll = (req, res, next) => {
       })
     } else {
       res.send({ message: 'All Trainings were deleted successfully!' })
-      next()
     }
   })
 }
 
-exports.getActivePeriod = (req, res, next) => {
+exports.getActivePeriod = (req, res) => {
   Training.findActivePeriod((err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
     } else {
-      res.locals.data = data
       res.send(data)
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getCourseMonthByYear = (req, res, next) => {
+exports.getCourseMonthByYear = (req, res) => {
   Training.findCourseMonthByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
     } else {
-      res.locals.data = data
       res.send(data)
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getLearnerByYear = (req, res, next) => {
+exports.getLearnerByYear = (req, res) => {
   Training.findLearnerByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
     } else {
-      res.locals.data = data
       res.send(data)
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getCourseByYear = (req, res, next) => {
+exports.getCourseByYear = (req, res) => {
   Training.findCourseByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
     } else {
-      res.locals.data = data
       res.send(data)
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getCourseTypeByYear = (req, res, next) => {
+exports.getCourseTypeByYear = (req, res) => {
   Training.findCourseTypeByYear(req.params.year, (err, data) => {
     if (err) {
       res.status(500).send({
         message: 'Internal database error'
       })
     } else {
-      res.locals.data = data
       res.send(data)
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getTrainingRecords = (req, res, next) => {
+exports.getTrainingRecords = (req, res) => {
   Training.findTrainingRecords(
     new URL(req.url, `http://${req.headers.host}`),
     (err, data) => {
@@ -323,9 +309,8 @@ exports.getTrainingRecords = (req, res, next) => {
           })
         }
       } else {
-        res.locals.data = data
         res.send(data)
-        next()
+        res.send(data)
       }
     }
   )

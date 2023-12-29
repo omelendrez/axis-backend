@@ -1,6 +1,6 @@
 const CourseItem = require('../models/course-item.model')
 
-exports.create = (req, res, next) => {
+exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -25,12 +25,11 @@ exports.create = (req, res, next) => {
       }
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.findAll = (req, res, next) => {
+exports.findAll = (req, res) => {
   const pagination = req.query
 
   CourseItem.getAll(pagination, (err, data) => {
@@ -40,13 +39,12 @@ exports.findAll = (req, res, next) => {
           err.message || 'Some error occurred while retrieving CourseItems.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.findAllView = (req, res, next) => {
+exports.findAllView = (req, res) => {
   CourseItem.getAllView(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -54,13 +52,12 @@ exports.findAllView = (req, res, next) => {
           err.message || 'Some error occurred while retrieving CourseItems.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.findOne = (req, res, next) => {
+exports.findOne = (req, res) => {
   CourseItem.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -73,13 +70,12 @@ exports.findOne = (req, res, next) => {
         })
       }
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.update = (req, res, next) => {
+exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -102,13 +98,12 @@ exports.update = (req, res, next) => {
         }
       } else {
         res.send(data)
-        next()
       }
     }
   )
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = (req, res) => {
   CourseItem.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -130,12 +125,11 @@ exports.delete = (req, res, next) => {
       }
     } else {
       res.send({ message: 'Course-item was deleted successfully!' })
-      next()
     }
   })
 }
 
-exports.deleteAll = (req, res, next) => {
+exports.deleteAll = (req, res) => {
   CourseItem.removeAll((err) => {
     if (err) {
       res.status(500).send({
@@ -144,7 +138,6 @@ exports.deleteAll = (req, res, next) => {
       })
     } else {
       res.send({ message: 'All CourseItems were deleted successfully!' })
-      next()
     }
   })
 }

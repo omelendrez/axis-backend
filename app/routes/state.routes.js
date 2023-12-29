@@ -1,6 +1,4 @@
 const auth = require('../middleware/auth')
-const cache = require('../middleware/cache')
-const handler = require('../middleware/handler')
 
 const secure = auth.validateToken
 
@@ -9,17 +7,17 @@ module.exports = (app) => {
 
   const router = require('express').Router()
 
-  router.post('/', secure, state.create, cache.del)
+  router.post('/', secure, state.create)
 
-  router.get('/', secure, cache.get, state.findAll, cache.set, handler.resp)
+  router.get('/', secure, state.findAll)
 
-  router.get('/:id', secure, cache.get, state.findOne, cache.set, handler.resp)
+  router.get('/:id', secure, state.findOne)
 
-  router.put('/:id', secure, state.update, cache.del)
+  router.put('/:id', secure, state.update)
 
-  router.delete('/:id', secure, state.delete, cache.del)
+  router.delete('/:id', secure, state.delete)
 
-  router.delete('/', secure, state.deleteAll, cache.del)
+  router.delete('/', secure, state.deleteAll)
 
   app.use('/api/state', router)
 }

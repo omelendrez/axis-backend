@@ -1,6 +1,6 @@
 const Opito = require('../models/opito.model')
 
-exports.findAll = (req, res, next) => {
+exports.findAll = (req, res) => {
   Opito.getAll((err, data) => {
     if (err) {
       res.status(500).send({
@@ -8,13 +8,12 @@ exports.findAll = (req, res, next) => {
           err.message || 'Some error occurred while retrieving Opito records.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.fileList = (req, res, next) => {
+exports.fileList = (req, res) => {
   const pagination = req.query
 
   Opito.getFileList(pagination, (err, data) => {
@@ -25,13 +24,12 @@ exports.fileList = (req, res, next) => {
           'Some error occurred while retrieving Opito file list records.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.fileContent = (req, res, next) => {
+exports.fileContent = (req, res) => {
   Opito.getFileContent(req.query, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -40,13 +38,12 @@ exports.fileContent = (req, res, next) => {
           'Some error occurred while retrieving Opito file content records.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.saveFieldValues = (req, res, next) => {
+exports.saveFieldValues = (req, res) => {
   Opito.saveFields(req.params, req.body, (err) => {
     if (err) {
       res.status(500).send({
@@ -55,7 +52,6 @@ exports.saveFieldValues = (req, res, next) => {
       })
     } else {
       res.send({ message: 'Fields updated successfully!' })
-      next()
     }
   })
 }

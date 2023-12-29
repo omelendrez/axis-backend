@@ -1,6 +1,6 @@
 const UserRole = require('../models/user-role.model')
 
-exports.create = (req, res, next) => {
+exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -21,12 +21,11 @@ exports.create = (req, res, next) => {
       }
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.findAll = (req, res, next) => {
+exports.findAll = (req, res) => {
   UserRole.getAll(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -34,13 +33,12 @@ exports.findAll = (req, res, next) => {
           err.message || 'Some error occurred while retrieving user-roles.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.findAllAvailable = (req, res, next) => {
+exports.findAllAvailable = (req, res) => {
   UserRole.getAllAvailable(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -48,13 +46,12 @@ exports.findAllAvailable = (req, res, next) => {
           err.message || 'Some error occurred while retrieving user-roles.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = (req, res) => {
   UserRole.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -76,12 +73,11 @@ exports.delete = (req, res, next) => {
       }
     } else {
       res.send({ message: 'User-Role was deleted successfully!' })
-      next()
     }
   })
 }
 
-exports.deleteAll = (req, res, next) => {
+exports.deleteAll = (req, res) => {
   UserRole.removeAll((err) => {
     if (err) {
       res.status(500).send({
@@ -90,7 +86,6 @@ exports.deleteAll = (req, res, next) => {
       })
     } else {
       res.send({ message: 'All user-roles were deleted successfully!' })
-      next()
     }
   })
 }

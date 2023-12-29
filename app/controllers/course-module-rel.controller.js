@@ -1,6 +1,6 @@
 const CourseModuleRel = require('../models/course-module-rel.model')
 
-exports.create = (req, res, next) => {
+exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -20,38 +20,35 @@ exports.create = (req, res, next) => {
       }
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.findAll = (req, res, next) => {
+exports.findAll = (req, res) => {
   CourseModuleRel.getAll(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving modules.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.findAllAvailable = (req, res, next) => {
+exports.findAllAvailable = (req, res) => {
   CourseModuleRel.getAllAvailable(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
         message: err.message || 'Some error occurred while retrieving modules.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = (req, res) => {
   CourseModuleRel.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -73,12 +70,11 @@ exports.delete = (req, res, next) => {
       }
     } else {
       res.send({ message: 'Module was deleted successfully!' })
-      next()
     }
   })
 }
 
-exports.deleteAll = (req, res, next) => {
+exports.deleteAll = (req, res) => {
   CourseModuleRel.removeAll((err) => {
     if (err) {
       res.status(500).send({
@@ -87,7 +83,6 @@ exports.deleteAll = (req, res, next) => {
       })
     } else {
       res.send({ message: 'All modules were deleted successfully!' })
-      next()
     }
   })
 }

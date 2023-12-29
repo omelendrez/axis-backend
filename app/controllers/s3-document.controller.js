@@ -1,6 +1,6 @@
 const S3Document = require('../models/s3-document.model')
 
-exports.create = (req, res, next) => {
+exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -18,12 +18,11 @@ exports.create = (req, res, next) => {
       })
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.update = (req, res, next) => {
+exports.update = (req, res) => {
   S3Document.update(req.body, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -31,12 +30,11 @@ exports.update = (req, res, next) => {
       })
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.exists = (req, res, next) => {
+exports.exists = (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`)
 
   S3Document.exists(url, (err, data) => {
@@ -45,13 +43,12 @@ exports.exists = (req, res, next) => {
         message: `Error checking document existence ${req.params.id}`
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.getAll = (req, res, next) => {
+exports.getAll = (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`)
 
   S3Document.getAll(url, (err, data) => {
@@ -60,13 +57,12 @@ exports.getAll = (req, res, next) => {
         message: 'Error getting list of S3 documents'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = (req, res) => {
   S3Document.delete(req.params.id, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -74,7 +70,6 @@ exports.delete = (req, res, next) => {
       })
     } else {
       res.send(data)
-      next()
     }
   })
 }

@@ -1,6 +1,6 @@
 const State = require('../models/state.model')
 
-exports.create = (req, res, next) => {
+exports.create = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -18,12 +18,11 @@ exports.create = (req, res, next) => {
       })
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.findAll = (req, res, next) => {
+exports.findAll = (req, res) => {
   const pagination = req.query
 
   State.getAll(pagination, (err, data) => {
@@ -32,13 +31,12 @@ exports.findAll = (req, res, next) => {
         message: err.message || 'Some error occurred while retrieving States.'
       })
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.findOne = (req, res, next) => {
+exports.findOne = (req, res) => {
   State.findById(req.params.id, (err, data) => {
     if (err) {
       if (err.kind === 'not_found') {
@@ -51,13 +49,12 @@ exports.findOne = (req, res, next) => {
         })
       }
     } else {
-      res.locals.data = data
-      next()
+      res.send(data)
     }
   })
 }
 
-exports.update = (req, res, next) => {
+exports.update = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -77,12 +74,11 @@ exports.update = (req, res, next) => {
       }
     } else {
       res.send(data)
-      next()
     }
   })
 }
 
-exports.delete = (req, res, next) => {
+exports.delete = (req, res) => {
   State.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -104,12 +100,11 @@ exports.delete = (req, res, next) => {
       }
     } else {
       res.send({ message: 'State was deleted successfully!' })
-      next()
     }
   })
 }
 
-exports.deleteAll = (req, res, next) => {
+exports.deleteAll = (req, res) => {
   State.removeAll((err) => {
     if (err) {
       res.status(500).send({
@@ -117,7 +112,6 @@ exports.deleteAll = (req, res, next) => {
       })
     } else {
       res.send({ message: 'All States were deleted successfully!' })
-      next()
     }
   })
 }

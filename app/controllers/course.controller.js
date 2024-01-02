@@ -121,7 +121,6 @@ exports.update = (req, res) => {
       }
     } else {
       res.send(data)
-      res.send(data)
     }
   })
 }

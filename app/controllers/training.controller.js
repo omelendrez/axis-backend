@@ -237,7 +237,6 @@ exports.getActivePeriod = (req, res) => {
       })
     } else {
       res.send(data)
-      res.send(data)
     }
   })
 }
@@ -249,7 +248,6 @@ exports.getCourseMonthByYear = (req, res) => {
         message: 'Internal database error'
       })
     } else {
-      res.send(data)
       res.send(data)
     }
   })
@@ -263,7 +261,6 @@ exports.getLearnerByYear = (req, res) => {
       })
     } else {
       res.send(data)
-      res.send(data)
     }
   })
 }
@@ -276,7 +273,6 @@ exports.getCourseByYear = (req, res) => {
       })
     } else {
       res.send(data)
-      res.send(data)
     }
   })
 }
@@ -288,7 +284,6 @@ exports.getCourseTypeByYear = (req, res) => {
         message: 'Internal database error'
       })
     } else {
-      res.send(data)
       res.send(data)
     }
   })
@@ -309,7 +304,6 @@ exports.getTrainingRecords = (req, res) => {
           })
         }
       } else {
-        res.send(data)
         res.send(data)
       }
     }

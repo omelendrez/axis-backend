@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "node app/",
-    "dev": "nodemon app/",
+    "dev": "node --watch app/",
     "lint": "eslint ./app --ext .js",
     "lint:fix": "eslint --fix ./app --ext .js",
     "update": "rm -rf node_modules && git pull && npm ci"
@@ -36,7 +36,6 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "nodemon": "^2.0.22"
+    "eslint-plugin-promise": "^6.1.1"
   }
 }

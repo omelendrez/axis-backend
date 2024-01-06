@@ -127,22 +127,14 @@ function listEndpoints(app, filter = '') {
     .forEach((r) => console.log(r))
 }
 
-function getTodayYMD() {
-  const today = new Date()
+function getTodayYMD(date = new Date()) {
+  const year = date.toLocaleString('default', { year: 'numeric' })
+  const month = date.toLocaleString('default', {
+    month: '2-digit'
+  })
+  const day = date.toLocaleString('default', { day: '2-digit' })
 
-  const day = today.getDate().toString()
-  const month = (today.getMonth() + 1).toString()
-  const year = today.getFullYear().toString()
-
-  const paddedDay =
-    parseInt(day, 10) < 10 ? day.padStart(2, '0') : day.toString()
-
-  const paddedMonth =
-    parseInt(month, 10) < 10 ? month.padStart(2, '0') : month.toString()
-
-  const paddedYear = year.toString()
-
-  return `${paddedYear}-${paddedMonth}-${paddedDay}`
+  return [year, month, day].join('-')
 }
 
 module.exports = {

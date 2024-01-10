@@ -103,11 +103,66 @@ const test = async (req, res) => {
   }
 }
 
+const generateForeingKeysDeleteFile = async (req, res) => {
+  try {
+    const resp = await Backup.generateForeingKeysDeleteFile()
+    res.status(200).send(resp)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send({
+      message:
+        error.message || 'Some error occurred when executing test script.'
+    })
+  }
+}
+
+const generateForeingKeysCreateFile = async (req, res) => {
+  try {
+    const resp = await Backup.generateForeingKeysCreateFile()
+    res.status(200).send(resp)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send({
+      message:
+        error.message || 'Some error occurred when executing test script.'
+    })
+  }
+}
+
+const generateIndexesCreateFile = async (req, res) => {
+  try {
+    const resp = await Backup.generateIndexesCreateFile()
+    res.status(200).send(resp)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send({
+      message:
+        error.message || 'Some error occurred when executing test script.'
+    })
+  }
+}
+
+const generateIndexesDeleteFile = async (req, res) => {
+  try {
+    const resp = await Backup.generateIndexesDeleteFile()
+    res.status(200).send(resp)
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send({
+      message:
+        error.message || 'Some error occurred when executing test script.'
+    })
+  }
+}
 module.exports = {
   createBackup,
   zipBackup,
   pushBackup,
   unzipBackup,
   restoreBackup,
-  test
+  test,
+  generateForeingKeysDeleteFile,
+  generateForeingKeysCreateFile,
+  generateIndexesCreateFile,
+  generateIndexesDeleteFile
 }

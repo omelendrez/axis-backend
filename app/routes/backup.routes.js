@@ -19,5 +19,29 @@ module.exports = (app) => {
 
   router.post('/test', secure, backup.test)
 
+  router.get(
+    '/generate-delete-foreignkeys-file',
+    secure,
+    backup.generateForeingKeysDeleteFile
+  )
+
+  router.get(
+    '/generate-create-foreignkeys-file',
+    secure,
+    backup.generateForeingKeysCreateFile
+  )
+
+  router.get(
+    '/generate-create-indexes-file',
+    secure,
+    backup.generateIndexesCreateFile
+  )
+
+  router.get(
+    '/generate-delete-indexes-file',
+    secure,
+    backup.generateIndexesDeleteFile
+  )
+
   app.use('/api/backup', router)
 }

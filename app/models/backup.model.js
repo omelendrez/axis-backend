@@ -444,4 +444,150 @@ Backup.test = () =>
     })
   })
 
+Backup.generateForeingKeysDeleteFile = () =>
+  new Promise((resolve) =>
+    (async () => {
+      const fileName = 'foreignKeysDeleteFile.sql'
+
+      if (await fs.existsSync(fileName)) {
+        await fs.unlinkSync(fileName)
+      }
+
+      const [foreignKeys] = await pool.query(
+        'SELECT CONSTRAINT_NAME, TABLE_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA=DATABASE() AND CONSTRAINT_NAME<>"PRIMARY" ORDER BY CONSTRAINT_NAME;'
+      )
+
+      for (const foreignKey of foreignKeys) {
+        const { CONSTRAINT_NAME, TABLE_NAME } = foreignKey
+
+        await fs.writeFileSync(
+          fileName,
+          `ALTER TABLE \`${TABLE_NAME}\` DROP CONSTRAINT \`${CONSTRAINT_NAME}\` ;\n`,
+          {
+            flag: 'a'
+          }
+        )
+      }
+      resolve('Done!')
+    })()
+  )
+
+Backup.generateForeingKeysCreateFile = () =>
+  new Promise((resolve) =>
+    (async () => {
+      const fileName = 'foreignKeysCreateFile.sql'
+
+      if (await fs.existsSync(fileName)) {
+        await fs.unlinkSync(fileName)
+      }
+
+      const [foreignKeys] = await pool.query(
+        'SELECT TABLE_NAME, CONSTRAINT_NAME, COLUMN_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA=DATABASE() AND CONSTRAINT_NAME<>"PRIMARY" ORDER BY CONSTRAINT_NAME;'
+      )
+
+      for (const foreignKey of foreignKeys) {
+        const {
+          TABLE_NAME,
+          CONSTRAINT_NAME,
+          COLUMN_NAME,
+          REFERENCED_TABLE_NAME,
+          REFERENCED_COLUMN_NAME
+        } = foreignKey
+
+        await fs.writeFileSync(
+          fileName,
+
+          `ALTER TABLE \`${TABLE_NAME}\` ADD CONSTRAINT \`${CONSTRAINT_NAME}\` FOREIGN KEY(${COLUMN_NAME}) REFERENCES ${REFERENCED_TABLE_NAME}(${REFERENCED_COLUMN_NAME});\n`,
+          {
+            flag: 'a'
+          }
+        )
+      }
+
+      resolve('Done!')
+    })()
+  )
+
+Backup.generateIndexesCreateFile = () =>
+  new Promise((resolve) =>
+    (async () => {
+      const fileName = 'indexesCreateFile.sql'
+
+      if (await fs.existsSync(fileName)) {
+        await fs.unlinkSync(fileName)
+      }
+
+      const [otherIndexes] = await pool.query(
+        'SELECT TABLE_NAME, INDEX_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND INDEX_NAME<>"PRIMARY" ORDER BY TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX;'
+      )
+
+      const firstRow = otherIndexes[0]
+
+      const indexes = []
+      const fields = []
+
+      let tableFilter = firstRow.TABLE_NAME
+      let indexFilter = firstRow.INDEX_NAME
+
+      for (const index of otherIndexes) {
+        const { TABLE_NAME, INDEX_NAME, COLUMN_NAME } = index
+
+        if (indexFilter !== INDEX_NAME || tableFilter !== TABLE_NAME) {
+          const otherIndex = `CREATE INDEX \`${indexFilter}\` ON ${tableFilter}(${fields.join(
+            ','
+          )});\n`
+          indexes.push(otherIndex)
+          tableFilter = TABLE_NAME
+          indexFilter = INDEX_NAME
+          fields.length = 0
+          fields.push(COLUMN_NAME)
+        } else {
+          fields.push(COLUMN_NAME)
+        }
+      }
+
+      const otherIndex = `CREATE INDEX \`${indexFilter}\` ON ${tableFilter}(${fields.join(
+        ','
+      )});\n`
+      indexes.push(otherIndex)
+
+      await fs.writeFileSync(
+        fileName,
+
+        indexes.join(''),
+        {
+          flag: 'a'
+        }
+      )
+
+      resolve('Done!')
+    })()
+  )
+
+Backup.generateIndexesDeleteFile = () =>
+  new Promise((resolve) =>
+    (async () => {
+      const fileName = 'indexesDeleteFile.sql'
+
+      if (await fs.existsSync(fileName)) {
+        await fs.unlinkSync(fileName)
+      }
+      const [otherIndexes] = await pool.query(
+        'SELECT DISTINCT TABLE_NAME, INDEX_NAME FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA=DATABASE() AND INDEX_NAME<>"PRIMARY" ORDER BY TABLE_NAME, INDEX_NAME;'
+      )
+
+      for (const index of otherIndexes) {
+        const { TABLE_NAME, INDEX_NAME } = index
+        await fs.writeFileSync(
+          fileName,
+          `DROP INDEX \`${INDEX_NAME}\` ON \`${TABLE_NAME}\`;\n`,
+          {
+            flag: 'a'
+          }
+        )
+      }
+
+      resolve('Done!')
+    })()
+  )
 module.exports = Backup

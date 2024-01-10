@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const CourseModuleRel = function (payload) {
   loadModel(payload, this)
@@ -12,6 +13,7 @@ CourseModuleRel.create = (payload, result) => {
     payload,
     (err, res) => {
       if (err) {
+        sendError('CourseModuleRel.create', err)
         log.error(err)
         result(err, null)
         return
@@ -28,6 +30,7 @@ CourseModuleRel.getAll = (id, result) => {
 
   sql.query(query, id, (err, res) => {
     if (err) {
+      sendError('CourseModuleRel.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -45,6 +48,7 @@ CourseModuleRel.getAllAvailable = (id, result) => {
 
   sql.query(query, id, (err, res) => {
     if (err) {
+      sendError('CourseModuleRel.getAllAvailable', err)
       log.error(err)
       result(err, null)
       return
@@ -59,6 +63,7 @@ CourseModuleRel.getAllAvailable = (id, result) => {
 CourseModuleRel.remove = (id, result) => {
   sql.query('DELETE FROM course_module_rel WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('CourseModuleRel.remove', err)
       log.error(err)
       result(err, null)
       return
@@ -76,6 +81,7 @@ CourseModuleRel.remove = (id, result) => {
 CourseModuleRel.removeAll = (result) => {
   sql.query('DELETE FROM course_module_rel', (err, res) => {
     if (err) {
+      sendError('CourseModuleRel.removeAll', err)
       log.error(err)
       result(err, null)
       return

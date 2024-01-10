@@ -2,6 +2,7 @@ const sql = require('./db')
 
 const { log } = require('../helpers/log')
 const { getPaginationFilters, toWeb } = require('../helpers/utils')
+const { sendError } = require('../errors/error-monitoring')
 
 // constructor
 const Opito = function () {}
@@ -43,6 +44,7 @@ ORDER BY t.id DESC;
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('Opito.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -92,6 +94,7 @@ Opito.getFileList = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('Opito.getFileList', err)
       log.error(err)
       result(err, null)
       return
@@ -124,6 +127,7 @@ Opito.getFileContent = ({ date, course }, result) => {
 
   sql.query(query, [date, course], (err, res) => {
     if (err) {
+      sendError('Opito.getFileContent', err)
       log.error(err)
       result(err, null)
       return
@@ -143,6 +147,7 @@ Opito.saveFields = ({ id }, { learnerId, certificateNo }, result) => {
 
   sql.query(query, [learnerId, certificateNo, id], (err, res) => {
     if (err) {
+      sendError('Opito.saveFields', err)
       log.error(err)
       result(err, null)
       return

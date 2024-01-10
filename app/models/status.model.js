@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const Status = function (payload) {
   loadModel(payload, this)
@@ -9,6 +10,7 @@ const Status = function (payload) {
 Status.create = (status, result) => {
   sql.query('INSERT INTO status SET ?', status, (err, res) => {
     if (err) {
+      sendError('Status.create', err)
       log.error(err)
       result(err, null)
       return
@@ -21,6 +23,7 @@ Status.create = (status, result) => {
 Status.findById = (id, result) => {
   sql.query('SELECT * FROM status WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('Status.findById', err)
       log.error(err)
       result(err, null)
       return
@@ -47,6 +50,7 @@ Status.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('Status.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -67,6 +71,7 @@ Status.updateById = (id, status, result) => {
     [status.status, status.continue_flow, id],
     (err, res) => {
       if (err) {
+        sendError('Status.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -88,6 +93,7 @@ Status.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('Status.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -100,6 +106,7 @@ Status.remove = (id, result) => {
 
       sql.query('DELETE FROM status WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('Status.remove', err)
           log.error(err)
           result(err, null)
           return
@@ -119,6 +126,7 @@ Status.remove = (id, result) => {
 Status.removeAll = (result) => {
   sql.query('DELETE FROM status', (err, res) => {
     if (err) {
+      sendError('Status.removeAll', err)
       log.error(err)
       result(err, null)
       return

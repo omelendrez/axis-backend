@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const ContactType = function (payload) {
   loadModel(payload, this)
@@ -10,6 +11,7 @@ ContactType.create = (contactType, result) => {
   const newContactType = { ...contactType }
   sql.query('INSERT INTO contact_type SET ?', newContactType, (err, res) => {
     if (err) {
+      sendError('ContactType.create', err)
       log.error(err)
       result(err, null)
       return
@@ -22,6 +24,7 @@ ContactType.create = (contactType, result) => {
 ContactType.findById = (id, result) => {
   sql.query('SELECT * FROM contact_type WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('ContactType.findById', err)
       log.error(err)
       result(err, null)
       return
@@ -48,6 +51,7 @@ ContactType.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('ContactType.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -68,6 +72,7 @@ ContactType.updateById = (id, contactType, result) => {
     [contactType.name, id],
     (err, res) => {
       if (err) {
+        sendError('ContactType.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -89,6 +94,7 @@ ContactType.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('ContactType.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -101,6 +107,7 @@ ContactType.remove = (id, result) => {
 
       sql.query('DELETE FROM contact_type WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('ContactType.remove', err)
           log.error(err)
           result(err, null)
           return
@@ -120,6 +127,7 @@ ContactType.remove = (id, result) => {
 ContactType.removeAll = (result) => {
   sql.query('DELETE FROM contact_type', (err, res) => {
     if (err) {
+      sendError('ContactType.removeAll', err)
       log.error(err)
       result(err, null)
       return

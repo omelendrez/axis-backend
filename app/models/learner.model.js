@@ -2,6 +2,7 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 
 // constructor
 const Learner = function (payload) {
@@ -16,6 +17,7 @@ Learner.create = (learner, result) => {
     [newLearner.first_name, newLearner.last_name, newLearner.birth_date],
     (err, res) => {
       if (err) {
+        sendError('Learner.create', err)
         log.error(err)
         result(err, null)
         return
@@ -45,6 +47,7 @@ Learner.findById = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('Learner.findById', err)
         log.error(err)
         result(err, null)
         return
@@ -66,6 +69,7 @@ Learner.findByIdView = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('Learner.findByIdView', err)
         log.error(err)
         result(err, null)
         return
@@ -95,14 +99,14 @@ Learner.getAll = (pagination, result) => {
     't.status=1'
   )
 
-  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, " ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
+  const queryData = `SELECT seta t.id, t.type, t.badge, CONCAT(t.first_name, " ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM learner t INNER JOIN company c ON t.company=c.id ${filter};`
 
   const query = `${queryData}${queryCount}`
 
   sql.query(query, (err, res) => {
     if (err) {
-      log.error(err)
+      sendError('Learner.getAll', err)
       result(err, null)
       return
     }
@@ -134,6 +138,7 @@ Learner.updateById = (id, learner, result) => {
     ],
     (err, res) => {
       if (err) {
+        sendError('Learner.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -155,6 +160,7 @@ Learner.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('Learner.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -186,6 +192,7 @@ Learner.remove = (id, result) => {
 Learner.removeAll = (result) => {
   sql.query('DELETE FROM learner', (err, res) => {
     if (err) {
+      sendError('Learner.removeAll', err)
       log.error(err)
       result(err, null)
       return

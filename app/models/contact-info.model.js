@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const ContactInfo = function (payload) {
   loadModel(payload, this)
@@ -14,6 +15,7 @@ ContactInfo.create = (info, result) => {
     [newContactInfo.learner, newContactInfo.type],
     (err, res) => {
       if (err) {
+        sendError('ContactInfo.create', err)
         log.error(err)
         result(err, null)
         return
@@ -47,6 +49,7 @@ ContactInfo.findById = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('ContactInfo.findById', err)
         log.error(err)
         result(err, null)
         return
@@ -67,6 +70,7 @@ ContactInfo.getAll = (id, result) => {
     'SELECT i.id, t.name type, i.value FROM contact_info i INNER JOIN contact_type t ON i.type = t.id WHERE i.learner = ?'
   sql.query(query, id, (err, res) => {
     if (err) {
+      sendError('ContactInfo.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -84,6 +88,7 @@ ContactInfo.updateById = (id, info, result) => {
     [info.type, info.value, id],
     (err, res) => {
       if (err) {
+        sendError('ContactInfo.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -102,6 +107,7 @@ ContactInfo.updateById = (id, info, result) => {
 ContactInfo.remove = (id, result) => {
   sql.query('DELETE FROM contact_info WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('ContactInfo.remove', err)
       log.error(err)
       result(err, null)
       return
@@ -119,6 +125,7 @@ ContactInfo.remove = (id, result) => {
 ContactInfo.removeAll = (result) => {
   sql.query('DELETE FROM contact_info', (err, res) => {
     if (err) {
+      sendError('ContactInfo.removeAll', err)
       log.error(err)
       result(err, null)
       return

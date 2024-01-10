@@ -2,6 +2,7 @@ const sql = require('./db')
 const { loadModel, TRAINING_STATUS } = require('../helpers/utils')
 const socketIO = require('../socket.io')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 
 const Approval = function (payload) {
   loadModel(payload, this)
@@ -62,6 +63,7 @@ Approval.approve = (id, status, payload, user, result) => {
 
   sql.query(query, params, (err, res) => {
     if (err) {
+      sendError('Approval.approve', err)
       log.error(err)
       result(err, null)
       return
@@ -89,6 +91,7 @@ Approval.undo = (id, result) => {
 
   sql.query(query, id, (err, res) => {
     if (err) {
+      sendError('Approval.undo', err)
       log.error(err)
       result(err, null)
       return
@@ -137,6 +140,7 @@ Approval.saveReason = (id, payload, result) => {
 
   sql.query(query, params, (err) => {
     if (err) {
+      sendError('Approval.saveReason', err)
       log.error(err)
       result(err, null)
       return
@@ -159,6 +163,7 @@ Approval.approveMultiple = (payload, result) => {
 
   sql.query(query, (err) => {
     if (err) {
+      sendError('Approval.approveMultiple', err)
       console.log(err)
       log.error(err)
       result(err, null)

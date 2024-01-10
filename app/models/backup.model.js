@@ -13,6 +13,7 @@ const {
 
 const path = require('path')
 const { getTodayYMD } = require('../helpers/utils')
+const { sendError } = require('../errors/error-monitoring')
 
 const backupFolderDirPath = path.join(
   __dirname,
@@ -337,6 +338,7 @@ const processTable = (table) =>
           resolve(`No records found for table ${table}`)
         }
       } catch (error) {
+        sendError('Backup.backup', error)
         console.log(error)
       }
     })()

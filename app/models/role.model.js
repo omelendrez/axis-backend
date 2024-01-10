@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const Role = function (payload) {
   loadModel(payload, this)
@@ -10,6 +11,7 @@ Role.create = (role, result) => {
   const newRole = { ...role }
   sql.query('INSERT INTO role SET ?', newRole, (err, res) => {
     if (err) {
+      sendError('Role.create', err)
       log.error(err)
       result(err, null)
       return
@@ -22,6 +24,7 @@ Role.create = (role, result) => {
 Role.findById = (id, result) => {
   sql.query('SELECT * FROM role WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('Role.findById', err)
       log.error(err)
       result(err, null)
       return
@@ -48,6 +51,7 @@ Role.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('Role.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -68,6 +72,7 @@ Role.updateById = (id, role, result) => {
     [role.name, id],
     (err, res) => {
       if (err) {
+        sendError('Role.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -94,6 +99,7 @@ Role.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('Role.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -106,6 +112,7 @@ Role.remove = (id, result) => {
 
       sql.query('DELETE FROM role WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('Role.remove', err)
           log.error(err)
           result(err, null)
           return
@@ -125,6 +132,7 @@ Role.remove = (id, result) => {
 Role.removeAll = (result) => {
   sql.query('DELETE FROM role', (err, res) => {
     if (err) {
+      sendError('Role.removeAll', err)
       log.error(err)
       result(err, null)
       return

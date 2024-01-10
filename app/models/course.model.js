@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const Course = function (payload) {
   loadModel(payload, this)
@@ -19,6 +20,7 @@ Course.create = (course, result) => {
     [course.name],
     (err, res) => {
       if (err) {
+        sendError('Course.create', err)
         log.error(err)
         result(err, null)
         return
@@ -30,6 +32,7 @@ Course.create = (course, result) => {
       }
       sql.query('INSERT INTO course SET ?', newCourse, (err, res) => {
         if (err) {
+          sendError('Course.create', err)
           log.error(err)
           result(err, null)
           return
@@ -44,6 +47,7 @@ Course.create = (course, result) => {
 Course.findById = (id, result) => {
   sql.query('SELECT * FROM course WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('Course.findById', err)
       log.error(err)
       result(err, null)
       return
@@ -64,6 +68,7 @@ Course.findByIdView = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('Course.findByIdView', err)
         log.error(err)
         result(err, null)
         return
@@ -108,6 +113,7 @@ Course.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('Course.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -144,6 +150,7 @@ Course.updateById = (id, course, result) => {
     ],
     (err, res) => {
       if (err) {
+        sendError('Course.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -165,6 +172,7 @@ Course.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('Course.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -177,6 +185,7 @@ Course.remove = (id, result) => {
 
       sql.query('DELETE FROM course WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('Course.remove', err)
           log.error(err)
           result(err, null)
           return
@@ -196,6 +205,7 @@ Course.remove = (id, result) => {
 Course.removeAll = (result) => {
   sql.query('DELETE FROM course', (err, res) => {
     if (err) {
+      sendError('Course.removeAll', err)
       log.error(err)
       result(err, null)
       return

@@ -2,6 +2,7 @@ const sql = require('./db')
 const { loadModel, toWeb } = require('../helpers/utils')
 
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 
 const S3Document = function (payload) {
   loadModel(payload, this)
@@ -12,6 +13,7 @@ S3Document.create = ({ file }, result) => {
 
   sql.query(query, [file], (err, res) => {
     if (err) {
+      sendError('S3Document.create', err)
       log.error(err)
       result(err, null)
       return
@@ -26,6 +28,7 @@ S3Document.create = ({ file }, result) => {
 
     sql.query(query, [{ file }], (err, res) => {
       if (err) {
+        sendError('S3Document.create', err)
         log.error(err)
         result(err, null)
         return
@@ -44,6 +47,7 @@ S3Document.update = (payload, result) => {
 
   sql.query(query, params, (err) => {
     if (err) {
+      sendError('S3Document.update', err)
       log.error(err)
       result(err, null)
       return
@@ -71,6 +75,7 @@ S3Document.exists = (url, result) => {
 
   sql.query(query, params, (err, res) => {
     if (err) {
+      sendError('S3Document.exists', err)
       log.error(err)
       result(err, null)
       return
@@ -107,6 +112,7 @@ S3Document.getAll = (url, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('S3Document.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -125,6 +131,7 @@ S3Document.delete = (id, result) => {
 
   sql.query(query, params, (err) => {
     if (err) {
+      sendError('S3Document.delete', err)
       log.error(err)
       result(err, null)
       return

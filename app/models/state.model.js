@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const State = function (payload) {
   loadModel(payload, this)
@@ -9,6 +10,7 @@ const State = function (payload) {
 State.create = (state, result) => {
   sql.query('INSERT INTO state SET ?', state, (err, res) => {
     if (err) {
+      sendError('State.create', err)
       log.error(err)
       result(err, null)
       return
@@ -21,6 +23,7 @@ State.create = (state, result) => {
 State.findById = (id, result) => {
   sql.query('SELECT * FROM state WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('State.findById', err)
       log.error(err)
       result(err, null)
       return
@@ -47,6 +50,7 @@ State.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('State.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -67,6 +71,7 @@ State.updateById = (id, state, result) => {
     [state.name, id],
     (err, res) => {
       if (err) {
+        sendError('State.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -88,6 +93,7 @@ State.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('State.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -100,6 +106,7 @@ State.remove = (id, result) => {
 
       sql.query('DELETE FROM state WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('State.remove', err)
           log.error(err)
           result(err, null)
           return
@@ -119,6 +126,7 @@ State.remove = (id, result) => {
 State.removeAll = (result) => {
   sql.query('DELETE FROM state', (err, res) => {
     if (err) {
+      sendError('State.removeAll', err)
       log.error(err)
       result(err, null)
       return

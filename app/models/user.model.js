@@ -7,6 +7,7 @@ const {
 } = require('../helpers/utils')
 const { log } = require('../helpers/log')
 const { createToken, comparePassword, passwordHash } = require('../secure')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const User = function (payload) {
   loadModel(payload, this)
@@ -20,6 +21,7 @@ User.create = async (user, result) => {
     `SELECT COUNT(1) records FROM user WHERE name='${user.name}'`,
     (err, res) => {
       if (err) {
+        sendError('User.create', err)
         log.error(err)
         result(err, null)
         return
@@ -32,6 +34,7 @@ User.create = async (user, result) => {
 
       sql.query('INSERT INTO user SET ?', newUser, (err, res) => {
         if (err) {
+          sendError('User.create', err)
           log.error(err)
           result(err, null)
           return
@@ -46,6 +49,7 @@ User.create = async (user, result) => {
 User.findById = (id, result) => {
   sql.query('SELECT * FROM user WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('User.findById', err)
       log.error(err)
       result(err, null)
       return
@@ -68,6 +72,7 @@ User.login = (params, result) => {
 
   sql.query(query, params.name.trim(), async (err, res) => {
     if (err) {
+      sendError('User.login', err)
       log.error(err)
       result(err, null)
       return
@@ -105,6 +110,7 @@ User.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('User.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -145,6 +151,7 @@ User.findByIdView = (id, result) => {
 
   sql.query(query, id, (err, res) => {
     if (err) {
+      sendError('User.findByIdView', err)
       log.error(err)
       result(err, null)
       return
@@ -171,6 +178,7 @@ User.updateById = (id, user, result) => {
     ],
     (err, res) => {
       if (err) {
+        sendError('User.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -196,6 +204,7 @@ User.chgPwd = async (id, user, result) => {
 
   sql.query('SELECT * FROM user WHERE id = ?;', id, async (err, res) => {
     if (err) {
+      sendError('User.chgPwd', err)
       log.error(err)
       result(err, null)
       return
@@ -220,6 +229,7 @@ User.chgPwd = async (id, user, result) => {
       [password, id],
       (err, res) => {
         if (err) {
+          sendError('User.chgPwd', err)
           log.error(err)
           result(err, null)
           return
@@ -244,6 +254,7 @@ User.reset = async (id, result) => {
     [password, id],
     (err) => {
       if (err) {
+        sendError('User.reset', err)
         log.error(err)
         result(err, null)
         return
@@ -260,6 +271,7 @@ User.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('User.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -272,6 +284,7 @@ User.remove = (id, result) => {
 
       sql.query('DELETE FROM user_role WHERE user = ?;', id, (err) => {
         if (err) {
+          sendError('User.remove', err)
           log.error(err)
           result(err, null)
           return
@@ -279,6 +292,7 @@ User.remove = (id, result) => {
 
         sql.query('DELETE FROM user WHERE id = ?;', id, (err, res) => {
           if (err) {
+            sendError('User.remove', err)
             log.error(err)
             result(err, null)
             return
@@ -299,6 +313,7 @@ User.remove = (id, result) => {
 User.removeAll = (result) => {
   sql.query('DELETE FROM user', (err, res) => {
     if (err) {
+      sendError('User.removeAll', err)
       log.error(err)
       result(err, null)
       return

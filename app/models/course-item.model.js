@@ -1,6 +1,7 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
 const { log } = require('../helpers/log')
+const { sendError } = require('../errors/error-monitoring')
 // constructor
 const CourseItem = function (payload) {
   loadModel(payload, this)
@@ -12,6 +13,7 @@ CourseItem.create = (courseItem, result) => {
     `SELECT COUNT(1) records FROM course_item WHERE name='${courseItem.name}'`,
     (err, res) => {
       if (err) {
+        sendError('CourseItem.create', err)
         log.error(err)
         result(err, null)
         return
@@ -23,6 +25,7 @@ CourseItem.create = (courseItem, result) => {
       }
       sql.query('INSERT INTO course_item SET ?', newCourse, (err, res) => {
         if (err) {
+          sendError('CourseItem.create', err)
           log.error(err)
           result(err, null)
           return
@@ -37,6 +40,7 @@ CourseItem.create = (courseItem, result) => {
 CourseItem.findById = (id, result) => {
   sql.query('SELECT * FROM course_item WHERE id = ?', id, (err, res) => {
     if (err) {
+      sendError('CourseItem.findById', err)
       log.error(err)
       result(err, null)
       return
@@ -63,6 +67,7 @@ CourseItem.getAll = (pagination, result) => {
 
   sql.query(query, (err, res) => {
     if (err) {
+      sendError('CourseItem.getAll', err)
       log.error(err)
       result(err, null)
       return
@@ -83,6 +88,7 @@ CourseItem.updateById = (id, courseItem, result) => {
     [courseItem.name, id],
     (err, res) => {
       if (err) {
+        sendError('CourseItem.updateById', err)
         log.error(err)
         result(err, null)
         return
@@ -104,6 +110,7 @@ CourseItem.remove = (id, result) => {
     id,
     (err, res) => {
       if (err) {
+        sendError('CourseItem.remove', err)
         log.error(err)
         result(err, null)
         return
@@ -116,6 +123,7 @@ CourseItem.remove = (id, result) => {
 
       sql.query('DELETE FROM course_item WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('CourseItem.remove', err)
           log.error(err)
           result(err, null)
           return
@@ -135,6 +143,7 @@ CourseItem.remove = (id, result) => {
 CourseItem.removeAll = (result) => {
   sql.query('DELETE FROM course_item', (err, res) => {
     if (err) {
+      sendError('CourseItem.removeAll', err)
       log.error(err)
       result(err, null)
       return

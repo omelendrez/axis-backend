@@ -99,7 +99,7 @@ Learner.getAll = (pagination, result) => {
     't.status=1'
   )
 
-  const queryData = `SELECT seta t.id, t.type, t.badge, CONCAT(t.first_name, " ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
+  const queryData = `SELECT t.id, t.type, t.badge, CONCAT(t.first_name, " ", t.last_name) full_name, c.name company FROM learner t INNER JOIN company c ON t.company=c.id ${filter} ORDER BY id DESC ${limits};`
   const queryCount = `SELECT COUNT(1) records FROM learner t INNER JOIN company c ON t.company=c.id ${filter};`
 
   const query = `${queryData}${queryCount}`

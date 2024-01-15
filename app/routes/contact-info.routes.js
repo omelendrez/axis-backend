@@ -1,23 +1,36 @@
+const router = require('express').Router()
+const contactInfo = require('../controllers/contact-info.controller')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const contactInfo = require('../controllers/contact-info.controller')
+  router.post('/', secure, contactInfo.create, cache.res)
 
-  const router = require('express').Router()
+  router.get(
+    '/:id/all',
+    secure,
+    cache.get,
+    contactInfo.findAll,
+    cache.set,
+    cache.res
+  )
 
-  router.post('/', secure, contactInfo.create)
+  router.get(
+    '/:id',
+    secure,
+    cache.get,
+    contactInfo.findOne,
+    cache.set,
+    cache.res
+  )
 
-  router.get('/:id/all', secure, contactInfo.findAll)
+  router.put('/:id', secure, contactInfo.update, cache.res)
 
-  router.get('/:id', secure, contactInfo.findOne)
+  router.delete('/:id', secure, contactInfo.delete, cache.res)
 
-  router.put('/:id', secure, contactInfo.update)
-
-  router.delete('/:id', secure, contactInfo.delete)
-
-  router.delete('/', secure, contactInfo.deleteAll)
+  // router.delete('/', secure, contactInfo.deleteAll, cache.res)
 
   app.use('/api/contact-info', router)
 }

@@ -1,6 +1,6 @@
 {
   "name": "axis-backend",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Axis API",
   "main": "index.js",
   "repository": {
@@ -29,6 +29,7 @@
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
     "mysql2": "^3.2.0",
+    "node-cache": "^5.1.2",
     "socket.io": "^4.7.1"
   },
   "devDependencies": {

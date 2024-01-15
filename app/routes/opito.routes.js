@@ -1,19 +1,25 @@
+const router = require('express').Router()
+const opito = require('../controllers/opito.controller')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const opito = require('../controllers/opito.controller')
+  router.put('/:id', secure, opito.saveFieldValues, cache.res)
 
-  const router = require('express').Router()
+  router.get('/', secure, cache.get, opito.findAll, cache.set, cache.res)
 
-  router.put('/:id', secure, opito.saveFieldValues)
+  router.get('/file', secure, cache.get, opito.fileList, cache.set, cache.res)
 
-  router.get('/', secure, opito.findAll)
-
-  router.get('/file', secure, opito.fileList)
-
-  router.get('/content', secure, opito.fileContent)
+  router.get(
+    '/content',
+    secure,
+    cache.get,
+    opito.fileContent,
+    cache.set,
+    cache.res
+  )
 
   app.use('/api/opito', router)
 }

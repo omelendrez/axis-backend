@@ -1,23 +1,29 @@
+const router = require('express').Router()
+const courseItem = require('../controllers/course-item.controller')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const courseItem = require('../controllers/course-item.controller')
+  router.post('/', secure, courseItem.create, cache.res)
 
-  const router = require('express').Router()
+  router.get('/', secure, cache.get, courseItem.findAll, cache.set, cache.res)
 
-  router.post('/', secure, courseItem.create)
+  router.get(
+    '/:id',
+    secure,
+    cache.get,
+    courseItem.findOne,
+    cache.set,
+    cache.res
+  )
 
-  router.get('/', secure, courseItem.findAll)
+  router.put('/:id', secure, courseItem.update, cache.res)
 
-  router.get('/:id', secure, courseItem.findOne)
+  router.delete('/:id', secure, courseItem.delete, cache.res)
 
-  router.put('/:id', secure, courseItem.update)
-
-  router.delete('/:id', secure, courseItem.delete)
-
-  router.delete('/', secure, courseItem.deleteAll)
+  // router.delete('/', secure, courseItem.deleteAll)
 
   app.use('/api/course-item', router)
 }

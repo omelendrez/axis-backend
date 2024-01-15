@@ -151,15 +151,15 @@ exports.delete = (req, res) => {
   })
 }
 
-exports.deleteAll = (req, res) => {
-  Course.removeAll((err) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message || 'Some error occurred while removing all Courses.'
-      })
-    } else {
-      res.send({ message: 'All Courses were deleted successfully!' })
-    }
-  })
-}
+// exports.deleteAll = (req, res) => {
+//   Course.removeAll((err) => {
+//     if (err) {
+//       res.status(500).send({
+//         message:
+//           err.message || 'Some error occurred while removing all Courses.'
+//       })
+//     } else {
+//       res.send({ message: 'All Courses were deleted successfully!' })
+//     }
+//   })
+// }

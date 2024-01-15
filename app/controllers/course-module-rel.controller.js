@@ -74,15 +74,15 @@ exports.delete = (req, res) => {
   })
 }
 
-exports.deleteAll = (req, res) => {
-  CourseModuleRel.removeAll((err) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message || 'Some error occurred while removing all modules.'
-      })
-    } else {
-      res.send({ message: 'All modules were deleted successfully!' })
-    }
-  })
-}
+// exports.deleteAll = (req, res) => {
+//   CourseModuleRel.removeAll((err) => {
+//     if (err) {
+//       res.status(500).send({
+//         message:
+//           err.message || 'Some error occurred while removing all modules.'
+//       })
+//     } else {
+//       res.send({ message: 'All modules were deleted successfully!' })
+//     }
+//   })
+// }

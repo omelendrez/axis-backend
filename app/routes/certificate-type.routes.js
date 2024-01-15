@@ -1,23 +1,36 @@
+const router = require('express').Router()
+const certificateType = require('../controllers/certificate-type.controller')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const certificateType = require('../controllers/certificate-type.controller')
+  router.post('/', secure, certificateType.create, cache.res)
 
-  const router = require('express').Router()
+  router.get(
+    '/',
+    secure,
+    cache.get,
+    certificateType.findAll,
+    cache.set,
+    cache.res
+  )
 
-  router.post('/', secure, certificateType.create)
+  router.get(
+    '/:id',
+    secure,
+    cache.get,
+    certificateType.findOne,
+    cache.set,
+    cache.res
+  )
 
-  router.get('/', secure, certificateType.findAll)
+  router.put('/:id', secure, certificateType.update, cache.res)
 
-  router.get('/:id', secure, certificateType.findOne)
+  router.delete('/:id', secure, certificateType.delete, cache.res)
 
-  router.put('/:id', secure, certificateType.update)
-
-  router.delete('/:id', secure, certificateType.delete)
-
-  router.delete('/', secure, certificateType.deleteAll)
+  // router.delete('/', secure, certificateType.deleteAll, cache.res)
 
   app.use('/api/certificate-type', router)
 }

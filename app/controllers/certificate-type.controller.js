@@ -115,16 +115,16 @@ exports.delete = (req, res) => {
   })
 }
 
-exports.deleteAll = (req, res) => {
-  CertificateType.removeAll((err) => {
-    if (err) {
-      res.status(500).send({
-        message:
-          err.message ||
-          'Some error occurred while removing all Certificate Types.'
-      })
-    } else {
-      res.send({ message: 'All Certificate Types were deleted successfully!' })
-    }
-  })
-}
+// exports.deleteAll = (req, res) => {
+//   CertificateType.removeAll((err) => {
+//     if (err) {
+//       res.status(500).send({
+//         message:
+//           err.message ||
+//           'Some error occurred while removing all Certificate Types.'
+//       })
+//     } else {
+//       res.send({ message: 'All Certificate Types were deleted successfully!' })
+//     }
+//   })
+// }

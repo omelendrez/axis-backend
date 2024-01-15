@@ -1,17 +1,17 @@
+const router = require('express').Router()
+const controller = require('../controllers/s3-document.controller')
+const cache = require('../middleware/cache')
+
 module.exports = (app) => {
-  const controller = require('../controllers/s3-document.controller')
+  router.get('/exists', cache.get, controller.exists, cache.set, cache.res)
 
-  const router = require('express').Router()
+  router.get('/', cache.get, controller.getAll, cache.set, cache.res)
 
-  router.get('/exists', controller.exists)
+  router.post('/', controller.create, cache.res)
 
-  router.get('/', controller.getAll)
+  router.put('/', controller.update, cache.res)
 
-  router.post('/', controller.create)
-
-  router.put('/', controller.update)
-
-  router.delete('/:id', controller.delete)
+  router.delete('/:id', controller.delete, cache.res)
 
   app.use('/api/s3-document', router)
 }

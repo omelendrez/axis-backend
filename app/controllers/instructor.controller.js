@@ -1,6 +1,6 @@
 const Instructor = require('../models/instructor.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -27,12 +27,12 @@ exports.create = (req, res) => {
           'Some error occurred while creating the Instructor assigment.'
       })
     }
-
     res.send(data)
+    next()
   })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
   Instructor.remove(req.params.id, (err) => {
     if (err) {
       switch (err.kind) {
@@ -49,5 +49,6 @@ exports.delete = (req, res) => {
       }
     } else
       res.send({ message: 'Instructor assignment was deleted successfully!' })
+    next()
   })
 }

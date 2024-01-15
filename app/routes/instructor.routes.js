@@ -1,18 +1,16 @@
+const router = require('express').Router()
+const instructor = require('../controllers/instructor.controller')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const instructor = require('../controllers/instructor.controller')
-
-  const router = require('express').Router()
-
   // POST
-  router
-    .post('/', secure, instructor.create) // Create instructor in learner view
+  router.post('/', secure, instructor.create, cache.res) // Create instructor in learner view
 
-    // DELETE
-    .delete('/:id', secure, instructor.delete)
+  // DELETE
+  router.delete('/:id', secure, instructor.delete, cache.res)
 
   app.use('/api/instructor', router)
 }

@@ -1,21 +1,20 @@
+const router = require('express').Router()
+const approval = require('../controllers/approval.controller')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const approval = require('../controllers/approval.controller')
+  router.post('/', secure, approval.approveMultiple, cache.res)
 
-  const router = require('express').Router()
+  router.post('/:id/reason', secure, approval.saveReason, cache.res)
 
-  router.post('/', secure, approval.approveMultiple)
+  router.post('/:id/:status', secure, approval.approve, cache.res)
 
-  router.post('/:id/reason', secure, approval.saveReason)
+  router.put('/', secure, approval.approveMultiple, cache.res)
 
-  router.post('/:id/:status', secure, approval.approve)
-
-  router.put('/', secure, approval.approveMultiple)
-
-  router.delete('/:id', secure, approval.undo)
+  router.delete('/:id', secure, approval.undo, cache.res)
 
   app.use('/api/approval', router)
 }

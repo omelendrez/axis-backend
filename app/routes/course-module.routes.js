@@ -19,7 +19,7 @@ module.exports = (app) => {
 
   router.delete('/:id', secure, courseModule.delete)
 
-  router.delete('/', secure, courseModule.deleteAll)
+  // router.delete('/', secure, courseModule.deleteAll)
 
   app.use('/api/course-module', router)
 }

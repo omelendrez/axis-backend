@@ -1,6 +1,6 @@
 const Approval = require('../models/approval.model')
 
-exports.approve = (req, res) => {
+exports.approve = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -33,12 +33,13 @@ exports.approve = (req, res) => {
         }
       } else {
         res.send(data)
+        next()
       }
     }
   )
 }
 
-exports.approveMultiple = (req, res) => {
+exports.approveMultiple = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -52,11 +53,12 @@ exports.approveMultiple = (req, res) => {
       })
     } else {
       res.send(data)
+      next()
     }
   })
 }
 
-exports.rejectMultiple = (req, res) => {
+exports.rejectMultiple = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -70,11 +72,12 @@ exports.rejectMultiple = (req, res) => {
       })
     } else {
       res.send(data)
+      next()
     }
   })
 }
 
-exports.undo = (req, res) => {
+exports.undo = (req, res, next) => {
   Approval.undo(parseInt(req.params.id, 10), (err, data) => {
     if (err) {
       switch (err.kind) {
@@ -95,11 +98,12 @@ exports.undo = (req, res) => {
       }
     } else {
       res.send(data)
+      next()
     }
   })
 }
 
-exports.saveReason = (req, res) => {
+exports.saveReason = (req, res, next) => {
   Approval.saveReason(parseInt(req.params.id, 10), req.body, (err, data) => {
     if (err) {
       res.status(500).send({
@@ -107,6 +111,7 @@ exports.saveReason = (req, res) => {
       })
     } else {
       res.send(data)
+      next()
     }
   })
 }

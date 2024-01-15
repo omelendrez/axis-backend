@@ -1,23 +1,22 @@
+const router = require('express').Router()
+const status = require('../controllers/status.controller')
 const auth = require('../middleware/auth')
+const cache = require('../middleware/cache')
 
 const secure = auth.validateToken
 
 module.exports = (app) => {
-  const status = require('../controllers/status.controller')
+  router.post('/', secure, status.create, cache.res)
 
-  const router = require('express').Router()
+  router.get('/', secure, cache.get, status.findAll, cache.set, cache.res)
 
-  router.post('/', secure, status.create)
+  router.get('/:id', secure, cache.get, status.findOne, cache.set, cache.res)
 
-  router.get('/', secure, status.findAll)
+  router.put('/:id', secure, status.update, cache.res)
 
-  router.get('/:id', secure, status.findOne)
+  router.delete('/:id', secure, status.delete, cache.res)
 
-  router.put('/:id', secure, status.update)
-
-  router.delete('/:id', secure, status.delete)
-
-  router.delete('/', secure, status.deleteAll)
+  // router.delete('/', secure, status.deleteAll)
 
   app.use('/api/status', router)
 }

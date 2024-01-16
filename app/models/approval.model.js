@@ -11,6 +11,11 @@ const Approval = function (payload) {
 Approval.approve = (id, status, payload, user, result) => {
   // It also does rejections
 
+  if (!status) {
+    result({ kind: 'missing_status' }, null)
+    return
+  }
+
   let query = ''
   const params = []
 

@@ -22,14 +22,21 @@ exports.approve = (req, res, next) => {
     req.decoded,
     (err, data) => {
       if (err) {
-        if (err.kind === 'not_found') {
-          res.status(404).send({
-            message: `Not found Training with id ${req.params.id}.`
-          })
-        } else {
-          res.status(500).send({
-            message: 'Error updating Training with id ' + req.params.id
-          })
+        switch (err.kind) {
+          case 'missing_status':
+            res.status(404).send({
+              message: `Missing status code for Training with id ${req.params.id}.`
+            })
+            break
+          case 'not_found':
+            res.status(404).send({
+              message: `Not found Training with id ${req.params.id}.`
+            })
+            break
+          default:
+            res.status(500).send({
+              message: `Error updating Training with id ${req.params.id}`
+            })
         }
       } else {
         res.send(data)

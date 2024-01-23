@@ -12,6 +12,7 @@ module.exports = (app) => {
   require('./course.routes')(app)
   require('./instructor.routes')(app)
   require('./learner.routes')(app)
+  require('./title.routes')(app)
   require('./nationality.routes')(app)
   require('./opito.routes')(app)
   require('./role.routes')(app)

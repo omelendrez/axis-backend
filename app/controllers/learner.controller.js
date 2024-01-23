@@ -11,6 +11,7 @@ exports.create = (req, res, next) => {
     type: req.body.type,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
+    title: req.body.title,
     sex: req.body.sex,
     state: req.body.state,
     nationality: req.body.nationality,

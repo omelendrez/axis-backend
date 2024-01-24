@@ -128,15 +128,13 @@ function listEndpoints(app, filter = '') {
 }
 
 function getTodayYMD(date = new Date()) {
-  const TZ = 'en-GB'
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
 
-  const year = date.toLocaleString(TZ, { year: 'numeric' })
-  const month = date.toLocaleString(TZ, { month: '2-digit' })
-  const day = date.toLocaleString(TZ, { day: '2-digit' })
-  const hour = date.toLocaleString(TZ, { hour: '2-digit' })
-  const minute = date.toLocaleString(TZ, { minute: '2-digit' })
-
-  return [year, month, day, day, hour, minute].join('-')
+  return [year, month, day, hours, minutes].join('-')
 }
 
 module.exports = {

@@ -23,10 +23,8 @@ const backupFolderDirPath = path.join(
   // 'sql-files'
 )
 
-const backupFileName = path.join(
-  backupFolderDirPath,
-  FILE_NAME.replace('{date}', getTodayYMD())
-)
+const backupFileName = () =>
+  path.join(backupFolderDirPath, FILE_NAME.replace('{date}', getTodayYMD()))
 
 const Backup = {}
 
@@ -63,7 +61,7 @@ Backup.backup = () =>
         processed++
       }
 
-      await uploadSqlFile(backupFileName, 'database')
+      await uploadSqlFile(backupFileName(), 'database')
 
       resolve({
         message: tables.length
@@ -81,7 +79,7 @@ const getValues = (row) =>
     resolve(result)
   })
 
-// const getPrimary = (table, backupFileName) =>
+// const getPrimary = (table, backupFileName()) =>
 //   new Promise((resolve) =>
 //     (async () => {
 //       const [primaryIndexes] = await pool.query(
@@ -103,7 +101,7 @@ const getValues = (row) =>
 //         primary.push(primaryIndex)
 
 //         await fs.writeFileSync(
-//           backupFileName,
+//           backupFileName(),
 //           `ALTER TABLE \`${table}\` DROP PRIMARY KEY;\n`,
 //           {
 //             flag: 'a'
@@ -115,7 +113,7 @@ const getValues = (row) =>
 //     })()
 //   )
 
-// const getIndexes = (table, backupFileName) =>
+// const getIndexes = (table, backupFileName()) =>
 //   new Promise((resolve) =>
 //     (async () => {
 //       const [otherIndexes] = await pool.query(
@@ -136,7 +134,7 @@ const getValues = (row) =>
 //           indexes.push(otherIndex)
 
 //           await fs.writeFileSync(
-//             backupFileName,
+//             backupFileName(),
 //             `DROP INDEX \`${indexName}\` ON \`${table}\`;\n`,
 //             {
 //               flag: 'a'
@@ -176,7 +174,7 @@ const getForeignKeys = (table) =>
         )
 
         await fs.writeFileSync(
-          backupFileName,
+          backupFileName(),
           `ALTER TABLE \`${table}\` DROP CONSTRAINT \`${CONSTRAINT_NAME}\` ;\n`,
           {
             flag: 'a'
@@ -210,7 +208,7 @@ const getTriggers = (table) =>
           `DELIMITER ;;\nCREATE TRIGGER \`${TRIGGER_NAME}\` ${ACTION_TIMING} ${EVENT_MANIPULATION} ON \`${table}\` FOR EACH ROW ${ACTION_STATEMENT};;\nDELIMITER ;\n`
         )
         await fs.writeFileSync(
-          backupFileName,
+          backupFileName(),
           `DROP TRIGGER IF EXISTS \`${TRIGGER_NAME}\` ;\n`,
           {
             flag: 'a'
@@ -226,7 +224,7 @@ const setHeaders = (table) =>
   new Promise((resolve) =>
     (async () => {
       await fs.writeFileSync(
-        backupFileName,
+        backupFileName(),
         HEADER.replace(/{table}/g, table),
         {
           flag: 'a'
@@ -238,10 +236,10 @@ const setHeaders = (table) =>
       foreignKeys.length = 0
       triggers.length = 0
 
-      // primary = await getPrimary(table, backupFileName)
-      // indexes = await getIndexes(table, backupFileName)
-      foreignKeys = await getForeignKeys(table, backupFileName)
-      triggers = await getTriggers(table, backupFileName)
+      // primary = await getPrimary(table, backupFileName())
+      // indexes = await getIndexes(table, backupFileName())
+      foreignKeys = await getForeignKeys(table, backupFileName())
+      triggers = await getTriggers(table, backupFileName())
 
       resolve()
     })()
@@ -251,30 +249,30 @@ const setFooters = () =>
   new Promise((resolve) =>
     (async () => {
       for (const p of primary) {
-        await fs.writeFileSync(backupFileName, p, {
+        await fs.writeFileSync(backupFileName(), p, {
           flag: 'a'
         })
       }
 
       for (const f of foreignKeys) {
-        await fs.writeFileSync(backupFileName, f, {
+        await fs.writeFileSync(backupFileName(), f, {
           flag: 'a'
         })
       }
 
       for (const i of indexes) {
-        await fs.writeFileSync(backupFileName, i, {
+        await fs.writeFileSync(backupFileName(), i, {
           flag: 'a'
         })
       }
 
       for (const t of triggers) {
-        await fs.writeFileSync(backupFileName, t, {
+        await fs.writeFileSync(backupFileName(), t, {
           flag: 'a'
         })
       }
 
-      await fs.writeFileSync(backupFileName, FOOTER, {
+      await fs.writeFileSync(backupFileName(), FOOTER, {
         flag: 'a'
       })
       resolve()
@@ -290,7 +288,7 @@ const processTable = (table) =>
         const totalRecords = resp[0][0].records
 
         if (totalRecords) {
-          await setHeaders(table, backupFileName)
+          await setHeaders(table, backupFileName())
 
           const limits = []
 
@@ -298,7 +296,7 @@ const processTable = (table) =>
             limits.push({ limit: LIMIT, records })
           }
 
-          await fs.writeFileSync(backupFileName, '\n', {
+          await fs.writeFileSync(backupFileName(), '\n', {
             flag: 'a'
           })
 
@@ -319,7 +317,7 @@ const processTable = (table) =>
               const insert =
                 await `INSERT INTO \`${table}\` VALUES ${values};\n`
 
-              await fs.writeFileSync(backupFileName, insert, {
+              await fs.writeFileSync(backupFileName(), insert, {
                 flag: 'a'
               })
             } catch (error) {
@@ -327,11 +325,11 @@ const processTable = (table) =>
             }
           }
 
-          await fs.writeFileSync(backupFileName, '\n', {
+          await fs.writeFileSync(backupFileName(), '\n', {
             flag: 'a'
           })
 
-          await setFooters(backupFileName)
+          await setFooters(backupFileName())
 
           resolve()
         } else {

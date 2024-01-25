@@ -321,7 +321,7 @@ const processTable = (table) =>
                 flag: 'a'
               })
             } catch (error) {
-              console.log(error)
+              sendError('Backup.processTable', error)
             }
           }
 
@@ -336,8 +336,7 @@ const processTable = (table) =>
           resolve(`No records found for table ${table}`)
         }
       } catch (error) {
-        sendError('Backup.backup', error)
-        console.log(error)
+        sendError('Backup.processTable', error)
       }
     })()
   )

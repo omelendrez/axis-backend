@@ -5,7 +5,6 @@ const findByIdView = require('./queries/findByIdView')
 
 const { TRAINING_STATUS, getPaginationFilters } = require('../helpers/utils')
 const { toWeb, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 // constructor
 const Training = function (payload) {
@@ -34,7 +33,6 @@ Training.create = (training, result) => {
     (err, res) => {
       if (err) {
         sendError('Training.create', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -47,7 +45,6 @@ Training.create = (training, result) => {
       sql.query('INSERT INTO training SET ?', newTraining, (err, res) => {
         if (err) {
           sendError('Training.create', err)
-          log.error(err)
           result(err, null)
           return
         }
@@ -65,7 +62,6 @@ Training.findById = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('Training.findById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -84,7 +80,6 @@ Training.findByIdView = (id, result) => {
   sql.query(findByIdView, [id, id, id, id, id, id, id], (err, res) => {
     if (err) {
       sendError('Training.findByIdView', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -114,7 +109,6 @@ Training.findAllById = (id, result) => {
   sql.query(query, id, (err, res) => {
     if (err) {
       sendError('Training.findAllById', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -211,7 +205,6 @@ Training.findByDate = (date, statuses, pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       sendError('Training.findByDate', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -231,7 +224,6 @@ Training.updateById = (id, training, result) => {
     (err, res) => {
       if (err) {
         sendError('Training.updateById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -256,7 +248,6 @@ Training.updateById = (id, training, result) => {
         (err, res) => {
           if (err) {
             sendError('Training.updateById', err)
-            log.error(err)
             result(err, null)
             return
           }
@@ -280,7 +271,6 @@ Training.remove = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('Training.remove', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -294,7 +284,6 @@ Training.remove = (id, result) => {
         sql.query('DELETE FROM training WHERE id = ?', id, (err, res) => {
           if (err) {
             sendError('Training.remove', err)
-            log.error(err)
             result(err, null)
             return
           }
@@ -315,7 +304,6 @@ Training.removeForce = (id, result) => {
   sql.query('DELETE FROM training_tracking WHERE training = ?;', id, (err) => {
     if (err) {
       sendError('Training.removeForce', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -323,7 +311,6 @@ Training.removeForce = (id, result) => {
     sql.query('DELETE FROM training WHERE id = ?;', id, (err, res) => {
       if (err) {
         sendError('Training.removeForce', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -342,7 +329,6 @@ Training.removeAll = (result) => {
   sql.query('DELETE FROM training;', (err, res) => {
     if (err) {
       sendError('Training.removeAll', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -358,7 +344,6 @@ Training.addTracking = (trainingId, userId, status, result) => {
     (err, res) => {
       if (err) {
         sendError('Training.addTracking', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -379,7 +364,6 @@ Training.findActivePeriod = (result) => {
   sql.query(query, (err, res) => {
     if (err) {
       sendError('Training.findActivePeriod', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -408,7 +392,6 @@ Training.findCourseMonthByYear = (year, result) => {
   sql.query(query, [year, year], (err, res) => {
     if (err) {
       sendError('Training.findCourseMonthByYear', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -429,7 +412,6 @@ Training.findLearnerByYear = (year, result) => {
   sql.query(query, [year], (err, res) => {
     if (err) {
       sendError('Training.findLearnerByYear', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -451,7 +433,6 @@ Training.findCourseByYear = (year, result) => {
   sql.query(query, [year], (err, res) => {
     if (err) {
       sendError('Training.findCourseByYear', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -474,7 +455,6 @@ Training.findCourseTypeByYear = (year, result) => {
   sql.query(query, [year], (err, res) => {
     if (err) {
       sendError('Training.findCourseTypeByYear', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -539,7 +519,6 @@ ${conditions.join(' ')};`
   sql.query(count, (err, res) => {
     if (err) {
       sendError('Training.findTrainingRecords', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -576,7 +555,6 @@ ${conditions.join(' ')};`
     sql.query(query, (err, res) => {
       if (err) {
         sendError('Training.findTrainingRecords', err)
-        log.error(err)
         result(err, null)
         return
       }

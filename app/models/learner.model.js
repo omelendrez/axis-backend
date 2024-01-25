@@ -1,7 +1,6 @@
 /* eslint-disable quotes */
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 
 // constructor
@@ -18,7 +17,6 @@ Learner.create = (learner, result) => {
     (err, res) => {
       if (err) {
         sendError('Learner.create', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -30,7 +28,6 @@ Learner.create = (learner, result) => {
 
       sql.query('INSERT INTO learner SET ?', newLearner, (err, res) => {
         if (err) {
-          log.error(err)
           result(err, null)
           return
         }
@@ -48,7 +45,6 @@ Learner.findById = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('Learner.findById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -70,7 +66,6 @@ Learner.findByIdView = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('Learner.findByIdView', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -140,7 +135,6 @@ Learner.updateById = (id, learner, result) => {
     (err, res) => {
       if (err) {
         sendError('Learner.updateById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -162,7 +156,6 @@ Learner.remove = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('Learner.remove', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -174,7 +167,6 @@ Learner.remove = (id, result) => {
 
       sql.query('DELETE FROM learner WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error(err)
           result(err, null)
           return
         }
@@ -194,7 +186,6 @@ Learner.removeAll = (result) => {
   sql.query('DELETE FROM learner', (err, res) => {
     if (err) {
       sendError('Learner.removeAll', err)
-      log.error(err)
       result(err, null)
       return
     }

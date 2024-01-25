@@ -1,6 +1,5 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 // constructor
 const Title = function (payload) {
@@ -20,7 +19,6 @@ Title.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       sendError('Title.getAll', err)
-      log.error(err)
       result(err, null)
       return
     }

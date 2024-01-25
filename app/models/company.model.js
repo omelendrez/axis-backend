@@ -1,6 +1,5 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 // constructor
 const Company = function (payload) {
@@ -16,7 +15,6 @@ Company.create = (company, result) => {
     (err, res) => {
       if (err) {
         sendError('Company.create', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -28,7 +26,6 @@ Company.create = (company, result) => {
       sql.query('INSERT INTO company SET ?', newCompany, (err, res) => {
         if (err) {
           sendError('Company.create', err)
-          log.error(err)
           result(err, null)
           return
         }
@@ -43,7 +40,6 @@ Company.findById = (id, result) => {
   sql.query('SELECT * FROM company WHERE id =?', id, (err, res) => {
     if (err) {
       sendError('Company.findById', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -70,7 +66,6 @@ Company.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       sendError('Company.getAll', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -91,7 +86,6 @@ Company.updateById = (id, company, result) => {
     (err, res) => {
       if (err) {
         sendError('Company.updateById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -113,7 +107,6 @@ Company.remove = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('Company.remove', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -126,7 +119,6 @@ Company.remove = (id, result) => {
       sql.query('DELETE FROM company WHERE id = ?', id, (err, res) => {
         if (err) {
           sendError('Company.remove', err)
-          log.error(err)
           result(err, null)
           return
         }
@@ -146,7 +138,6 @@ Company.removeAll = (result) => {
   sql.query('DELETE FROM company', (err, res) => {
     if (err) {
       sendError('Company.removeAll', err)
-      log.error(err)
       result(err, null)
       return
     }

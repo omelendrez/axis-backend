@@ -1,6 +1,4 @@
 'use strict'
-
-const { log } = require('../helpers/log')
 const messages = require('./messages.json')
 
 /**
@@ -70,7 +68,6 @@ errorHandler.middleware = function (err, req, res, _next) {
   const { code, body } = errorHandler.handle(err)
 
   if (req.log) {
-    log.error(err)
     req.log.error(err)
   }
 

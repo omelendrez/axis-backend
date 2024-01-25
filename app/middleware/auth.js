@@ -1,4 +1,3 @@
-const { log } = require('../helpers/log')
 const { verifyToken } = require('../secure')
 require('dotenv').config()
 
@@ -13,7 +12,6 @@ module.exports = {
         req.decoded = result
         next()
       } catch (err) {
-        log.error(err)
         if (err.message === 'jwt expired') {
           result = {
             code: 401,

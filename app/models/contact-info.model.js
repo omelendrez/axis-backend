@@ -1,6 +1,5 @@
 const sql = require('./db')
 const { toWeb, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 // constructor
 const ContactInfo = function (payload) {
@@ -16,7 +15,7 @@ ContactInfo.create = (info, result) => {
     (err, res) => {
       if (err) {
         sendError('ContactInfo.create', err)
-        log.error(err)
+
         result(err, null)
         return
       }
@@ -31,7 +30,6 @@ ContactInfo.create = (info, result) => {
         newContactInfo,
         (err, res) => {
           if (err) {
-            log.error(err)
             result(err, null)
             return
           }
@@ -50,7 +48,6 @@ ContactInfo.findById = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('ContactInfo.findById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -71,7 +68,6 @@ ContactInfo.getAll = (id, result) => {
   sql.query(query, id, (err, res) => {
     if (err) {
       sendError('ContactInfo.getAll', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -89,7 +85,6 @@ ContactInfo.updateById = (id, info, result) => {
     (err, res) => {
       if (err) {
         sendError('ContactInfo.updateById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -108,7 +103,6 @@ ContactInfo.remove = (id, result) => {
   sql.query('DELETE FROM contact_info WHERE id = ?', id, (err, res) => {
     if (err) {
       sendError('ContactInfo.remove', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -126,7 +120,6 @@ ContactInfo.removeAll = (result) => {
   sql.query('DELETE FROM contact_info', (err, res) => {
     if (err) {
       sendError('ContactInfo.removeAll', err)
-      log.error(err)
       result(err, null)
       return
     }

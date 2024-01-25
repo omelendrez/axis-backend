@@ -1,6 +1,5 @@
 const sql = require('./db')
 const { toWeb, getPaginationFilters, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 // constructor
 const CertificateType = function (payload) {
@@ -15,7 +14,6 @@ CertificateType.create = (certificatetype, result) => {
     (err, res) => {
       if (err) {
         sendError('CertificateType.create', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -29,7 +27,6 @@ CertificateType.findById = (id, result) => {
   sql.query('SELECT * FROM certificate_type WHERE id = ?', id, (err, res) => {
     if (err) {
       sendError('CertificateType.findById', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -56,7 +53,6 @@ CertificateType.getAll = (pagination, result) => {
   sql.query(query, (err, res) => {
     if (err) {
       sendError('CertificateType.getAll', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -77,7 +73,6 @@ CertificateType.updateById = (id, certificatetype, result) => {
     (err, res) => {
       if (err) {
         sendError('CertificateType.updateById', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -99,7 +94,6 @@ CertificateType.remove = (id, result) => {
     (err, res) => {
       if (err) {
         sendError('CertificateType.remove', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -111,7 +105,6 @@ CertificateType.remove = (id, result) => {
 
       sql.query('DELETE FROM certificate_type WHERE id = ?', id, (err, res) => {
         if (err) {
-          log.error(err)
           result(err, null)
           return
         }
@@ -131,7 +124,6 @@ CertificateType.removeAll = (result) => {
   sql.query('DELETE FROM certificate_type', (err, res) => {
     if (err) {
       sendError('CertificateType.removeAll', err)
-      log.error(err)
       result(err, null)
       return
     }

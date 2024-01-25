@@ -1,6 +1,5 @@
 const sql = require('./db')
 const { loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 // constructor
 const Instructor = function (payload) {
@@ -19,7 +18,6 @@ Instructor.create = (instructor, result) => {
     (err, res) => {
       if (err) {
         sendError('Instructor.create', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -34,7 +32,6 @@ Instructor.create = (instructor, result) => {
         (err, res) => {
           if (err) {
             sendError('Instructor.create', err)
-            log.error(err)
             result(err, null)
             return
           }
@@ -50,7 +47,6 @@ Instructor.remove = (id, result) => {
   sql.query('DELETE FROM training_instructor WHERE id = ?', id, (err, res) => {
     if (err) {
       sendError('Instructor.remove', err)
-      log.error(err)
       result(err, null)
       return
     }

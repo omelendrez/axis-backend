@@ -1,6 +1,5 @@
 const sql = require('./db')
 const { toWeb, loadModel } = require('../helpers/utils')
-const { log } = require('../helpers/log')
 const { sendError } = require('../errors/error-monitoring')
 // constructor
 const UserRole = function (payload) {
@@ -14,7 +13,6 @@ UserRole.create = (payload, result) => {
     (err, res) => {
       if (err) {
         sendError('UserRole.create', err)
-        log.error(err)
         result(err, null)
         return
       }
@@ -31,7 +29,6 @@ UserRole.getAll = (id, result) => {
   sql.query(query, id, (err, res) => {
     if (err) {
       sendError('UserRole.getAll', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -49,7 +46,6 @@ UserRole.getAllAvailable = (id, result) => {
   sql.query(query, id, (err, res) => {
     if (err) {
       sendError('UserRole.getAllAvailable', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -64,7 +60,6 @@ UserRole.remove = (id, result) => {
   sql.query('DELETE FROM user_role WHERE id = ?', id, (err, res) => {
     if (err) {
       sendError('UserRole.remove', err)
-      log.error(err)
       result(err, null)
       return
     }
@@ -82,7 +77,6 @@ UserRole.removeAll = (result) => {
   sql.query('DELETE FROM user_role', (err, res) => {
     if (err) {
       sendError('UserRole.removeAll', err)
-      log.error(err)
       result(err, null)
       return
     }

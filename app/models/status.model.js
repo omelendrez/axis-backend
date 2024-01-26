@@ -116,16 +116,16 @@ Status.remove = (id, result) => {
   )
 }
 
-Status.removeAll = (result) => {
-  sql.query('DELETE FROM status', (err, res) => {
-    if (err) {
-      sendError('Status.removeAll', err)
-      result(err, null)
-      return
-    }
+// Status.removeAll = (result) => {
+//   sql.query('DELETE FROM status', (err, res) => {
+//     if (err) {
+//       sendError('Status.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = Status

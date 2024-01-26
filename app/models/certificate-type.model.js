@@ -105,6 +105,7 @@ CertificateType.remove = (id, result) => {
 
       sql.query('DELETE FROM certificate_type WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('CertificateType.remove', err)
           result(err, null)
           return
         }
@@ -120,16 +121,16 @@ CertificateType.remove = (id, result) => {
   )
 }
 
-CertificateType.removeAll = (result) => {
-  sql.query('DELETE FROM certificate_type', (err, res) => {
-    if (err) {
-      sendError('CertificateType.removeAll', err)
-      result(err, null)
-      return
-    }
+// CertificateType.removeAll = (result) => {
+//   sql.query('DELETE FROM certificate_type', (err, res) => {
+//     if (err) {
+//       sendError('CertificateType.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = CertificateType

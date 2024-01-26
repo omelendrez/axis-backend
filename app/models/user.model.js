@@ -295,16 +295,16 @@ User.remove = (id, result) => {
   )
 }
 
-User.removeAll = (result) => {
-  sql.query('DELETE FROM user', (err, res) => {
-    if (err) {
-      sendError('User.removeAll', err)
-      result(err, null)
-      return
-    }
+// User.removeAll = (result) => {
+//   sql.query('DELETE FROM user', (err, res) => {
+//     if (err) {
+//       sendError('User.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = User

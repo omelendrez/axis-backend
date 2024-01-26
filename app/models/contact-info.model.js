@@ -15,7 +15,6 @@ ContactInfo.create = (info, result) => {
     (err, res) => {
       if (err) {
         sendError('ContactInfo.create', err)
-
         result(err, null)
         return
       }
@@ -30,6 +29,7 @@ ContactInfo.create = (info, result) => {
         newContactInfo,
         (err, res) => {
           if (err) {
+            sendError('ContactInfo.create', err)
             result(err, null)
             return
           }
@@ -116,16 +116,16 @@ ContactInfo.remove = (id, result) => {
   })
 }
 
-ContactInfo.removeAll = (result) => {
-  sql.query('DELETE FROM contact_info', (err, res) => {
-    if (err) {
-      sendError('ContactInfo.removeAll', err)
-      result(err, null)
-      return
-    }
+// ContactInfo.removeAll = (result) => {
+//   sql.query('DELETE FROM contact_info', (err, res) => {
+//     if (err) {
+//       sendError('ContactInfo.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = ContactInfo

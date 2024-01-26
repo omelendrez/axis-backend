@@ -73,16 +73,16 @@ UserRole.remove = (id, result) => {
   })
 }
 
-UserRole.removeAll = (result) => {
-  sql.query('DELETE FROM user_role', (err, res) => {
-    if (err) {
-      sendError('UserRole.removeAll', err)
-      result(err, null)
-      return
-    }
+// UserRole.removeAll = (result) => {
+//   sql.query('DELETE FROM user_role', (err, res) => {
+//     if (err) {
+//       sendError('UserRole.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = UserRole

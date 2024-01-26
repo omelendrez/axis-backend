@@ -117,16 +117,16 @@ Nationality.remove = (id, result) => {
   )
 }
 
-Nationality.removeAll = (result) => {
-  sql.query('DELETE FROM nationality', (err, res) => {
-    if (err) {
-      sendError('Nationality.removeAll', err)
-      result(err, null)
-      return
-    }
+// Nationality.removeAll = (result) => {
+//   sql.query('DELETE FROM nationality', (err, res) => {
+//     if (err) {
+//       sendError('Nationality.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = Nationality

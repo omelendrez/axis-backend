@@ -325,17 +325,17 @@ Training.removeForce = (id, result) => {
   })
 }
 
-Training.removeAll = (result) => {
-  sql.query('DELETE FROM training;', (err, res) => {
-    if (err) {
-      sendError('Training.removeAll', err)
-      result(err, null)
-      return
-    }
+// Training.removeAll = (result) => {
+//   sql.query('DELETE FROM training;', (err, res) => {
+//     if (err) {
+//       sendError('Training.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 Training.addTracking = (trainingId, userId, status, result) => {
   sql.query(

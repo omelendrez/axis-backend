@@ -28,6 +28,7 @@ Learner.create = (learner, result) => {
 
       sql.query('INSERT INTO learner SET ?', newLearner, (err, res) => {
         if (err) {
+          sendError('Learner.create', err)
           result(err, null)
           return
         }
@@ -167,6 +168,7 @@ Learner.remove = (id, result) => {
 
       sql.query('DELETE FROM learner WHERE id = ?', id, (err, res) => {
         if (err) {
+          sendError('Learner.remove', err)
           result(err, null)
           return
         }
@@ -182,16 +184,16 @@ Learner.remove = (id, result) => {
   )
 }
 
-Learner.removeAll = (result) => {
-  sql.query('DELETE FROM learner', (err, res) => {
-    if (err) {
-      sendError('Learner.removeAll', err)
-      result(err, null)
-      return
-    }
+// Learner.removeAll = (result) => {
+//   sql.query('DELETE FROM learner', (err, res) => {
+//     if (err) {
+//       sendError('Learner.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = Learner

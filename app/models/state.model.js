@@ -116,16 +116,16 @@ State.remove = (id, result) => {
   )
 }
 
-State.removeAll = (result) => {
-  sql.query('DELETE FROM state', (err, res) => {
-    if (err) {
-      sendError('State.removeAll', err)
-      result(err, null)
-      return
-    }
+// State.removeAll = (result) => {
+//   sql.query('DELETE FROM state', (err, res) => {
+//     if (err) {
+//       sendError('State.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = State

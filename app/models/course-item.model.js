@@ -132,16 +132,16 @@ CourseItem.remove = (id, result) => {
   )
 }
 
-CourseItem.removeAll = (result) => {
-  sql.query('DELETE FROM course_item', (err, res) => {
-    if (err) {
-      sendError('CourseItem.removeAll', err)
-      result(err, null)
-      return
-    }
+// CourseItem.removeAll = (result) => {
+//   sql.query('DELETE FROM course_item', (err, res) => {
+//     if (err) {
+//       sendError('CourseItem.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = CourseItem

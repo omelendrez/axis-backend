@@ -7,7 +7,7 @@ const { listEndpoints } = require('./helpers/utils')
 const { log } = require('./helpers/log')
 
 // Databse Modifiers
-const Modifier = require('./modifiers')
+// const Modifier = require('./modifiers')
 
 require('dotenv').config()
 
@@ -107,4 +107,4 @@ if (process.env.NODE_ENV !== 'production') {
   log.error(process.env.NODE_ENV)
 }
 
-Modifier.execute()
+// Modifier.execute()

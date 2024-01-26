@@ -134,16 +134,16 @@ Company.remove = (id, result) => {
   )
 }
 
-Company.removeAll = (result) => {
-  sql.query('DELETE FROM company', (err, res) => {
-    if (err) {
-      sendError('Company.removeAll', err)
-      result(err, null)
-      return
-    }
+// Company.removeAll = (result) => {
+//   sql.query('DELETE FROM company', (err, res) => {
+//     if (err) {
+//       sendError('Company.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = Company

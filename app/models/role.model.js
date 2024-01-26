@@ -122,16 +122,16 @@ Role.remove = (id, result) => {
   )
 }
 
-Role.removeAll = (result) => {
-  sql.query('DELETE FROM role', (err, res) => {
-    if (err) {
-      sendError('Role.removeAll', err)
-      result(err, null)
-      return
-    }
+// Role.removeAll = (result) => {
+//   sql.query('DELETE FROM role', (err, res) => {
+//     if (err) {
+//       sendError('Role.removeAll', err)
+//       result(err, null)
+//       return
+//     }
 
-    result(null, res.affectedRows)
-  })
-}
+//     result(null, res.affectedRows)
+//   })
+// }
 
 module.exports = Role

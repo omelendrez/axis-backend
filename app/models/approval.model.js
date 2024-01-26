@@ -122,6 +122,8 @@ Approval.undo = (id, result) => {
     sql.query(query, params, (err) => {
       if (err) {
         sendError('Approval.undo', err)
+        result(err, null)
+        return
       }
 
       result(null, {

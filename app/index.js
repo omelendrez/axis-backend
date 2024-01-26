@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 const logger = require('morgan')
 
-const errorHandler = require('./errors/error-handler')
+// const errorHandler = require('./errors/error-handler')
 const { listEndpoints } = require('./helpers/utils')
 const { log } = require('./helpers/log')
 
@@ -88,7 +88,7 @@ app.use(function (req, res, next) {
 
 require('./routes')(app)
 
-app.use(errorHandler.middleware)
+// app.use(errorHandler.middleware)
 
 const PORT = process.env.PORT || 3000
 

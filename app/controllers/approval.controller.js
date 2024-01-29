@@ -5,6 +5,12 @@ exports.approve = (req, res, next) => {
     res.status(400).send({
       message: 'Content can not be empty!'
     })
+    return
+  }
+
+  if (req.params.status === 'reason') {
+    res.status(200)
+    return
   }
 
   const data = new Approval({

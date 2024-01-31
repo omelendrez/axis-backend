@@ -4,7 +4,7 @@ content-type: application/json
 
 {
     "name": "omar",
-    "password": "master1"
+    "password": "abc123*()"
 }
 
 ### Users
@@ -22,6 +22,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjo5N
 content-type: application/json
 
 {
-    "password": "master1",
-    "prevPass": "master2"
+    "password": "def456_+",
+    "prevPass": "abc123*()"
 }

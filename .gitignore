@@ -5,3 +5,4 @@ backup/*.sql
 .DS_Store
 
 .env
+.env.production

@@ -15,14 +15,14 @@ const app = express()
 
 const httpServer = require('http').createServer(app)
 
-const socketIO = require('./socket.io')
-httpServer,
-  {
-    cors: {
-      origin: 'https://axis-tolmann.vercel.app',
-      methods: ['GET', 'POST']
-    }
-  }
+// const socketIO = require('./socket.io')
+// httpServer,
+//   {
+//     cors: {
+//       origin: 'https://axis-tolmann.vercel.app',
+//       methods: ['GET', 'POST']
+//     }
+//   }
 
 const whitelist = [
   'http://localhost:5173',
@@ -53,11 +53,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-const io = require('socket.io')(httpServer, {
-  cors: {
-    origin: whitelist
-  }
-})
+// const io = require('socket.io')(httpServer, {
+//   cors: {
+//     origin: whitelist
+//   }
+// })
 
 app.use(express.json())
 
@@ -96,9 +96,9 @@ httpServer.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`)
 })
 
-io.on('connection', (socket) => {
-  socketIO.set(socket)
-})
+// io.on('connection', (socket) => {
+//   socketIO.set(socket)
+// })
 
 if (process.env.NODE_ENV !== 'production') {
   listEndpoints(app, '')

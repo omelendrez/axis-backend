@@ -1,6 +1,6 @@
 const sql = require('./db')
 const { loadModel, TRAINING_STATUS } = require('../helpers/utils')
-const socketIO = require('../socket.io')
+// const socketIO = require('../socket.io')
 const { sendError } = require('../errors/error-monitoring')
 
 const Approval = function (payload) {
@@ -82,12 +82,12 @@ Approval.approve = (id, status, payload, user, result) => {
       message: 'Status updated successfully!'
     })
 
-    socketIO.notify('training-status-changed', { id, status })
+    // socketIO.notify('training-status-changed', { id, status })
   })
 }
 
 Approval.undo = (id, result) => {
-  socketIO.notify('data', id)
+  // socketIO.notify('data', id)
 
   let query =
     'SELECT status FROM training_tracking WHERE training = ? ORDER BY id DESC LIMIT 2;'
@@ -131,7 +131,7 @@ Approval.undo = (id, result) => {
         message: 'Status undone successfully!'
       })
 
-      socketIO.notify('training-status-changed', { id, status })
+      // socketIO.notify('training-status-changed', { id, status })
     })
   })
 }

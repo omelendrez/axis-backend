@@ -102,7 +102,7 @@ S3Document.getAll = (url, result) => {
 
   const query = `SELECT file, status, created, updated FROM s3_document ${conditions.join(
     ' '
-  )} limit 50;`
+  )} limit 100;`
 
   sql.query(query, (err, res) => {
     if (err) {

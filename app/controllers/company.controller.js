@@ -1,6 +1,6 @@
 const Company = require('../models/company.model')
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
   if (!req.body) {
     res.status(400).send({
       message: 'Content can not be empty!'
@@ -14,7 +14,7 @@ exports.create = (req, res) => {
     contact: req.body.contact
   })
 
-  Company.create(company, (err, data, next) => {
+  Company.create(company, (err, data) => {
     if (err) {
       if (err.kind === 'already_exists') {
         return res.status(400).send({

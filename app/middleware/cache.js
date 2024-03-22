@@ -38,7 +38,7 @@ const get = (req, res, next) => {
 
   const content = cache.get(url)
   if (content) {
-    // Process ends here if there is cach for the url
+    // Process ends here if there is cache for the url
     return res.status(200).send(content)
   }
   // No cache found so we get data from database (controller)

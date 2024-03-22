@@ -11,7 +11,7 @@ exports.create = (req, res) => {
     name: req.body.name,
     front_id_text: req.body.front_id_text,
     back_id_text: req.body.back_id_text,
-    id_card: req.body.id_card,
+    id_card: req.body.id_card || 0,
     duration: req.body.duration,
     validity: req.body.validity,
     cert_type: req.body.cert_type,
@@ -150,16 +150,3 @@ exports.delete = (req, res) => {
     }
   })
 }
-
-// exports.deleteAll = (req, res) => {
-//   Course.removeAll((err) => {
-//     if (err) {
-//       res.status(500).send({
-//         message:
-//           err.message || 'Some error occurred while removing all Courses.'
-//       })
-//     } else {
-//       res.send({ message: 'All Courses were deleted successfully!' })
-//     }
-//   })
-// }

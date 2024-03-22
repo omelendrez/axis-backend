@@ -92,7 +92,7 @@ const del = async (req, res, next) => {
  * @param {HTTP request object} req
  * @param {HTTP response object} res
  * @param {next method} next
- * @returns Returs retrieved data for GET HTTP method, otherwise invalidate cache
+ * @returns Returns retrieved data for GET HTTP method, otherwise invalidate cache
  */
 const res = (req, res, next) => {
   // GET HTTP method reaches here if no cache found for that url

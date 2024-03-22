@@ -38,7 +38,7 @@ const get = (req, res, next) => {
 
   const content = cache.get(url)
   if (content) {
-    // Process ends here if there is cach for the url
+    // Process ends here if there is cache for the url
     return res.status(200).send(content)
   }
   // No cache found so we get data from database (controller)
@@ -92,7 +92,7 @@ const del = async (req, res, next) => {
  * @param {HTTP request object} req
  * @param {HTTP response object} res
  * @param {next method} next
- * @returns Returs retrieved data for GET HTTP method, otherwise invalidate cache
+ * @returns Returns retrieved data for GET HTTP method, otherwise invalidate cache
  */
 const res = (req, res, next) => {
   // GET HTTP method reaches here if no cache found for that url

@@ -22,16 +22,23 @@ exports.create = (req, res, next) => {
 
   Learner.create(learner, (err, data) => {
     if (err) {
-      if (err.kind === 'already_exists') {
-        res.status(400).send({
-          message:
-            'Learner with same names and birth date already exists in database.'
-        })
-      } else {
-        res.status(500).send({
-          message:
-            err.message || 'Some error occurred while creating the Learner.'
-        })
+      switch (err.kind) {
+        case 'title_missing':
+          return res.status(400).send({
+            message: 'Title is required.'
+          })
+
+        case 'already_exists':
+          return res.status(400).send({
+            message:
+              'Learner with same names and birth date already exists in database.'
+          })
+
+        default:
+          return res.status(500).send({
+            message:
+              err.message || 'Some error occurred while creating the Learner.'
+          })
       }
     } else {
       res.send(data)

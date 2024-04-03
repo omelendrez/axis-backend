@@ -2,6 +2,7 @@
 const sql = require('./db')
 
 const findByIdView = require('./queries/findByIdView')
+const verifyCertificate = require('./queries/verifyCertificate')
 
 const { TRAINING_STATUS, getPaginationFilters } = require('../helpers/utils')
 const { toWeb, loadModel } = require('../helpers/utils')
@@ -563,6 +564,23 @@ ${conditions.join(' ')};`
 
       result(null, { data, message: `${data.length || 'No'} records found` })
     })
+  })
+}
+
+Training.verify = (id, result) => {
+  sql.query(verifyCertificate, id, (err, res) => {
+    if (err) {
+      sendError('Training.verify', err)
+      result(err, null)
+      return
+    }
+
+    if (res.length) {
+      result(null, toWeb(res[0]))
+      return
+    }
+
+    result({ kind: 'not_found' }, null)
   })
 }
 

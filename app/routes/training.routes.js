@@ -73,6 +73,8 @@ module.exports = (app) => {
     cache.res
   ) // List all training records by a given learner
 
+  router.get('/:id/verify', cache.get, training.verify, cache.set, cache.res)
+
   router.get(
     '/:id/view',
     secure,
@@ -80,7 +82,7 @@ module.exports = (app) => {
     training.getOneView,
     cache.set,
     cache.res
-  ) // Gets the data needed for the Training View component and subcomponents
+  ) // Gets the data needed for the Training View component and child components
 
   router.get(
     '/:date/:statuses',

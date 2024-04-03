@@ -11,6 +11,11 @@ const Learner = function (payload) {
 Learner.create = (learner, result) => {
   const newLearner = { ...learner, status: 1 }
 
+  if (!newLearner.title) {
+    result({ kind: 'title_missing' }, null)
+    return
+  }
+
   sql.query(
     'SELECT COUNT(1) records FROM learner WHERE first_name = ? AND last_name = ? AND DATE_FORMAT(birth_date, "%Y-%m-%d") = ?',
     [newLearner.first_name, newLearner.last_name, newLearner.birth_date],

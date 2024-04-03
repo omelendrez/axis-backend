@@ -323,3 +323,25 @@ exports.getTrainingRecords = (req, res, next) => {
     }
   )
 }
+
+exports.verify = (req, res, next) => {
+  const id = parseInt(req.params.id, 16)
+  Training.verify(id, (err, data) => {
+    if (err) {
+      switch (err.kind) {
+        case 'not_found':
+          res.status(404).send({
+            message: `Not found Training with id ${req.params.id}.`
+          })
+          break
+        default:
+          res.status(500).send({
+            message: 'Could not delete Training with id ' + req.params.id
+          })
+      }
+    } else {
+      res.locals.data = data
+      next()
+    }
+  })
+}

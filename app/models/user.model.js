@@ -81,6 +81,8 @@ User.login = (params, result) => {
         return
       }
 
+      sql.query('UPDATE user SET last_access = NOW() WHERE id = ?', [res[0].id])
+
       const user = toWeb(res[0])
       const token = await createToken(user)
 

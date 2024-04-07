@@ -135,7 +135,7 @@ exports.chgPwd = (req, res) => {
             message: `Error updating User with id ${req.params.id}`
           })
       }
-    } else res.send({ message: 'Password changed successfuly.' })
+    } else res.send({ message: 'Password changed successfully.' })
   })
 }
 
@@ -143,9 +143,9 @@ exports.reset = (req, res) => {
   User.reset(req.params.id, (err) => {
     if (err) {
       res.status(500).send({
-        message: `Error reseting password for User with id ${req.params.id}`
+        message: `Error trying to reset password for User with id ${req.params.id}`
       })
-    } else res.send({ message: 'Password reset successfuly.' })
+    } else res.send({ message: 'Password reset successfully.' })
   })
 }
 

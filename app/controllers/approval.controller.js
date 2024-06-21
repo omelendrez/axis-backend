@@ -34,6 +34,11 @@ exports.approve = (req, res, next) => {
               message: `Missing status code for Training with id ${req.params.id}.`
             })
             break
+          case 'missing_foet':
+            res.status(404).send({
+              message: 'Previous FOET certicate is missing.'
+            })
+            break
           case 'not_found':
             res.status(404).send({
               message: `Not found Training with id ${req.params.id}.`

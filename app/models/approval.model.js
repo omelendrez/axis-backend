@@ -2,6 +2,7 @@ const sql = require('./db')
 const { loadModel, TRAINING_STATUS } = require('../helpers/utils')
 // const socketIO = require('../socket.io')
 const { sendError } = require('../errors/error-monitoring')
+const findFOET = require('./queries/findFOETDocument.js')
 
 const Approval = function (payload) {
   loadModel(payload, this)
@@ -16,73 +17,89 @@ Approval.approve = (id, status, payload, user, result) => {
   }
 
   let query = ''
-  const params = []
 
-  if (payload?.status === status) {
-    query +=
-      'UPDATE training_tracking SET user=?, updated=NOW() WHERE training=? AND status=?;'
-    params.push(user.data.id, id, status)
-  } else {
-    query +=
-      'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
-    params.push(id, status, user.data.id)
-  }
-
-  query += 'UPDATE training SET reject_reason = "" WHERE id = ?;'
-  params.push(id)
-
-  switch (status) {
-    case TRAINING_STATUS.MEDIC_DONE:
-      payload.updates
-        .filter((e) => !e.existing)
-        .map((d) => {
-          query +=
-            'INSERT INTO training_medical (training, date, systolic, diastolic) VALUES (?,?,?,?);'
-          params.push(
-            id,
-            d.date,
-            parseInt(d.systolic, 10),
-            parseInt(d.diastolic, 10)
-          )
-        })
-      break
-
-    case TRAINING_STATUS.CERT_PRINT_DONE:
-      if (parseInt(payload.hasId, 10) === 0) {
-        query +=
-          'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
-        params.push(id, TRAINING_STATUS.COMPLETED, user.data.id)
-      }
-
-      break
-
-    case TRAINING_STATUS.ID_CARD_PRINT_DONE:
-      query +=
-        'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
-      params.push(id, TRAINING_STATUS.COMPLETED, user.data.id)
-
-      break
-    default:
-  }
-
-  sql.query(query, params, (err, res) => {
+  sql.query(findFOET, [id, id], (err, res) => {
     if (err) {
       sendError('Approval.approve', err)
       result(err, null)
       return
     }
 
-    if (res.affectedRows === 0) {
-      result({ kind: 'not_found' }, null)
+    const { is_required, documents } = res[0]
+
+    if (is_required && !documents) {
+      result({ kind: 'missing_foet' }, null)
       return
     }
 
-    result(null, {
-      id,
-      message: 'Status updated successfully!'
-    })
+    const params = []
 
-    // socketIO.notify('training-status-changed', { id, status })
+    if (payload?.status === status) {
+      query +=
+        'UPDATE training_tracking SET user=?, updated=NOW() WHERE training=? AND status=?;'
+      params.push(user.data.id, id, status)
+    } else {
+      query +=
+        'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+      params.push(id, status, user.data.id)
+    }
+
+    query += 'UPDATE training SET reject_reason = "" WHERE id = ?;'
+    params.push(id)
+
+    switch (status) {
+      case TRAINING_STATUS.MEDIC_DONE:
+        payload.updates
+          .filter((e) => !e.existing)
+          .map((d) => {
+            query +=
+              'INSERT INTO training_medical (training, date, systolic, diastolic) VALUES (?,?,?,?);'
+            params.push(
+              id,
+              d.date,
+              parseInt(d.systolic, 10),
+              parseInt(d.diastolic, 10)
+            )
+          })
+        break
+
+      case TRAINING_STATUS.CERT_PRINT_DONE:
+        if (parseInt(payload.hasId, 10) === 0) {
+          query +=
+            'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+          params.push(id, TRAINING_STATUS.COMPLETED, user.data.id)
+        }
+
+        break
+
+      case TRAINING_STATUS.ID_CARD_PRINT_DONE:
+        query +=
+          'INSERT INTO training_tracking (training, status, user) VALUES (?,?,?);'
+        params.push(id, TRAINING_STATUS.COMPLETED, user.data.id)
+
+        break
+      default:
+    }
+
+    sql.query(query, params, (err, res) => {
+      if (err) {
+        sendError('Approval.approve', err)
+        result(err, null)
+        return
+      }
+
+      if (res.affectedRows === 0) {
+        result({ kind: 'not_found' }, null)
+        return
+      }
+
+      result(null, {
+        id,
+        message: 'Status updated successfully!'
+      })
+
+      // socketIO.notify('training-status-changed', { id, status })
+    })
   })
 }
 

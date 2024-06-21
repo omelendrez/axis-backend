@@ -60,7 +60,7 @@ Course.findById = (id, result) => {
 
 Course.findByIdView = (id, result) => {
   sql.query(
-    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, c.front_id_text, c.back_id_text, c.duration, c.validity, c.expiry_type, CASE c.expiry_type WHEN 0 THEN "Certificate has no expiring date" WHEN 1 THEN "Expiring date calculated automatically" ELSE "FOET expiration date calculation" END expiry_type_name, TRIM(c.opito_reg_code) opito_code FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
+    'SELECT c.id, c.name, ct.name type, CASE WHEN c.id_card = 1 THEN "Yes" ELSE "No" END card_id, c.front_id_text, c.back_id_text, c.duration, c.validity, c.expiry_type, CASE c.expiry_type WHEN 0 THEN "Certificate has no expiring date" WHEN 1 THEN "Expiring date calculated automatically" ELSE "FOET expiration date calculation" END expiry_type_name, TRIM(c.opito_reg_code) opito_code, CASE WHEN c.foet_required = 1 THEN "Yes" ELSE "No" END foet_required FROM course c INNER JOIN certificate_type ct ON c.cert_type = ct.id WHERE c.id = ?',
     id,
     (err, res) => {
       if (err) {
@@ -93,7 +93,8 @@ Course.getAll = (pagination, result) => {
                         CASE c.expiry_type WHEN 0 THEN "Certificate has no expiring date" WHEN 1 THEN "Expiring date calculated automatically" ELSE "FOET expiration date calculation" END expiry_type_name,
                         c.duration,
                         c.validity,
-                        CASE c.id_card WHEN '0' THEN 'No' ELSE 'Yes' END id_card
+                        CASE c.id_card WHEN '0' THEN 'No' ELSE 'Yes' END id_card,
+                        CASE WHEN c.foet_required = 1 THEN 'Yes' ELSE 'No' END foet_required
                       FROM
                         course c
                       INNER JOIN
@@ -129,7 +130,7 @@ Course.updateById = (id, course, result) => {
   }
 
   sql.query(
-    'UPDATE course SET name = ?, front_id_text = ?, back_id_text = ?, duration = ?, validity = ?, cert_type = ?, id_card = ?, expiry_type = ?, opito_reg_code = ? WHERE id = ?',
+    'UPDATE course SET name = ?, front_id_text = ?, back_id_text = ?, duration = ?, validity = ?, cert_type = ?, id_card = ?, expiry_type = ?, opito_reg_code = ?, foet_required = ? WHERE id = ?',
     [
       course.name,
       course.front_id_text,
@@ -140,6 +141,7 @@ Course.updateById = (id, course, result) => {
       course.id_card,
       course.expiry_type,
       course.opito_reg_code,
+      course.foet_required,
       id
     ],
     (err, res) => {

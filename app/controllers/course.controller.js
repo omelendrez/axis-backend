@@ -16,7 +16,8 @@ exports.create = (req, res) => {
     validity: req.body.validity,
     cert_type: req.body.cert_type,
     expiry_type: req.body.expiry_type,
-    opito_reg_code: req.body.opito_reg_code
+    opito_reg_code: req.body.opito_reg_code,
+    foet_required: req.body.foet_required
   })
 
   Course.create(course, (err, data) => {

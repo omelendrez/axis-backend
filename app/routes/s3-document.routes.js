@@ -5,7 +5,7 @@ const cache = require('../middleware/cache')
 module.exports = (app) => {
   router.get('/exists', cache.get, controller.exists, cache.set, cache.res)
 
-  router.get('/', controller.getAll, cache.res)
+  router.get('/', cache.get, controller.getAll, cache.set, cache.res)
 
   router.post('/', controller.create, cache.res)
 
